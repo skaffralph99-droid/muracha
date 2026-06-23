@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
 
-const WA = "961XXXXXXXX";
+const WA = "96171425250";
 const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8", GD="#1a3a18";
 const P = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao. High in antioxidants, boosts mood, great for a warm drink or desserts.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
