@@ -56,7 +56,7 @@ export default function App(){
   useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
-  useEffect(()=>{const t=setInterval(()=>setHeroSlide(p=>(p+1)%5),5000);return()=>clearInterval(t)},[]);
+  useEffect(()=>{const t=setInterval(()=>setHeroSlide(p=>(p+1)%5),3000);return()=>clearInterval(t)},[]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
   const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
@@ -206,40 +206,40 @@ export default function App(){
 
       {pg==="home"&&<>
         {/* HERO SLIDESHOW */}
-        <section style={{position:"relative",height:"100vh",minHeight:580,maxHeight:900,overflow:"hidden",paddingTop:64,background:GD}}>
+        <section style={{position:"relative",height:"100vh",minHeight:580,maxHeight:900,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #1a3a18, #244a22)"}}>
           {/* Slides */}
           {[
-            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15",bg:"linear-gradient(135deg, #1a3a18, #2a5426)"},
-            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50",bg:"linear-gradient(135deg, #2a1a18, #4a3528)"},
-            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15",bg:"linear-gradient(135deg, #2a2018, #3d2b1f)"},
-            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22",bg:"linear-gradient(135deg, #1a3018, #2a4a20)"},
-            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50",bg:"linear-gradient(135deg, #1a2a18, #2a3a28)"},
+            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
+            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50"},
+            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15"},
+            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22"},
+            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50"},
           ].map((slide,i)=>(
-            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity 1s ease",zIndex:heroSlide===i?2:1,background:slide.bg}}>
+            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity .4s ease",zIndex:heroSlide===i?2:1}}>
               <div style={{maxWidth:1200,margin:"0 auto",height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,5vw,80px)",gap:"clamp(20px,4vw,60px)"}}>
                 {/* Text side */}
                 <div style={{flex:"1 1 50%",zIndex:3}}>
-                  <div style={{display:"inline-block",background:"rgba(255,255,255,.1)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .2s"}}>
+                  <div style={{display:"inline-block",background:"rgba(255,255,255,.1)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .1s"}}>
                     <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.8)",fontWeight:500}}>{slide.label}</p>
                   </div>
-                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .3s"}}>
+                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .15s"}}>
                     {slide.title}
                   </h1>
-                  <p style={{fontSize:15,color:"rgba(255,255,255,.55)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .4s"}}>
+                  <p style={{fontSize:15,color:"rgba(255,255,255,.55)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .2s"}}>
                     {slide.sub}
                   </p>
-                  <p className="f" style={{fontSize:30,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .7s ease .45s"}}>
+                  <p className="f" style={{fontSize:30,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .25s"}}>
                     {slide.price}
                   </p>
-                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .7s ease .5s"}}>
+                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .3s"}}>
                     <button className="b bw" onClick={()=>go("shop")}>Shop Now</button>
                     <button className="b" style={{background:"transparent",border:"1.5px solid rgba(255,255,255,.3)",color:"#fff",padding:"13px 28px",fontSize:12,letterSpacing:1.5}} onClick={()=>go("about")} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.6)"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.3)"}}>Our Story</button>
                   </div>
                 </div>
-                {/* Product image - full, not cropped */}
+                {/* Product image */}
                 <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"40px 0"}}>
                   <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(255,255,255,.05)",filter:"blur(60px)"}} />
-                  <img src={slide.img} alt={slide.title} style={{height:"clamp(300px,55vh,480px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.88) translateY(30px)",transition:"all .8s cubic-bezier(.16,1,.3,1) .2s"}} />
+                  <img src={slide.img} alt={slide.title} style={{height:"clamp(300px,55vh,480px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
                 </div>
               </div>
             </div>
