@@ -166,7 +166,7 @@ export default function MuraCha() {
       {/* NAV */}
       <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, height:68, display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 clamp(16px,4vw,48px)", background:navSolid?"rgba(250,248,245,.92)":"transparent", backdropFilter:navSolid?"blur(20px) saturate(1.5)":"none", borderBottom:navSolid?"1px solid rgba(139,111,71,.06)":"none", transition:"all .5s cubic-bezier(.16,1,.3,1)" }}>
         <div style={{ display:"flex", alignItems:"center", gap:36 }}>
-          <span onClick={() => goTo("home")} style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:24, fontWeight:600, letterSpacing:3, cursor:"pointer", color:nc, transition:"color .3s" }}>MuraCha</span>
+          <span onClick={() => goTo("home")} style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:24, fontWeight:600, letterSpacing:3, cursor:"pointer", color:nc, transition:"color .3s" }}><img src="/images/logo.png" alt="MuraCha" style={{height:38,objectFit:"contain"}} /></span>
           <div className="desk" style={{ display:"flex", gap:28 }}>
             {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l]) => (
               <span key={p} onClick={() => goTo(p)} style={{ fontSize:11, letterSpacing:2, textTransform:"uppercase", cursor:"pointer", fontWeight:600, color:nc, opacity:page===p?1:.5, transition:"all .3s", borderBottom:page===p?`1.5px solid ${nc}`:"1.5px solid transparent", paddingBottom:2 }}>{l}</span>
@@ -467,7 +467,7 @@ export default function MuraCha() {
       <footer style={{ borderTop:"1px solid rgba(139,111,71,.06)", padding:"56px clamp(16px,5vw,48px) 36px", marginTop:40, background:"rgba(44,36,24,.02)" }}>
         <div style={{ maxWidth:1200, margin:"0 auto", display:"flex", flexWrap:"wrap", justifyContent:"space-between", gap:36 }}>
           <div>
-            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, letterSpacing:3, marginBottom:8 }}>MuraCha</h3>
+            <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:26, fontWeight:600, letterSpacing:3, marginBottom:8 }}><img src="/images/logo.png" alt="MuraCha" style={{height:50,objectFit:"contain"}} /></h3>
             <p style={{ fontSize:13, color:"#9e9385" }}>Pure Japanese Essence & Chinese Art</p>
           </div>
           <div style={{ display:"flex", gap:36, flexWrap:"wrap" }}>
