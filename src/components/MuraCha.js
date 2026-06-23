@@ -43,6 +43,7 @@ export default function App(){
   const[toast,setToast]=useState(null);
   const[trans,setTrans]=useState(false);
   const[ri,setRI]=useState(0);
+  const[heroSlide,setHeroSlide]=useState(0);
   const[userRevs,setUserRevs]=useState([]);
   const[revForm,setRevForm]=useState({name:"",text:"",stars:5});
   const[revOpen,setRevOpen]=useState(false);
@@ -55,6 +56,7 @@ export default function App(){
   useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
+  useEffect(()=>{const t=setInterval(()=>setHeroSlide(p=>(p+1)%5),5000);return()=>clearInterval(t)},[]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
   const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
@@ -100,7 +102,7 @@ export default function App(){
         .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
         .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
         .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
-        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.pg5{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
+        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
       `}</style>
 
       <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${prog*100}%`,zIndex:200,transition:"width .1s"}} />
@@ -203,46 +205,62 @@ export default function App(){
       <div style={{opacity:trans?0:1,transform:trans?"translateY(8px)":"translateY(0)",transition:"all .25s"}}>
 
       {pg==="home"&&<>
-        {/* HERO */}
-        <section style={{paddingTop:64,background:`linear-gradient(135deg, ${GX} 0%, #f5f2ec 50%, ${GX} 100%)`,position:"relative",overflow:"hidden"}}>
-          <div style={{maxWidth:1200,margin:"0 auto",padding:"48px clamp(16px,4vw,48px) 0"}}>
-            {/* Text */}
-            <div style={{textAlign:"center",maxWidth:620,margin:"0 auto",opacity:0,animation:"slideUp .8s ease .1s both"}}>
-              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:16}}>
-                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
+        {/* HERO SLIDESHOW */}
+        <section style={{position:"relative",height:"100vh",minHeight:600,maxHeight:900,overflow:"hidden",paddingTop:64}}>
+          {/* Slides */}
+          {[
+            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
+            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50"},
+            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15"},
+            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22"},
+            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50"},
+          ].map((slide,i)=>(
+            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity 1s ease",zIndex:heroSlide===i?2:1}}>
+              {/* Background image */}
+              <div style={{position:"absolute",inset:0,background:`url(${slide.img}) center/cover no-repeat`}}>
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, rgba(26,58,24,.75) 0%, rgba(26,58,24,.4) 40%, rgba(0,0,0,.3) 100%)"}} />
               </div>
-              <h1 className="f" style={{fontSize:"clamp(34px,5.5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:14}}>
-                Nourish Your Body & <span style={{fontWeight:600,color:G}}>Soul</span>
-              </h1>
-              <p style={{fontSize:15,color:"#666",lineHeight:1.7,marginBottom:24}}>
-                Premium hojicha, blooming tea bombs, and organic powders — delivered to your door in Lebanon.
-              </p>
-              <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
-                <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
-                <button className="b bo" onClick={()=>go("about")}>Our Story</button>
-              </div>
-              <div style={{display:"flex",gap:20,justifyContent:"center",flexWrap:"wrap",marginBottom:36}}>
-                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
-                  <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
-                    <span style={{fontSize:14}}>{ic}</span>
-                    <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
+              {/* Content */}
+              <div style={{position:"relative",zIndex:3,height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,6vw,80px)"}}>
+                <div style={{maxWidth:560}}>
+                  <div style={{display:"inline-block",background:"rgba(255,255,255,.12)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .2s"}}>
+                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#fff",fontWeight:500}}>{slide.label}</p>
                   </div>
-                ))}
+                  <h1 className="f" style={{fontSize:"clamp(40px,7vw,72px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(30px)",transition:"all .8s ease .3s"}}>
+                    {slide.title}
+                  </h1>
+                  <p style={{fontSize:16,color:"rgba(255,255,255,.7)",lineHeight:1.7,marginBottom:8,maxWidth:400,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .4s"}}>
+                    {slide.sub}
+                  </p>
+                  <p className="f" style={{fontSize:28,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .45s"}}>
+                    {slide.price}
+                  </p>
+                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .5s"}}>
+                    <button className="b bw" onClick={()=>go("shop")}>Shop Now</button>
+                    <button className="b" style={{background:"transparent",border:"1.5px solid rgba(255,255,255,.4)",color:"#fff",padding:"13px 28px",fontSize:12,letterSpacing:1.5}} onClick={()=>go("about")} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.1)";e.currentTarget.style.borderColor="rgba(255,255,255,.7)"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.4)"}}>Our Story</button>
+                  </div>
+                </div>
               </div>
             </div>
-            {/* Product image showcase - visible on ALL devices */}
-            <div style={{opacity:0,animation:"slideUp .8s ease .35s both"}}>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:10,maxWidth:1000,margin:"0 auto"}} className="pg5">
-                {P.slice(0,5).map((p,i)=>(
-                  <div key={p.id} onClick={()=>{setSel(p);setII(0)}} style={{borderRadius:14,overflow:"hidden",cursor:"pointer",background:"#fff",border:"1px solid rgba(50,107,47,.06)",transition:"all .4s cubic-bezier(.16,1,.3,1)",position:"relative",aspectRatio:i===0?"auto":"1"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(50,107,47,.12)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
-                    <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.06)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
-                    <div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.55))",padding:"24px 10px 10px"}}>
-                      <p style={{fontSize:11,color:"#fff",fontWeight:600,lineHeight:1.3}}>{p.name}</p>
-                      <p style={{fontSize:13,color:"#fff",fontWeight:700}}>${p.price.toFixed(2)}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          ))}
+          {/* Slide dots */}
+          <div style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
+            {[0,1,2,3,4].map(i=>(
+              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?"#fff":"rgba(255,255,255,.3)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
+            ))}
+          </div>
+          {/* Side arrows */}
+          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.1)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.15)",borderRadius:"50%",width:44,height:44,cursor:"pointer",color:"#fff",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.2)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.1)"}>‹</button>
+          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.1)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.15)",borderRadius:"50%",width:44,height:44,cursor:"pointer",color:"#fff",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.2)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.1)"}>›</button>
+          {/* Trust bar at bottom */}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(0,0,0,.25)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
+            <div style={{maxWidth:800,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:12}}>
+              {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"],["💚","Free above $50"]].map(([ic,tx])=>(
+                <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
+                  <span style={{fontSize:14}}>{ic}</span>
+                  <span style={{fontSize:11,color:"rgba(255,255,255,.8)",fontWeight:500}}>{tx}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
