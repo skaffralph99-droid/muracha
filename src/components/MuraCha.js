@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 
 const WA = "96171425250";
+const DELIVERY_FEE = 4;
+const FREE_SHIP_MIN = 50;
 const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8", GD="#1a3a18";
 const P = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao. High in antioxidants, boosts mood, great for a warm drink or desserts.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
@@ -17,11 +19,13 @@ const P = [
   {id:"white-tangerine",name:"White Tangerine Peel Tea Bomb Jar",price:10,size:"4 × 5g balls",cat:"chinese",desc:"White tea with tangerine peel in a glass jar. Each ball makes 1–2 cups.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2201.jpg?v=1770921245","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9037.jpg?v=1770921245"]},
 ];
 const CATS={all:"All",japanese:"Japanese",chinese:"Tea Bombs",powders:"Powders"};
-const reviews=[
+const defaultReviews=[
   {name:"Sarah M.",text:"The hojicha is incredible — smooth, calming, and the perfect coffee replacement. I'm obsessed!",stars:5},
   {name:"Rami K.",text:"The rose tea bombs are a whole experience. Watching them bloom is magical. Taste is amazing too.",stars:5},
   {name:"Nour A.",text:"Best tea I've ever had in Lebanon. The quality is unmatched and the packaging is beautiful.",stars:5},
   {name:"Maya H.",text:"Ordered the cacao powder and hojicha powder — both are top quality. Will definitely reorder!",stars:5},
+  {name:"Ali S.",text:"My wife loved the chrysanthemum tea bombs as a gift. Beautiful presentation and great taste.",stars:5},
+  {name:"Lara J.",text:"Finally a real tea brand in Lebanon! The lemon balm tea helps me relax every evening. Thank you MuraCha!",stars:4},
 ];
 
 function useInView(t=0.1){const r=useRef(null);const[v,s]=useState(false);useEffect(()=>{const e=r.current;if(!e)return;const o=new IntersectionObserver(([en])=>{if(en.isIntersecting){s(true);o.unobserve(e)}},{threshold:t});o.observe(e);return()=>o.disconnect()},[t]);return[r,v]}
@@ -39,20 +43,30 @@ export default function App(){
   const[toast,setToast]=useState(null);
   const[trans,setTrans]=useState(false);
   const[ri,setRI]=useState(0);
+  const[userRevs,setUserRevs]=useState([]);
+  const[revForm,setRevForm]=useState({name:"",text:"",stars:5});
+  const[revOpen,setRevOpen]=useState(false);
+  const[revSubmitted,setRevSubmitted]=useState(false);
+  const allRevs=[...defaultReviews,...userRevs];
+
+  useEffect(()=>{try{const s=localStorage.getItem('muracha_reviews');if(s)setUserRevs(JSON.parse(s))}catch(e){}},[]);
+  const submitReview=()=>{if(!revForm.name||!revForm.text)return;const nr={...revForm,date:new Date().toLocaleDateString()};const updated=[...userRevs,nr];setUserRevs(updated);try{localStorage.setItem('muracha_reviews',JSON.stringify(updated))}catch(e){}setRevForm({name:"",text:"",stars:5});setRevSubmitted(true);setTimeout(()=>setRevSubmitted(false),3000)};
 
   useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
-  useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%reviews.length),4000);return()=>clearInterval(t)},[]);
+  useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
   const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
   const rm=id=>setCart(p=>p.filter(i=>i.id!==id));
   const uq=(id,d)=>setCart(p=>p.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const delivery=tot>=FREE_SHIP_MIN?0:DELIVERY_FEE;
+  const grandTotal=tot+delivery;
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
   const fil=cat==="all"?P:P.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Total: $${tot.toFixed(2)}*${tot>=50?"\n✓ Free shipping":""}`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
@@ -86,7 +100,7 @@ export default function App(){
         .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
         .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
         .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
-        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
+        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.pg5{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
       `}</style>
 
       <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${prog*100}%`,zIndex:200,transition:"width .1s"}} />
@@ -142,14 +156,20 @@ export default function App(){
           </div>
           {cart.length>0&&(
             <div style={{padding:20,borderTop:"1px solid rgba(50,107,47,.05)",background:GX}}>
-              {tot>=50?<p style={{fontSize:12,color:G,marginBottom:10,fontWeight:600}}>✓ Free shipping!</p>:
+              {tot>=FREE_SHIP_MIN?<p style={{fontSize:12,color:G,marginBottom:10,fontWeight:600}}>✓ Free delivery!</p>:
               <div style={{marginBottom:10}}>
-                <p style={{fontSize:11,color:"#5a6e58",marginBottom:5}}>${(50-tot).toFixed(2)} away from free shipping</p>
-                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/50*100,100)}%`,transition:"width .5s"}} /></div>
+                <p style={{fontSize:11,color:"#5a6e58",marginBottom:5}}>${(FREE_SHIP_MIN-tot).toFixed(2)} away from free delivery</p>
+                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/FREE_SHIP_MIN*100,100)}%`,transition:"width .5s"}} /></div>
               </div>}
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:14}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:13,color:"#5a6e58"}}>
+                <span>Subtotal</span><span>${tot.toFixed(2)}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,fontSize:13,color:delivery===0?G:"#5a6e58"}}>
+                <span>Delivery</span><span>{delivery===0?"Free":`$${delivery.toFixed(2)}`}</span>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:14,borderTop:"1px solid rgba(50,107,47,.08)",paddingTop:10}}>
                 <span className="f" style={{fontSize:20}}>Total</span>
-                <span className="f" style={{fontSize:20,fontWeight:700}}>${tot.toFixed(2)}</span>
+                <span className="f" style={{fontSize:20,fontWeight:700}}>${grandTotal.toFixed(2)}</span>
               </div>
               <button className="b bp" style={{width:"100%"}} onClick={()=>{setCartOpen(false);go("checkout")}}>Checkout via WhatsApp</button>
             </div>
@@ -185,43 +205,44 @@ export default function App(){
       {pg==="home"&&<>
         {/* HERO */}
         <section style={{paddingTop:64,background:`linear-gradient(135deg, ${GX} 0%, #f5f2ec 50%, ${GX} 100%)`,position:"relative",overflow:"hidden"}}>
-          <div style={{maxWidth:1200,margin:"0 auto",padding:"60px clamp(16px,4vw,48px) 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center"}} className="hg">
-            {/* Left */}
-            <div style={{opacity:0,animation:"slideUp .8s ease .1s both"}}>
-              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
-                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Asia</p>
+          <div style={{maxWidth:1200,margin:"0 auto",padding:"48px clamp(16px,4vw,48px) 0"}}>
+            {/* Text */}
+            <div style={{textAlign:"center",maxWidth:620,margin:"0 auto",opacity:0,animation:"slideUp .8s ease .1s both"}}>
+              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:16}}>
+                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
               </div>
-              <h1 className="f" style={{fontSize:"clamp(36px,5vw,58px)",fontWeight:300,lineHeight:1.1,marginBottom:18}}>
-                Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
+              <h1 className="f" style={{fontSize:"clamp(34px,5.5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:14}}>
+                Nourish Your Body & <span style={{fontWeight:600,color:G}}>Soul</span>
               </h1>
-              <p style={{fontSize:15,color:"#666",lineHeight:1.8,maxWidth:440,marginBottom:28}}>
-                Premium Japanese hojicha, Chinese blooming tea bombs, and organic powders — delivered to your door in Lebanon.
+              <p style={{fontSize:15,color:"#666",lineHeight:1.7,marginBottom:24}}>
+                Premium hojicha, blooming tea bombs, and organic powders — delivered to your door in Lebanon.
               </p>
-              <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:32}}>
+              <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:20}}>
                 <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
                 <button className="b bo" onClick={()=>go("about")}>Our Story</button>
               </div>
-              {/* Trust */}
-              <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
-                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","Free Ship 50$+"]].map(([ic,tx])=>(
-                  <div key={tx} style={{display:"flex",alignItems:"center",gap:6}}>
-                    <span style={{fontSize:16}}>{ic}</span>
+              <div style={{display:"flex",gap:20,justifyContent:"center",flexWrap:"wrap",marginBottom:36}}>
+                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
+                  <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
+                    <span style={{fontSize:14}}>{ic}</span>
                     <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
                   </div>
                 ))}
               </div>
             </div>
-            {/* Right - product grid */}
-            <div className="dk" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,opacity:0,animation:"slideUp .8s ease .3s both"}}>
-              {P.slice(0,4).map((p,i)=>(
-                <div key={p.id} onClick={()=>{setSel(p);setII(0)}} style={{borderRadius:14,overflow:"hidden",cursor:"pointer",background:"#fff",border:"1px solid rgba(50,107,47,.06)",transition:"all .3s",position:"relative",aspectRatio:"1"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.03)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>
-                  <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                  <div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.5))",padding:"20px 12px 12px"}}>
-                    <p style={{fontSize:12,color:"#fff",fontWeight:600}}>{p.name}</p>
-                    <p style={{fontSize:14,color:"#fff",fontWeight:700}}>${p.price.toFixed(2)}</p>
+            {/* Product image showcase - visible on ALL devices */}
+            <div style={{opacity:0,animation:"slideUp .8s ease .35s both"}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:10,maxWidth:1000,margin:"0 auto"}} className="pg5">
+                {P.slice(0,5).map((p,i)=>(
+                  <div key={p.id} onClick={()=>{setSel(p);setII(0)}} style={{borderRadius:14,overflow:"hidden",cursor:"pointer",background:"#fff",border:"1px solid rgba(50,107,47,.06)",transition:"all .4s cubic-bezier(.16,1,.3,1)",position:"relative",aspectRatio:i===0?"auto":"1"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 16px 40px rgba(50,107,47,.12)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
+                    <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.06)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
+                    <div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.55))",padding:"24px 10px 10px"}}>
+                      <p style={{fontSize:11,color:"#fff",fontWeight:600,lineHeight:1.3}}>{p.name}</p>
+                      <p style={{fontSize:13,color:"#fff",fontWeight:700}}>${p.price.toFixed(2)}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -229,7 +250,7 @@ export default function App(){
         {/* STATS BAR */}
         <div style={{background:G,color:"#fff",padding:"16px clamp(16px,4vw,48px)"}}>
           <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:16}}>
-            {[["11+","Products"],["100%","Natural"],["$50+","Free Shipping"],["💬","Order via WhatsApp"]].map(([n,l])=>(
+            {[["11+","Products"],["100%","Natural"],["$4","Delivery (Free 50$+)"],["💬","Order via WhatsApp"]].map(([n,l])=>(
               <div key={l} style={{textAlign:"center"}}>
                 <p className="f" style={{fontSize:22,fontWeight:700}}>{n}</p>
                 <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>{l}</p>
@@ -275,7 +296,7 @@ export default function App(){
         {/* BENEFITS */}
         <section style={{padding:"60px clamp(16px,4vw,48px)",background:GX}}>
           <div className="bg" style={{maxWidth:1000,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
-            {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","Fast Delivery","Free shipping on orders above $50 across Lebanon"]].map(([ic,t,d],i)=>(
+            {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","$4 Delivery","Just $4 delivery anywhere in Lebanon — free on orders above $50!"]].map(([ic,t,d],i)=>(
               <R key={t} delay={i*.08} d="scale">
                 <div style={{background:"#fff",borderRadius:14,padding:"28px 20px",textAlign:"center",border:"1px solid rgba(50,107,47,.04)",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 36px rgba(50,107,47,.08)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{fontSize:28,marginBottom:12}}>{ic}</div>
@@ -317,20 +338,53 @@ export default function App(){
         <section style={{padding:"60px clamp(16px,4vw,48px)",background:GD,color:"#fff",overflow:"hidden"}}>
           <div style={{maxWidth:700,margin:"0 auto",textAlign:"center"}}>
             <R><p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:GL,marginBottom:10,fontWeight:600}}>What Customers Say</p>
-            <h2 className="f" style={{fontSize:"clamp(26px,4vw,38px)",fontWeight:300,marginBottom:40}}>Loved Across Lebanon</h2></R>
+            <h2 className="f" style={{fontSize:"clamp(26px,4vw,38px)",fontWeight:300,marginBottom:8}}>Loved Across Lebanon</h2>
+            <p style={{fontSize:13,color:"rgba(255,255,255,.4)",marginBottom:32}}>{allRevs.length} reviews</p></R>
             <div style={{position:"relative",minHeight:140}}>
-              {reviews.map((r,i)=>(
+              {allRevs.map((r,i)=>(
                 <div key={i} style={{position:i===0?"relative":"absolute",top:0,left:0,right:0,opacity:ri===i?1:0,transform:ri===i?"translateY(0)":"translateY(16px)",transition:"all .6s cubic-bezier(.16,1,.3,1)",pointerEvents:ri===i?"auto":"none"}}>
                   <div style={{display:"flex",justifyContent:"center",gap:4,marginBottom:14}}>
-                    {[...Array(r.stars)].map((_,j)=><span key={j} style={{color:"#f0c040",fontSize:18}}>★</span>)}
+                    {[...Array(5)].map((_,j)=><span key={j} style={{color:j<r.stars?"#f0c040":"rgba(255,255,255,.15)",fontSize:18}}>★</span>)}
                   </div>
                   <p className="f" style={{fontSize:22,fontStyle:"italic",lineHeight:1.6,marginBottom:16,fontWeight:300,opacity:.9}}>&ldquo;{r.text}&rdquo;</p>
-                  <p style={{fontSize:13,fontWeight:600,color:GL}}>— {r.name}</p>
+                  <p style={{fontSize:13,fontWeight:600,color:GL}}>— {r.name}{r.date?` · ${r.date}`:""}</p>
                 </div>
               ))}
             </div>
-            <div style={{display:"flex",justifyContent:"center",gap:8,marginTop:28}}>
-              {reviews.map((_,i)=><button key={i} onClick={()=>setRI(i)} style={{width:ri===i?24:8,height:8,borderRadius:4,background:ri===i?GL:"rgba(255,255,255,.2)",border:"none",cursor:"pointer",transition:"all .3s"}} />)}
+            <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:28}}>
+              {allRevs.map((_,i)=><button key={i} onClick={()=>setRI(i)} style={{width:ri===i?20:7,height:7,borderRadius:4,background:ri===i?GL:"rgba(255,255,255,.15)",border:"none",cursor:"pointer",transition:"all .3s"}} />)}
+            </div>
+
+            {/* WRITE A REVIEW */}
+            <div style={{marginTop:36}}>
+              {!revOpen?(
+                <button onClick={()=>setRevOpen(true)} className="b" style={{background:"rgba(255,255,255,.1)",color:"#fff",padding:"12px 28px",fontSize:12,letterSpacing:1.5,border:"1px solid rgba(255,255,255,.15)"}}>Write a Review ✍️</button>
+              ):(
+                <div style={{background:"rgba(255,255,255,.06)",borderRadius:14,padding:24,maxWidth:440,margin:"0 auto",textAlign:"left",border:"1px solid rgba(255,255,255,.08)"}}>
+                  {revSubmitted?(
+                    <div style={{textAlign:"center",padding:"20px 0"}}>
+                      <p style={{fontSize:24,marginBottom:8}}>🎉</p>
+                      <p className="f" style={{fontSize:20}}>Thank you for your review!</p>
+                    </div>
+                  ):(<>
+                    <p style={{fontSize:14,fontWeight:600,marginBottom:16}}>Share your experience</p>
+                    <div style={{marginBottom:14}}>
+                      <p style={{fontSize:11,marginBottom:6,opacity:.6}}>Rating</p>
+                      <div style={{display:"flex",gap:4}}>
+                        {[1,2,3,4,5].map(s=>(
+                          <button key={s} onClick={()=>setRevForm({...revForm,stars:s})} style={{background:"none",border:"none",cursor:"pointer",fontSize:24,color:s<=revForm.stars?"#f0c040":"rgba(255,255,255,.15)",transition:"transform .2s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.2)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>★</button>
+                        ))}
+                      </div>
+                    </div>
+                    <input value={revForm.name} onChange={e=>setRevForm({...revForm,name:e.target.value})} placeholder="Your name" style={{width:"100%",padding:"10px 14px",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:6,color:"#fff",fontSize:13,marginBottom:10,outline:"none",fontFamily:"'DM Sans'"}} />
+                    <textarea value={revForm.text} onChange={e=>setRevForm({...revForm,text:e.target.value})} placeholder="What did you love about our tea?" rows={3} style={{width:"100%",padding:"10px 14px",background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.1)",borderRadius:6,color:"#fff",fontSize:13,marginBottom:14,outline:"none",resize:"vertical",fontFamily:"'DM Sans'"}} />
+                    <div style={{display:"flex",gap:10}}>
+                      <button onClick={submitReview} className="b" style={{background:GL,color:"#fff",padding:"10px 24px",fontSize:12,flex:1}} disabled={!revForm.name||!revForm.text}>Submit Review</button>
+                      <button onClick={()=>setRevOpen(false)} className="b" style={{background:"rgba(255,255,255,.06)",color:"#fff",padding:"10px 16px",fontSize:12,border:"1px solid rgba(255,255,255,.1)"}}>Cancel</button>
+                    </div>
+                  </>)}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -424,10 +478,16 @@ export default function App(){
                 <span style={{fontWeight:700}}>${(item.price*item.qty).toFixed(2)}</span>
               </div>
             ))}
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:8}} className="f">
-              <span style={{fontWeight:600}}>Total</span><span style={{fontWeight:700,color:G}}>${tot.toFixed(2)}</span>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#5a6e58",paddingTop:8}}>
+              <span>Subtotal</span><span>${tot.toFixed(2)}</span>
             </div>
-            {tot>=50&&<p style={{fontSize:11,color:G,marginTop:6,fontWeight:600}}>✓ Free shipping</p>}
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:delivery===0?G:"#5a6e58",paddingTop:4}}>
+              <span>Delivery</span><span>{delivery===0?"Free":"$"+delivery.toFixed(2)}</span>
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:10,borderTop:"1px solid rgba(50,107,47,.06)",marginTop:8}} className="f">
+              <span style={{fontWeight:600}}>Total</span><span style={{fontWeight:700,color:G}}>${grandTotal.toFixed(2)}</span>
+            </div>
+            {tot>=FREE_SHIP_MIN&&<p style={{fontSize:11,color:G,marginTop:6,fontWeight:600}}>✓ Free delivery</p>}
           </div></R>
           <R delay={0.2}><div style={{display:"flex",flexDirection:"column",gap:12}}>
             <input className="inp" placeholder="Full Name *" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
