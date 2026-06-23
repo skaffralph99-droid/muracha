@@ -237,9 +237,9 @@ export default function App(){
                   </div>
                 </div>
                 {/* Product image - full, not cropped */}
-                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"80%",position:"relative"}}>
-                  <div style={{position:"absolute",width:"70%",height:"70%",borderRadius:"50%",background:"rgba(255,255,255,.04)",filter:"blur(40px)"}} />
-                  <img src={slide.img} alt={slide.title} style={{maxHeight:"85%",maxWidth:"90%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.3))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.88) translateY(30px)",transition:"all .8s cubic-bezier(.16,1,.3,1) .2s"}} />
+                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"40px 0"}}>
+                  <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(255,255,255,.05)",filter:"blur(60px)"}} />
+                  <img src={slide.img} alt={slide.title} style={{height:"clamp(300px,55vh,480px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.88) translateY(30px)",transition:"all .8s cubic-bezier(.16,1,.3,1) .2s"}} />
                 </div>
               </div>
             </div>
