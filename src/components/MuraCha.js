@@ -19,10 +19,10 @@ const PRODUCTS = [
 ];
 
 const CATS = { all:"All", japanese:"Japanese", chinese:"Tea Bombs", powders:"Powders" };
+const G="#326b2f", GL="#5a9e4f", GX="#e8f0e6";
 
 function useInView(t=0.12){const r=useRef(null);const[v,s]=useState(false);useEffect(()=>{const e=r.current;if(!e)return;const o=new IntersectionObserver(([en])=>{if(en.isIntersecting){s(true);o.unobserve(e)}},{threshold:t});o.observe(e);return()=>o.disconnect()},[t]);return[r,v]}
-
-function Reveal({children,delay=0,direction="up",style={},className=""}){const[r,v]=useInView();const t={up:"translateY(60px)",down:"translateY(-60px)",left:"translateX(60px)",right:"translateX(-60px)",scale:"scale(0.9)"};return(<div ref={r} className={className} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[direction],transition:`opacity .9s cubic-bezier(.16,1,.3,1) ${delay}s, transform .9s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>)}
+function Reveal({children,delay=0,direction="up",style={},className=""}){const[r,v]=useInView();const t={up:"translateY(50px)",down:"translateY(-50px)",left:"translateX(50px)",right:"translateX(-50px)",scale:"scale(0.92)"};return(<div ref={r} className={className} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[direction],transition:`opacity .8s cubic-bezier(.16,1,.3,1) ${delay}s, transform .8s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>)}
 
 export default function MuraCha(){
   const[page,setPage]=useState("home");
@@ -35,9 +35,12 @@ export default function MuraCha(){
   const[form,setForm]=useState({name:"",phone:"",address:"",notes:""});
   const[toast,setToast]=useState(null);
   const[transition,setTransition]=useState(false);
+  const[heroImg,setHeroImg]=useState(0);
 
   useEffect(()=>{const h=()=>setScrollY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
+  // Rotate hero product images
+  useEffect(()=>{const t=setInterval(()=>setHeroImg(p=>(p+1)%3),3000);return()=>clearInterval(t)},[]);
 
   const goTo=(p)=>{setTransition(true);setTimeout(()=>{setPage(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTransition(false),50)},300)};
   const addToCart=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
@@ -46,16 +49,12 @@ export default function MuraCha(){
   const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
   const count=cart.reduce((s,i)=>s+i.qty,0);
   const filtered=cat==="all"?PRODUCTS:PRODUCTS.filter(p=>p.category===cat);
+  const heroProducts=[PRODUCTS[1],PRODUCTS[5],PRODUCTS[0]];
 
   const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Total: $${total.toFixed(2)}*${total>=50?"\n✓ Free shipping":""}`;window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const navSolid=scrollY>80||page!=="home";
   const progress=Math.min(scrollY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
-
-  // Colors - green theme matching logo
-  const G="#326b2f"; // dark green
-  const GL="#5a9e4f"; // light green
-  const GX="#e8f0e6"; // very light green bg
 
   return(
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fafaf7",color:"#2a2a2a",minHeight:"100vh"}}>
@@ -66,14 +65,15 @@ export default function MuraCha(){
         @keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(5deg)}}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
         @keyframes toastIn{0%{opacity:0;transform:translateX(-50%) translateY(30px) scale(.9)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
         @keyframes toastOut{0%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
         @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
         @keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes heroLine{from{width:0;opacity:0}to{width:100px;opacity:1}}
-        @keyframes letterSpace{from{letter-spacing:12px;opacity:0}to{letter-spacing:5px;opacity:1}}
+        @keyframes heroLine{from{width:0;opacity:0}to{width:80px;opacity:1}}
+        @keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
         .card{transition:all .45s cubic-bezier(.16,1,.3,1);cursor:pointer;border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(50,107,47,.08)}
         .card:hover{transform:translateY(-10px);box-shadow:0 24px 64px rgba(50,107,47,.1)}
         .card-img{transition:transform .7s cubic-bezier(.16,1,.3,1)}
@@ -96,10 +96,14 @@ export default function MuraCha(){
         .tag{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:#326b2f;font-size:11px;letter-spacing:.5px;border-radius:20px;font-weight:500;transition:all .3s}
         .tag:hover{background:rgba(50,107,47,.12);transform:scale(1.05)}
         .page-transition{transition:opacity .3s,transform .3s}
-        @media(max-width:768px){.desk{display:none!important}.pgrid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.modal-p{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cart-p{width:100%!important}.hero-t{font-size:34px!important}.csec{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:8px;justify-content:flex-start!important}}
+        .hero-product{position:absolute;transition:all .8s cubic-bezier(.16,1,.3,1);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.08)}
+        .step-card{background:#fff;border-radius:16px;padding:32px 24px;text-align:center;border:1px solid rgba(50,107,47,.06);transition:all .4s cubic-bezier(.16,1,.3,1)}
+        .step-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(50,107,47,.08)}
+        .step-num{width:44px;height:44px;border-radius:50%;background:rgba(50,107,47,.08);color:#326b2f;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin:0 auto 16px}
+        @media(max-width:768px){.desk{display:none!important}.pgrid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.modal-p{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cart-p{width:100%!important}.hero-split{flex-direction:column!important;text-align:center!important}.hero-right{display:none!important}.hero-left{padding:120px 24px 60px!important}.csec{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:8px;justify-content:flex-start!important}.steps-grid{grid-template-columns:1fr!important}}
       `}</style>
 
-      {/* SCROLL PROGRESS */}
+      {/* PROGRESS */}
       <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${progress*100}%`,zIndex:200,transition:"width .1s"}} />
 
       {/* TOAST */}
@@ -109,12 +113,12 @@ export default function MuraCha(){
       <div style={{position:"fixed",inset:0,background:"#fafaf7",zIndex:150,pointerEvents:"none",opacity:transition?1:0,transition:"opacity .3s ease"}} />
 
       {/* NAV */}
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:68,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:navSolid?"rgba(250,250,247,.95)":"rgba(250,250,247,.8)",backdropFilter:"blur(20px) saturate(1.5)",borderBottom:navSolid?"1px solid rgba(50,107,47,.06)":"1px solid transparent",transition:"all .5s cubic-bezier(.16,1,.3,1)"}}>
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:68,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.92)",backdropFilter:"blur(20px) saturate(1.5)",borderBottom:"1px solid rgba(50,107,47,.06)",transition:"all .5s"}}>
         <div style={{display:"flex",alignItems:"center",gap:36}}>
           <span onClick={()=>goTo("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:42,objectFit:"contain"}} /></span>
           <div className="desk" style={{display:"flex",gap:28}}>
             {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l])=>(
-              <span key={p} onClick={()=>goTo(p)} style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",cursor:"pointer",fontWeight:600,color:"#2a2a2a",opacity:page===p?1:.45,transition:"all .3s",borderBottom:page===p?`2px solid ${G}`:"2px solid transparent",paddingBottom:3}}>{l}</span>
+              <span key={p} onClick={()=>goTo(p)} style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",cursor:"pointer",fontWeight:600,color:"#2a2a2a",opacity:page===p?1:.4,transition:"all .3s",borderBottom:page===p?`2px solid ${G}`:"2px solid transparent",paddingBottom:3}}>{l}</span>
             ))}
           </div>
         </div>
@@ -128,9 +132,9 @@ export default function MuraCha(){
       {cartOpen&&<div className="overlay" onClick={()=>setCartOpen(false)} />}
       {cartOpen&&(
         <div className="cart-p" style={{position:"fixed",right:0,top:0,bottom:0,width:400,background:"#fff",zIndex:202,boxShadow:"-12px 0 60px rgba(0,0,0,.08)",display:"flex",flexDirection:"column",animation:"slideRight .4s cubic-bezier(.16,1,.3,1)"}}>
-          <div style={{padding:"28px 28px 18px",borderBottom:"1px solid rgba(50,107,47,.06)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{padding:"28px 28px 18px",borderBottom:`1px solid rgba(50,107,47,.06)`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:500}}>Cart <span style={{fontSize:16,color:G}}>({count})</span></h3>
-            <button onClick={()=>setCartOpen(false)} style={{background:"rgba(0,0,0,.04)",border:"none",borderRadius:"50%",width:36,height:36,cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(0,0,0,.08)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(0,0,0,.04)"}>✕</button>
+            <button onClick={()=>setCartOpen(false)} style={{background:"rgba(0,0,0,.04)",border:"none",borderRadius:"50%",width:36,height:36,cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
           </div>
           <div style={{flex:1,overflow:"auto",padding:24}}>
             {cart.length===0?<p style={{color:"#a0afa0",fontSize:14,textAlign:"center",marginTop:60}}>Your cart is empty</p>:
@@ -141,7 +145,7 @@ export default function MuraCha(){
                   <p style={{fontSize:14,fontWeight:600,marginBottom:3}}>{item.name}</p>
                   <p style={{fontSize:11,color:"#8a9a88",marginBottom:8}}>{item.size}</p>
                   <div style={{display:"flex",alignItems:"center",gap:12}}>
-                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.12)",borderRadius:6,overflow:"hidden"}}>
+                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.12)",borderRadius:6}}>
                       <button onClick={()=>updateQty(item.id,-1)} style={{background:"none",border:"none",padding:"5px 12px",cursor:"pointer",fontSize:14}}>−</button>
                       <span style={{fontSize:13,fontWeight:600,minWidth:22,textAlign:"center"}}>{item.qty}</span>
                       <button onClick={()=>updateQty(item.id,1)} style={{background:"none",border:"none",padding:"5px 12px",cursor:"pointer",fontSize:14}}>+</button>
@@ -158,7 +162,7 @@ export default function MuraCha(){
               {total>=50?<p style={{fontSize:12,color:G,marginBottom:12,fontWeight:600}}>✓ Free shipping unlocked!</p>:
               <div style={{marginBottom:12}}>
                 <p style={{fontSize:12,color:"#5a6e58",marginBottom:6}}>${(50-total).toFixed(2)} away from free shipping</p>
-                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(total/50*100,100)}%`,transition:"width .5s cubic-bezier(.16,1,.3,1)"}} /></div>
+                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(total/50*100,100)}%`,transition:"width .5s"}} /></div>
               </div>}
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:18}}>
                 <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22}}>Total</span>
@@ -197,38 +201,65 @@ export default function MuraCha(){
       <div className="page-transition" style={{opacity:transition?0:1,transform:transition?"translateY(10px)":"translateY(0)"}}>
 
       {page==="home"&&<>
-        {/* HERO - LIGHT */}
-        <section style={{height:"100vh",background:"linear-gradient(180deg, #f0ede6 0%, #fafaf7 100%)",display:"flex",alignItems:"center",justifyContent:"center",position:"relative",overflow:"hidden",padding:"0 clamp(16px,5vw,60px)"}}>
-          <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 25% 45%, rgba(50,107,47,.06) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(90,158,79,.04) 0%, transparent 45%)"}} />
-          {/* Parallax kanji */}
-          <div style={{position:"absolute",right:"clamp(-80px,3vw,20px)",top:`calc(50% - ${scrollY*.15}px)`,transform:"translateY(-50%)",fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(200px,32vw,420px)",color:"rgba(50,107,47,.04)",lineHeight:1,userSelect:"none"}}>茶</div>
-          {/* Floating decoratives */}
-          <div style={{position:"absolute",top:"15%",left:"12%",width:6,height:6,borderRadius:"50%",background:"rgba(50,107,47,.15)",animation:"float 5s ease-in-out infinite"}} />
-          <div style={{position:"absolute",top:"65%",right:"18%",width:4,height:4,borderRadius:"50%",background:"rgba(50,107,47,.1)",animation:"float2 7s ease-in-out infinite 1s"}} />
-          <div style={{position:"absolute",bottom:"25%",left:"8%",width:8,height:8,borderRadius:"50%",background:"rgba(90,158,79,.1)",animation:"float 6s ease-in-out infinite 2s"}} />
-          <div style={{position:"absolute",top:"30%",right:"10%",width:80,height:80,border:"1px solid rgba(50,107,47,.05)",borderRadius:"50%",animation:"spin 30s linear infinite"}} />
-
-          <div style={{textAlign:"center",maxWidth:680,position:"relative",zIndex:1}}>
-            {/* Logo in hero */}
-            <div style={{marginBottom:28,opacity:0,animation:"fadeIn 1s ease .2s both"}}>
-              <img src="/images/logo.png" alt="MuraCha" style={{height:90,objectFit:"contain"}} />
+        {/* HERO - SPLIT LAYOUT */}
+        <section className="hero-split" style={{minHeight:"100vh",display:"flex",alignItems:"center",position:"relative",overflow:"hidden"}}>
+          {/* Left - text */}
+          <div className="hero-left" style={{flex:"1 1 50%",padding:"120px clamp(24px,5vw,80px) 80px clamp(24px,5vw,80px)",position:"relative",zIndex:2}}>
+            <div style={{opacity:0,animation:"slideUp .8s ease .2s both"}}>
+              <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:20,fontWeight:600,display:"flex",alignItems:"center",gap:8}}>
+                <span style={{width:24,height:1.5,background:G,display:"inline-block"}}></span> From Japan & China
+              </p>
             </div>
-            <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:28,fontWeight:500,animation:"letterSpace 1.2s cubic-bezier(.16,1,.3,1) both"}}>Authentic Japanese & Chinese Tea</p>
-            <h1 className="hero-t" style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(40px,7.5vw,78px)",fontWeight:300,color:"#2a2a2a",lineHeight:1.08,marginBottom:24,opacity:0,animation:"fadeIn 1s ease .3s both"}}>
-              Pure Essence,<br /><em style={{fontWeight:500,fontStyle:"italic",background:`linear-gradient(135deg,${G},${GL})`,WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Timeless Craft</em>
+            <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(36px,5vw,64px)",fontWeight:300,color:"#2a2a2a",lineHeight:1.1,marginBottom:20,opacity:0,animation:"slideUp .8s ease .35s both"}}>
+              Discover the<br /><span style={{fontWeight:600,color:G}}>Art of Tea</span>
             </h1>
-            <div style={{width:0,height:1.5,background:`linear-gradient(90deg, transparent, ${GL}, transparent)`,margin:"0 auto 32px",animation:"heroLine 1.2s cubic-bezier(.16,1,.3,1) .8s both"}} />
-            <p style={{fontSize:15,color:"rgba(42,42,42,.45)",lineHeight:1.9,maxWidth:480,margin:"0 auto 48px",opacity:0,animation:"fadeIn 1s ease .6s both"}}>
-              Experience the nourishing and calming taste of meticulously sourced authentic tea from Japan and China.
+            <p style={{fontSize:16,color:"rgba(42,42,42,.5)",lineHeight:1.8,maxWidth:420,marginBottom:36,opacity:0,animation:"slideUp .8s ease .5s both"}}>
+              Authentic hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms.
             </p>
-            <div style={{opacity:0,animation:"fadeIn 1s ease .9s both"}}>
-              <button className="btn bp" style={{padding:"16px 44px",letterSpacing:3,borderRadius:8}} onClick={()=>goTo("shop")}>Shop Collection</button>
+            <div style={{display:"flex",gap:14,flexWrap:"wrap",opacity:0,animation:"slideUp .8s ease .65s both"}}>
+              <button className="btn bp" style={{padding:"16px 36px",letterSpacing:2}} onClick={()=>goTo("shop")}>Shop Now</button>
+              <button className="btn bo" style={{padding:"16px 36px",letterSpacing:2}} onClick={()=>goTo("about")}>Our Story</button>
+            </div>
+            {/* Trust badges */}
+            <div style={{display:"flex",gap:28,marginTop:48,opacity:0,animation:"slideUp .8s ease .8s both"}}>
+              {[["🍃","100% Natural"],["🌿","Organic"],["📦","Free Shipping 50$+"]].map(([icon,text])=>(
+                <div key={text} style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:18}}>{icon}</span>
+                  <span style={{fontSize:11,color:"#5a6e58",fontWeight:500,letterSpacing:.5}}>{text}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div style={{position:"absolute",bottom:36,left:"50%",transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",gap:8,animation:"pulse 2.5s ease infinite"}}>
-            <span style={{fontSize:9,letterSpacing:3,textTransform:"uppercase",color:"rgba(42,42,42,.2)"}}>Scroll</span>
-            <div style={{width:1,height:28,background:"linear-gradient(rgba(42,42,42,.2),transparent)"}} />
+          {/* Right - product showcase */}
+          <div className="hero-right" style={{flex:"1 1 50%",position:"relative",height:"100vh",background:`linear-gradient(135deg, ${GX}, #f0ede6)`}}>
+            {/* Floating product images */}
+            {heroProducts.map((p,i)=>(
+              <div key={p.id} className="hero-product" style={{
+                opacity:heroImg===i?1:0,
+                transform:heroImg===i?"scale(1) rotate(0deg)":"scale(.85) rotate(3deg)",
+                top:"15%",left:"10%",right:"10%",bottom:"15%",
+                zIndex:heroImg===i?2:1
+              }}>
+                <img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                <div style={{position:"absolute",bottom:24,left:24,right:24,background:"rgba(255,255,255,.92)",backdropFilter:"blur(12px)",borderRadius:12,padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div>
+                    <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,fontWeight:500}}>{p.name}</p>
+                    <p style={{fontSize:12,color:"#8a9a88"}}>{p.size}</p>
+                  </div>
+                  <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
+                </div>
+              </div>
+            ))}
+            {/* Dots indicator */}
+            <div style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:5}}>
+              {heroProducts.map((_,i)=>(
+                <button key={i} onClick={()=>setHeroImg(i)} style={{width:heroImg===i?24:8,height:8,borderRadius:4,background:heroImg===i?G:"rgba(50,107,47,.2)",border:"none",cursor:"pointer",transition:"all .4s"}} />
+              ))}
+            </div>
+            {/* Decorative elements */}
+            <div style={{position:"absolute",top:"10%",right:"8%",width:60,height:60,border:`1px solid rgba(50,107,47,.08)`,borderRadius:"50%",animation:"spin 25s linear infinite"}} />
+            <div style={{position:"absolute",bottom:"20%",left:"5%",width:8,height:8,borderRadius:"50%",background:"rgba(50,107,47,.12)",animation:"float 5s ease infinite"}} />
           </div>
         </section>
 
@@ -239,11 +270,32 @@ export default function MuraCha(){
           </div>
         </div>
 
+        {/* HOW IT WORKS */}
+        <section style={{padding:"80px clamp(16px,5vw,48px)",background:GX}}>
+          <div style={{maxWidth:900,margin:"0 auto"}}>
+            <Reveal><div style={{textAlign:"center",marginBottom:48}}>
+              <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:600}}>How It Works</p>
+              <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(28px,4vw,40px)",fontWeight:300}}>Order in 3 Simple Steps</h2>
+            </div></Reveal>
+            <div className="steps-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
+              {[["Browse","Explore our collection of authentic Japanese and Chinese teas"],["Add to Cart","Pick your favorites and add them to your cart"],["Order via WhatsApp","Checkout sends your order directly — we'll confirm and deliver"]].map(([title,desc],i)=>(
+                <Reveal key={title} delay={i*.12}>
+                  <div className="step-card">
+                    <div className="step-num">{i+1}</div>
+                    <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,fontWeight:500,marginBottom:8}}>{title}</h3>
+                    <p style={{fontSize:13,color:"#5a6e58",lineHeight:1.7}}>{desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* FEATURED */}
         <section style={{padding:"100px clamp(16px,5vw,48px)",maxWidth:1200,margin:"0 auto"}}>
           <Reveal><div style={{textAlign:"center",marginBottom:56}}>
             <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:600}}>Featured</p>
-            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(30px,5vw,46px)",fontWeight:300,letterSpacing:"-1px"}}>Our Bestsellers</h2>
+            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(30px,5vw,46px)",fontWeight:300}}>Our Bestsellers</h2>
           </div></Reveal>
           <div className="pgrid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",gap:22}}>
             {PRODUCTS.slice(0,4).map((p,i)=>(
@@ -252,7 +304,7 @@ export default function MuraCha(){
                   <div style={{height:240,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
                     <img className="card-img" src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
                     <div className="card-overlay" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .4s",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                      <span style={{background:"rgba(255,255,255,.95)",padding:"8px 20px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase",boxShadow:"0 4px 16px rgba(0,0,0,.08)"}}>View Details</span>
+                      <span style={{background:"rgba(255,255,255,.95)",padding:"8px 20px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>View Details</span>
                     </div>
                   </div>
                   <div style={{padding:"18px 20px 22px"}}>
@@ -273,7 +325,7 @@ export default function MuraCha(){
           </div></Reveal>
         </section>
 
-        {/* TEA BOMBS - light green bg */}
+        {/* TEA BOMBS */}
         <section style={{padding:"90px clamp(16px,5vw,48px)",background:`linear-gradient(180deg, ${GX}, #f0ede6)`}}>
           <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
             <Reveal><div>
@@ -289,7 +341,7 @@ export default function MuraCha(){
                       <img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.15)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"} />
                     </div>
                     <p style={{fontSize:12,color:G,fontWeight:500,lineHeight:1.4}}>{p.name.replace(" Tea Bomb","").replace(" Pu'erh","")}</p>
-                    <p style={{fontSize:15,color:"#2a2a2a",fontWeight:700,marginTop:6}}>${p.price.toFixed(2)}</p>
+                    <p style={{fontSize:15,fontWeight:700,marginTop:6}}>${p.price.toFixed(2)}</p>
                   </div>
                 </Reveal>
               ))}
@@ -390,7 +442,7 @@ export default function MuraCha(){
       )}
 
       {/* FOOTER */}
-      <footer style={{borderTop:"1px solid rgba(50,107,47,.06)",padding:"56px clamp(16px,5vw,48px) 36px",marginTop:40,background:"rgba(232,240,230,.2)"}}>
+      <footer style={{borderTop:"1px solid rgba(50,107,47,.06)",padding:"56px clamp(16px,5vw,48px) 36px",marginTop:40,background:"rgba(232,240,230,.15)"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap",justifyContent:"space-between",gap:36}}>
           <div>
             <img src="/images/logo.png" alt="MuraCha" style={{height:50,objectFit:"contain",marginBottom:8}} />
