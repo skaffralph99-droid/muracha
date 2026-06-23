@@ -206,59 +206,60 @@ export default function App(){
 
       {pg==="home"&&<>
         {/* HERO SLIDESHOW */}
-        <section style={{position:"relative",height:"100vh",minHeight:600,maxHeight:900,overflow:"hidden",paddingTop:64}}>
+        <section style={{position:"relative",height:"100vh",minHeight:580,maxHeight:900,overflow:"hidden",paddingTop:64,background:GD}}>
           {/* Slides */}
           {[
-            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
-            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50"},
-            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15"},
-            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22"},
-            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50"},
+            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15",bg:"linear-gradient(135deg, #1a3a18, #2a5426)"},
+            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50",bg:"linear-gradient(135deg, #2a1a18, #4a3528)"},
+            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15",bg:"linear-gradient(135deg, #2a2018, #3d2b1f)"},
+            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22",bg:"linear-gradient(135deg, #1a3018, #2a4a20)"},
+            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50",bg:"linear-gradient(135deg, #1a2a18, #2a3a28)"},
           ].map((slide,i)=>(
-            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity 1s ease",zIndex:heroSlide===i?2:1}}>
-              {/* Background image */}
-              <div style={{position:"absolute",inset:0,background:`url(${slide.img}) center/cover no-repeat`}}>
-                <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg, rgba(26,58,24,.75) 0%, rgba(26,58,24,.4) 40%, rgba(0,0,0,.3) 100%)"}} />
-              </div>
-              {/* Content */}
-              <div style={{position:"relative",zIndex:3,height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,6vw,80px)"}}>
-                <div style={{maxWidth:560}}>
-                  <div style={{display:"inline-block",background:"rgba(255,255,255,.12)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .2s"}}>
-                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#fff",fontWeight:500}}>{slide.label}</p>
+            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity 1s ease",zIndex:heroSlide===i?2:1,background:slide.bg}}>
+              <div style={{maxWidth:1200,margin:"0 auto",height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,5vw,80px)",gap:"clamp(20px,4vw,60px)"}}>
+                {/* Text side */}
+                <div style={{flex:"1 1 50%",zIndex:3}}>
+                  <div style={{display:"inline-block",background:"rgba(255,255,255,.1)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .2s"}}>
+                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.8)",fontWeight:500}}>{slide.label}</p>
                   </div>
-                  <h1 className="f" style={{fontSize:"clamp(40px,7vw,72px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(30px)",transition:"all .8s ease .3s"}}>
+                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .3s"}}>
                     {slide.title}
                   </h1>
-                  <p style={{fontSize:16,color:"rgba(255,255,255,.7)",lineHeight:1.7,marginBottom:8,maxWidth:400,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .4s"}}>
+                  <p style={{fontSize:15,color:"rgba(255,255,255,.55)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-30px)",transition:"all .7s ease .4s"}}>
                     {slide.sub}
                   </p>
-                  <p className="f" style={{fontSize:28,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .45s"}}>
+                  <p className="f" style={{fontSize:30,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .7s ease .45s"}}>
                     {slide.price}
                   </p>
-                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateY(0)":"translateY(20px)",transition:"all .8s ease .5s"}}>
+                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .7s ease .5s"}}>
                     <button className="b bw" onClick={()=>go("shop")}>Shop Now</button>
-                    <button className="b" style={{background:"transparent",border:"1.5px solid rgba(255,255,255,.4)",color:"#fff",padding:"13px 28px",fontSize:12,letterSpacing:1.5}} onClick={()=>go("about")} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.1)";e.currentTarget.style.borderColor="rgba(255,255,255,.7)"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.4)"}}>Our Story</button>
+                    <button className="b" style={{background:"transparent",border:"1.5px solid rgba(255,255,255,.3)",color:"#fff",padding:"13px 28px",fontSize:12,letterSpacing:1.5}} onClick={()=>go("about")} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.6)"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.3)"}}>Our Story</button>
                   </div>
+                </div>
+                {/* Product image - full, not cropped */}
+                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"80%",position:"relative"}}>
+                  <div style={{position:"absolute",width:"70%",height:"70%",borderRadius:"50%",background:"rgba(255,255,255,.04)",filter:"blur(40px)"}} />
+                  <img src={slide.img} alt={slide.title} style={{maxHeight:"85%",maxWidth:"90%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.3))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.88) translateY(30px)",transition:"all .8s cubic-bezier(.16,1,.3,1) .2s"}} />
                 </div>
               </div>
             </div>
           ))}
-          {/* Slide dots */}
-          <div style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
+          {/* Dots */}
+          <div style={{position:"absolute",bottom:60,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
             {[0,1,2,3,4].map(i=>(
-              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?"#fff":"rgba(255,255,255,.3)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
+              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?"#fff":"rgba(255,255,255,.25)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
             ))}
           </div>
-          {/* Side arrows */}
-          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.1)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.15)",borderRadius:"50%",width:44,height:44,cursor:"pointer",color:"#fff",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.2)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.1)"}>‹</button>
-          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.1)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.15)",borderRadius:"50%",width:44,height:44,cursor:"pointer",color:"#fff",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.2)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.1)"}>›</button>
-          {/* Trust bar at bottom */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(0,0,0,.25)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
+          {/* Arrows */}
+          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} className="dk" style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.08)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.12)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:"#fff",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>‹</button>
+          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} className="dk" style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.08)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.12)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:"#fff",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>›</button>
+          {/* Trust bar */}
+          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(0,0,0,.3)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
             <div style={{maxWidth:800,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:12}}>
               {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"],["💚","Free above $50"]].map(([ic,tx])=>(
                 <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
                   <span style={{fontSize:14}}>{ic}</span>
-                  <span style={{fontSize:11,color:"rgba(255,255,255,.8)",fontWeight:500}}>{tx}</span>
+                  <span style={{fontSize:11,color:"rgba(255,255,255,.75)",fontWeight:500}}>{tx}</span>
                 </div>
               ))}
             </div>
