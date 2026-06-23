@@ -1,475 +1,474 @@
 'use client';
-
 import { useState, useEffect, useRef } from "react";
 
-const WHATSAPP_NUMBER = "961XXXXXXXX";
-
-const PRODUCTS = [
-  { id:"cacao-powder", name:"Cacao Powder", price:15, size:"200g", category:"powders", desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao. High in antioxidants, boosts mood, great for a warm drink or desserts.", images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"] },
-  { id:"hojicha-classic", name:"Hojicha Tea — Classic", price:15, size:"30g", category:"japanese", desc:"Roasted to perfection with umami-rich taste. Made of 100% first harvest Sencha tea, medium roasted. A great coffee alternative, smooth on stomach, rich in L-theanine, low in caffeine.", benefits:["Boosts Metabolism","Low Caffeine","Heart Health","Calm Focus"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_2acf7464-448e-4798-b6c8-b6982bcc927a.jpg?v=1770921443","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9032.jpg?v=1770921443"] },
-  { id:"hojicha-floral", name:"Hojicha Tea — Floral Harmony", price:18, size:"25g", category:"japanese", desc:"Luxury blend of superior quality Hojicha. Made of 100% first harvest Tencha tea, light roasted. Low in caffeine, antioxidant-rich, controls blood sugar while still uplifting.", images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2205.jpg?v=1770919693"] },
-  { id:"hojicha-powder", name:"Organic Hojicha Powder", price:22, size:"40g", category:"powders", desc:"Nutty, caramel-like taste with all-day hydration. Made of 100% organic Bancha tea in powder form. Extremely low in caffeine — perfect for the whole family. Great for lattes and desserts.", images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2204.jpg?v=1770919462"] },
-  { id:"lemon-balm", name:"Organic Lemon Balm Tea", price:8, size:"Glass Jar", category:"japanese", desc:"Known as مليسة (Melissa). A herbal tea that promotes relaxation, reduces stress, and eases PMS symptoms. Comes in a glass jar with wooden spoon.", images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/BFF6BC9B-CC35-4E67-85FC-2522493380DB.jpg?v=1774715246"] },
-  { id:"rose-puerh", name:"Rose Pu'erh Tea Bomb", price:6.5, size:"2 × 9g balls", category:"chinese", desc:"Pu'erh tea with rose flower. Steep in boiling water to watch the tea ball bloom artistically. Each ball makes 4–5 cups.", benefits:["Glowing Skin","Beauty","Pain Relief"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/3.jpg?v=1761370469","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM.jpg?v=1763463842"] },
-  { id:"tangerine-puerh", name:"Tangerine Peel Pu'erh Tea Bomb", price:6.5, size:"2 × 9g balls", category:"chinese", desc:"Pu'erh tea with tangerine peel. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.", benefits:["Reduces Fat","Helps Stomach","Reduces Cough"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/2.jpg?v=1761370453","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_3.jpg?v=1763463821"] },
-  { id:"jasmine-puerh", name:"Jasmine Pu'erh Tea Bomb", price:6.5, size:"2 × 9g balls", category:"chinese", desc:"Pu'erh tea with jasmine flower. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.", benefits:["Detox","Slimming","Fresh Breath","Mood Enhancer"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9038.jpg?v=1761757578","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_1.jpg?v=1763463836"] },
-  { id:"chrysanthemum-big", name:"Chrysanthemum Pu'erh Tea Bomb", price:6.5, size:"2 × 9g balls", category:"chinese", desc:"Pu'erh tea with white chrysanthemum flower. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.", benefits:["Anti-bacterial","Good for Eyes & Liver","Reduces Swelling"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/1.jpg?v=1761370435","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_2.jpg?v=1763463829"] },
-  { id:"white-chrysanthemum", name:"White Chrysanthemum Tea Bomb Jar", price:10, size:"4 × 5g balls", category:"chinese", desc:"White tea with chrysanthemum flower in a glass jar. Steep in boiling water for an artistic blooming experience. Each ball makes 1–2 cups.", benefits:["Anti-bacterial","Good for Eyes & Liver","Reduces Swelling"], images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2203.jpg?v=1770921274","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9036.jpg?v=1770921274"] },
-  { id:"white-tangerine", name:"White Tangerine Peel Tea Bomb Jar", price:10, size:"4 × 5g balls", category:"chinese", desc:"White tea with tangerine peel in a glass jar. Steep in boiling water for an artistic blooming experience. Each ball makes 1–2 cups.", images:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2201.jpg?v=1770921245","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9037.jpg?v=1770921245"] },
+const WA = "961XXXXXXXX";
+const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8", GD="#1a3a18";
+const P = [
+  {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao. High in antioxidants, boosts mood, great for a warm drink or desserts.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
+  {id:"hojicha-classic",name:"Hojicha Tea — Classic",price:15,size:"30g",cat:"japanese",desc:"Roasted to perfection with umami-rich taste. Made of 100% first harvest Sencha tea, medium roasted. A great coffee alternative, smooth on stomach, rich in L-theanine, low in caffeine.",ben:["Boosts Metabolism","Low Caffeine","Heart Health","Calm Focus"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_2acf7464-448e-4798-b6c8-b6982bcc927a.jpg?v=1770921443","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9032.jpg?v=1770921443"]},
+  {id:"hojicha-floral",name:"Hojicha Tea — Floral Harmony",price:18,size:"25g",cat:"japanese",desc:"Luxury blend of superior quality Hojicha. Made of 100% first harvest Tencha tea, light roasted. Low in caffeine, antioxidant-rich, controls blood sugar while still uplifting.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2205.jpg?v=1770919693"]},
+  {id:"hojicha-powder",name:"Organic Hojicha Powder",price:22,size:"40g",cat:"powders",desc:"Nutty, caramel-like taste with all-day hydration. Made of 100% organic Bancha tea in powder form. Extremely low in caffeine — perfect for the whole family. Great for lattes and desserts.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2204.jpg?v=1770919462"]},
+  {id:"lemon-balm",name:"Organic Lemon Balm Tea",price:8,size:"Glass Jar",cat:"japanese",desc:"Known as مليسة (Melissa). Herbal tea that promotes relaxation, reduces stress, and eases PMS symptoms. Comes in a glass jar with wooden spoon.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/BFF6BC9B-CC35-4E67-85FC-2522493380DB.jpg?v=1774715246"]},
+  {id:"rose-puerh",name:"Rose Pu'erh Tea Bomb",price:6.5,size:"2 × 9g balls",cat:"chinese",desc:"Pu'erh tea with rose flower. Steep in boiling water to watch the tea ball bloom artistically. Each ball makes 4–5 cups.",ben:["Glowing Skin","Beauty","Pain Relief"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/3.jpg?v=1761370469","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM.jpg?v=1763463842"]},
+  {id:"tangerine-puerh",name:"Tangerine Peel Pu'erh Tea Bomb",price:6.5,size:"2 × 9g balls",cat:"chinese",desc:"Pu'erh tea with tangerine peel. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.",ben:["Reduces Fat","Helps Stomach","Reduces Cough"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/2.jpg?v=1761370453","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_3.jpg?v=1763463821"]},
+  {id:"jasmine-puerh",name:"Jasmine Pu'erh Tea Bomb",price:6.5,size:"2 × 9g balls",cat:"chinese",desc:"Pu'erh tea with jasmine flower. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.",ben:["Detox","Slimming","Fresh Breath","Mood Enhancer"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9038.jpg?v=1761757578","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_1.jpg?v=1763463836"]},
+  {id:"chrysanthemum-big",name:"Chrysanthemum Pu'erh Tea Bomb",price:6.5,size:"2 × 9g balls",cat:"chinese",desc:"Pu'erh tea with white chrysanthemum flower. Steep in boiling water for an artistic blooming experience. Each ball makes 4–5 cups.",ben:["Anti-bacterial","Good for Eyes & Liver","Reduces Swelling"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/1.jpg?v=1761370435","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/WhatsApp_Image_2025-10-30_at_5.38.55_PM_2.jpg?v=1763463829"]},
+  {id:"white-chrysanthemum",name:"White Chrysanthemum Tea Bomb Jar",price:10,size:"4 × 5g balls",cat:"chinese",desc:"White tea with chrysanthemum flower in a glass jar. Each ball makes 1–2 cups.",ben:["Anti-bacterial","Good for Eyes & Liver","Reduces Swelling"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2203.jpg?v=1770921274","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9036.jpg?v=1770921274"]},
+  {id:"white-tangerine",name:"White Tangerine Peel Tea Bomb Jar",price:10,size:"4 × 5g balls",cat:"chinese",desc:"White tea with tangerine peel in a glass jar. Each ball makes 1–2 cups.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2201.jpg?v=1770921245","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9037.jpg?v=1770921245"]},
+];
+const CATS={all:"All",japanese:"Japanese",chinese:"Tea Bombs",powders:"Powders"};
+const reviews=[
+  {name:"Sarah M.",text:"The hojicha is incredible — smooth, calming, and the perfect coffee replacement. I'm obsessed!",stars:5},
+  {name:"Rami K.",text:"The rose tea bombs are a whole experience. Watching them bloom is magical. Taste is amazing too.",stars:5},
+  {name:"Nour A.",text:"Best tea I've ever had in Lebanon. The quality is unmatched and the packaging is beautiful.",stars:5},
+  {name:"Maya H.",text:"Ordered the cacao powder and hojicha powder — both are top quality. Will definitely reorder!",stars:5},
 ];
 
-const CATS = { all:"All", japanese:"Japanese", chinese:"Tea Bombs", powders:"Powders" };
-const G="#326b2f", GL="#5a9e4f", GX="#e8f0e6";
+function useInView(t=0.1){const r=useRef(null);const[v,s]=useState(false);useEffect(()=>{const e=r.current;if(!e)return;const o=new IntersectionObserver(([en])=>{if(en.isIntersecting){s(true);o.unobserve(e)}},{threshold:t});o.observe(e);return()=>o.disconnect()},[t]);return[r,v]}
+function R({children,delay=0,d="up",style={}}){const[r,v]=useInView();const t={up:"translateY(40px)",scale:"scale(0.93)",left:"translateX(40px)",right:"translateX(-40px)"};return(<div ref={r} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[d],transition:`all .7s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>)}
 
-function useInView(t=0.12){const r=useRef(null);const[v,s]=useState(false);useEffect(()=>{const e=r.current;if(!e)return;const o=new IntersectionObserver(([en])=>{if(en.isIntersecting){s(true);o.unobserve(e)}},{threshold:t});o.observe(e);return()=>o.disconnect()},[t]);return[r,v]}
-function Reveal({children,delay=0,direction="up",style={},className=""}){const[r,v]=useInView();const t={up:"translateY(50px)",down:"translateY(-50px)",left:"translateX(50px)",right:"translateX(-50px)",scale:"scale(0.92)"};return(<div ref={r} className={className} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[direction],transition:`opacity .8s cubic-bezier(.16,1,.3,1) ${delay}s, transform .8s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>)}
-
-export default function MuraCha(){
-  const[page,setPage]=useState("home");
+export default function App(){
+  const[pg,setPg]=useState("home");
   const[cart,setCart]=useState([]);
   const[sel,setSel]=useState(null);
   const[cat,setCat]=useState("all");
   const[cartOpen,setCartOpen]=useState(false);
-  const[scrollY,setScrollY]=useState(0);
-  const[imgIdx,setImgIdx]=useState(0);
+  const[sY,setSY]=useState(0);
+  const[ii,setII]=useState(0);
   const[form,setForm]=useState({name:"",phone:"",address:"",notes:""});
   const[toast,setToast]=useState(null);
-  const[transition,setTransition]=useState(false);
-  const[heroImg,setHeroImg]=useState(0);
+  const[trans,setTrans]=useState(false);
+  const[ri,setRI]=useState(0);
 
-  useEffect(()=>{const h=()=>setScrollY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
+  useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
-  // Rotate hero product images
-  useEffect(()=>{const t=setInterval(()=>setHeroImg(p=>(p+1)%3),3000);return()=>clearInterval(t)},[]);
+  useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%reviews.length),4000);return()=>clearInterval(t)},[]);
 
-  const goTo=(p)=>{setTransition(true);setTimeout(()=>{setPage(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTransition(false),50)},300)};
-  const addToCart=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
-  const removeFromCart=id=>setCart(p=>p.filter(i=>i.id!==id));
-  const updateQty=(id,d)=>setCart(p=>p.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
-  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const count=cart.reduce((s,i)=>s+i.qty,0);
-  const filtered=cat==="all"?PRODUCTS:PRODUCTS.filter(p=>p.category===cat);
-  const heroProducts=[PRODUCTS[1],PRODUCTS[5],PRODUCTS[0]];
+  const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
+  const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
+  const rm=id=>setCart(p=>p.filter(i=>i.id!==id));
+  const uq=(id,d)=>setCart(p=>p.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
+  const tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const cnt=cart.reduce((s,i)=>s+i.qty,0);
+  const fil=cat==="all"?P:P.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Total: $${total.toFixed(2)}*${total>=50?"\n✓ Free shipping":""}`;window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Total: $${tot.toFixed(2)}*${tot>=50?"\n✓ Free shipping":""}`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
-  const navSolid=scrollY>80||page!=="home";
-  const progress=Math.min(scrollY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
+  const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
   return(
-    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fafaf7",color:"#2a2a2a",minHeight:"100vh"}}>
+    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fafaf7",color:"#2a2a2a",minHeight:"100vh",overflowX:"hidden"}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}a{text-decoration:none;color:inherit}
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-        @keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(5deg)}}
-        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
+        @keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
         @keyframes toastIn{0%{opacity:0;transform:translateX(-50%) translateY(30px) scale(.9)}100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
         @keyframes toastOut{0%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
-        @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-        @keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes heroLine{from{width:0;opacity:0}to{width:80px;opacity:1}}
-        @keyframes scaleIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
-        .card{transition:all .45s cubic-bezier(.16,1,.3,1);cursor:pointer;border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(50,107,47,.08)}
-        .card:hover{transform:translateY(-10px);box-shadow:0 24px 64px rgba(50,107,47,.1)}
-        .card-img{transition:transform .7s cubic-bezier(.16,1,.3,1)}
-        .card:hover .card-img{transform:scale(1.08)}
-        .card:hover .card-overlay{opacity:1}
-        .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:13px 28px;border:none;cursor:pointer;font-family:'DM Sans';font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:all .35s cubic-bezier(.16,1,.3,1);border-radius:6px;position:relative;overflow:hidden}
-        .btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);transform:translateX(-100%);transition:transform .5s}
-        .btn:hover::after{transform:translateX(100%)}
-        .bp{background:#326b2f;color:#fff}.bp:hover{background:#5a9e4f;transform:translateY(-2px);box-shadow:0 8px 24px rgba(50,107,47,.25)}
-        .bo{background:transparent;border:1.5px solid #326b2f;color:#326b2f}.bo:hover{background:#326b2f;color:#fff;transform:translateY(-2px)}
-        .ba{background:#5a9e4f;color:#fff}.ba:hover{background:#326b2f;transform:translateY(-2px)}
-        .bs{padding:8px 18px;font-size:11px;border-radius:4px}
-        .cat-btn{padding:9px 22px;border:1px solid rgba(50,107,47,.15);background:transparent;color:#5a6e58;font-family:'DM Sans';font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .35s cubic-bezier(.16,1,.3,1);border-radius:30px;font-weight:500}
-        .cat-btn.on{background:#326b2f;color:#fff;border-color:#326b2f;transform:scale(1.05)}
-        .cat-btn:hover:not(.on){border-color:#5a9e4f;color:#5a9e4f;transform:scale(1.03)}
-        .overlay{position:fixed;inset:0;background:rgba(20,30,18,.5);z-index:200;backdrop-filter:blur(8px);animation:fadeIn .3s}
-        .input{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.15);background:rgba(255,255,255,.7);font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
-        .input:focus{border-color:#5a9e4f;background:#fff;box-shadow:0 0 0 3px rgba(50,107,47,.08)}
-        .input::placeholder{color:#a0afa0}
-        .tag{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:#326b2f;font-size:11px;letter-spacing:.5px;border-radius:20px;font-weight:500;transition:all .3s}
-        .tag:hover{background:rgba(50,107,47,.12);transform:scale(1.05)}
-        .page-transition{transition:opacity .3s,transform .3s}
-        .hero-product{position:absolute;transition:all .8s cubic-bezier(.16,1,.3,1);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.08)}
-        .step-card{background:#fff;border-radius:16px;padding:32px 24px;text-align:center;border:1px solid rgba(50,107,47,.06);transition:all .4s cubic-bezier(.16,1,.3,1)}
-        .step-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(50,107,47,.08)}
-        .step-num{width:44px;height:44px;border-radius:50%;background:rgba(50,107,47,.08);color:#326b2f;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin:0 auto 16px}
-        @media(max-width:768px){.desk{display:none!important}.pgrid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.modal-p{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cart-p{width:100%!important}.hero-split{flex-direction:column!important;text-align:center!important}.hero-right{display:none!important}.hero-left{padding:120px 24px 60px!important}.csec{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:8px;justify-content:flex-start!important}.steps-grid{grid-template-columns:1fr!important}}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .f{font-family:'Cormorant Garamond',serif}
+        .card{transition:all .4s cubic-bezier(.16,1,.3,1);cursor:pointer;border-radius:14px;overflow:hidden;background:#fff;border:1px solid rgba(50,107,47,.06)}
+        .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(50,107,47,.1)}
+        .cimg{transition:transform .6s cubic-bezier(.16,1,.3,1)}.card:hover .cimg{transform:scale(1.07)}
+        .card:hover .covr{opacity:1}
+        .b{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:'DM Sans';font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:all .3s cubic-bezier(.16,1,.3,1);border-radius:6px;position:relative;overflow:hidden}
+        .b::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);transform:translateX(-100%);transition:transform .4s}.b:hover::after{transform:translateX(100%)}
+        .bp{background:${G};color:#fff;padding:14px 30px;font-size:13px}.bp:hover{background:${GL};transform:translateY(-2px);box-shadow:0 8px 20px rgba(50,107,47,.2)}
+        .bo{background:transparent;border:1.5px solid ${G};color:${G};padding:13px 28px;font-size:12px}.bo:hover{background:${G};color:#fff;transform:translateY(-2px)}
+        .bs{padding:8px 16px;font-size:11px;border-radius:4px}
+        .bw{background:#fff;color:${G};padding:14px 30px;font-size:13px}.bw:hover{background:rgba(255,255,255,.9);transform:translateY(-2px)}
+        .cb{padding:9px 20px;border:1px solid rgba(50,107,47,.12);background:transparent;color:#5a6e58;font-family:'DM Sans';font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:30px;font-weight:500}
+        .cb.on{background:${G};color:#fff;border-color:${G}}.cb:hover:not(.on){border-color:${GL};color:${GL}}
+        .ov{position:fixed;inset:0;background:rgba(20,30,18,.55);z-index:200;backdrop-filter:blur(8px);animation:fadeIn .25s}
+        .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
+        .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
+        .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
+        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
       `}</style>
 
-      {/* PROGRESS */}
-      <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${progress*100}%`,zIndex:200,transition:"width .1s"}} />
+      <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${prog*100}%`,zIndex:200,transition:"width .1s"}} />
 
-      {/* TOAST */}
-      {toast&&(<div style={{position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:999,background:G,color:"#fff",padding:"14px 32px",borderRadius:12,fontSize:13,fontWeight:500,animation:"toastIn .4s cubic-bezier(.16,1,.3,1), toastOut .4s ease 2s forwards",boxShadow:"0 12px 40px rgba(0,0,0,.15)",display:"flex",alignItems:"center",gap:10}}><span style={{background:GL,borderRadius:"50%",width:22,height:22,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>✓</span>{toast} added to cart</div>)}
+      {toast&&<div style={{position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:999,background:G,color:"#fff",padding:"14px 32px",borderRadius:12,fontSize:13,fontWeight:500,animation:"toastIn .4s cubic-bezier(.16,1,.3,1), toastOut .4s ease 2s forwards",boxShadow:"0 12px 40px rgba(0,0,0,.15)",display:"flex",alignItems:"center",gap:10}}><span style={{background:GL,borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>✓</span>{toast} added</div>}
 
-      {/* PAGE TRANSITION */}
-      <div style={{position:"fixed",inset:0,background:"#fafaf7",zIndex:150,pointerEvents:"none",opacity:transition?1:0,transition:"opacity .3s ease"}} />
+      <div style={{position:"fixed",inset:0,background:"#fafaf7",zIndex:150,pointerEvents:"none",opacity:trans?1:0,transition:"opacity .25s"}} />
 
       {/* NAV */}
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:68,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.92)",backdropFilter:"blur(20px) saturate(1.5)",borderBottom:"1px solid rgba(50,107,47,.06)",transition:"all .5s"}}>
-        <div style={{display:"flex",alignItems:"center",gap:36}}>
-          <span onClick={()=>goTo("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:42,objectFit:"contain"}} /></span>
-          <div className="desk" style={{display:"flex",gap:28}}>
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.94)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(50,107,47,.05)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:32}}>
+          <span onClick={()=>go("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:40,objectFit:"contain"}} /></span>
+          <div className="dk" style={{display:"flex",gap:24}}>
             {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l])=>(
-              <span key={p} onClick={()=>goTo(p)} style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",cursor:"pointer",fontWeight:600,color:"#2a2a2a",opacity:page===p?1:.4,transition:"all .3s",borderBottom:page===p?`2px solid ${G}`:"2px solid transparent",paddingBottom:3}}>{l}</span>
+              <span key={p} onClick={()=>go(p)} style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",cursor:"pointer",fontWeight:600,color:pg===p?G:"#888",transition:"color .3s"}}>{l}</span>
             ))}
           </div>
         </div>
-        <button onClick={()=>setCartOpen(true)} style={{position:"relative",background:"none",border:"none",cursor:"pointer",padding:6,transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.15)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2a2a2a" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-          {count>0&&<span style={{position:"absolute",top:-2,right:-2,background:G,color:"white",fontSize:9,fontWeight:700,width:18,height:18,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 2px 8px rgba(50,107,47,.4)`}}>{count}</span>}
+        <button onClick={()=>setCartOpen(true)} style={{position:"relative",background:"none",border:"none",cursor:"pointer",padding:6}}>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2a2a2a" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          {cnt>0&&<span style={{position:"absolute",top:-3,right:-3,background:G,color:"#fff",fontSize:9,fontWeight:700,width:17,height:17,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{cnt}</span>}
         </button>
       </nav>
 
       {/* CART */}
-      {cartOpen&&<div className="overlay" onClick={()=>setCartOpen(false)} />}
+      {cartOpen&&<div className="ov" onClick={()=>setCartOpen(false)} />}
       {cartOpen&&(
-        <div className="cart-p" style={{position:"fixed",right:0,top:0,bottom:0,width:400,background:"#fff",zIndex:202,boxShadow:"-12px 0 60px rgba(0,0,0,.08)",display:"flex",flexDirection:"column",animation:"slideRight .4s cubic-bezier(.16,1,.3,1)"}}>
-          <div style={{padding:"28px 28px 18px",borderBottom:`1px solid rgba(50,107,47,.06)`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:26,fontWeight:500}}>Cart <span style={{fontSize:16,color:G}}>({count})</span></h3>
-            <button onClick={()=>setCartOpen(false)} style={{background:"rgba(0,0,0,.04)",border:"none",borderRadius:"50%",width:36,height:36,cursor:"pointer",fontSize:16,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+        <div className="cp" style={{position:"fixed",right:0,top:0,bottom:0,width:400,background:"#fff",zIndex:202,boxShadow:"-8px 0 40px rgba(0,0,0,.06)",display:"flex",flexDirection:"column",animation:"slideRight .35s cubic-bezier(.16,1,.3,1)"}}>
+          <div style={{padding:"24px 24px 16px",borderBottom:"1px solid rgba(50,107,47,.05)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <h3 className="f" style={{fontSize:24,fontWeight:500}}>Cart ({cnt})</h3>
+            <button onClick={()=>setCartOpen(false)} style={{background:"rgba(0,0,0,.03)",border:"none",borderRadius:"50%",width:34,height:34,cursor:"pointer",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
           </div>
-          <div style={{flex:1,overflow:"auto",padding:24}}>
-            {cart.length===0?<p style={{color:"#a0afa0",fontSize:14,textAlign:"center",marginTop:60}}>Your cart is empty</p>:
+          <div style={{flex:1,overflow:"auto",padding:20}}>
+            {cart.length===0?<p style={{color:"#b0bfae",fontSize:14,textAlign:"center",marginTop:50}}>Your cart is empty</p>:
             cart.map((item,i)=>(
-              <div key={item.id} style={{display:"flex",gap:16,marginBottom:20,paddingBottom:20,borderBottom:"1px solid rgba(50,107,47,.04)",animation:`fadeIn .4s ease ${i*.1}s both`}}>
-                <img src={item.images[0]} alt="" style={{width:68,height:68,objectFit:"cover",borderRadius:10}} />
+              <div key={item.id} style={{display:"flex",gap:14,marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(50,107,47,.04)"}}>
+                <img src={item.img[0]} alt="" style={{width:64,height:64,objectFit:"cover",borderRadius:10}} />
                 <div style={{flex:1}}>
-                  <p style={{fontSize:14,fontWeight:600,marginBottom:3}}>{item.name}</p>
-                  <p style={{fontSize:11,color:"#8a9a88",marginBottom:8}}>{item.size}</p>
-                  <div style={{display:"flex",alignItems:"center",gap:12}}>
-                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.12)",borderRadius:6}}>
-                      <button onClick={()=>updateQty(item.id,-1)} style={{background:"none",border:"none",padding:"5px 12px",cursor:"pointer",fontSize:14}}>−</button>
-                      <span style={{fontSize:13,fontWeight:600,minWidth:22,textAlign:"center"}}>{item.qty}</span>
-                      <button onClick={()=>updateQty(item.id,1)} style={{background:"none",border:"none",padding:"5px 12px",cursor:"pointer",fontSize:14}}>+</button>
+                  <p style={{fontSize:13,fontWeight:600,marginBottom:2}}>{item.name}</p>
+                  <p style={{fontSize:11,color:"#8a9a88",marginBottom:6}}>{item.size}</p>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.1)",borderRadius:5}}>
+                      <button onClick={()=>uq(item.id,-1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>−</button>
+                      <span style={{fontSize:12,fontWeight:600,minWidth:18,textAlign:"center"}}>{item.qty}</span>
+                      <button onClick={()=>uq(item.id,1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>+</button>
                     </div>
-                    <span style={{fontSize:14,fontWeight:700,color:G}}>${(item.price*item.qty).toFixed(2)}</span>
-                    <button onClick={()=>removeFromCart(item.id)} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",fontSize:11,color:"#c9857a",fontWeight:600}}>Remove</button>
+                    <span style={{fontSize:13,fontWeight:700,color:G}}>${(item.price*item.qty).toFixed(2)}</span>
+                    <button onClick={()=>rm(item.id)} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",fontSize:10,color:"#c9857a",fontWeight:600}}>Remove</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
           {cart.length>0&&(
-            <div style={{padding:24,borderTop:"1px solid rgba(50,107,47,.06)",background:"rgba(232,240,230,.3)"}}>
-              {total>=50?<p style={{fontSize:12,color:G,marginBottom:12,fontWeight:600}}>✓ Free shipping unlocked!</p>:
-              <div style={{marginBottom:12}}>
-                <p style={{fontSize:12,color:"#5a6e58",marginBottom:6}}>${(50-total).toFixed(2)} away from free shipping</p>
-                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2,overflow:"hidden"}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(total/50*100,100)}%`,transition:"width .5s"}} /></div>
+            <div style={{padding:20,borderTop:"1px solid rgba(50,107,47,.05)",background:GX}}>
+              {tot>=50?<p style={{fontSize:12,color:G,marginBottom:10,fontWeight:600}}>✓ Free shipping!</p>:
+              <div style={{marginBottom:10}}>
+                <p style={{fontSize:11,color:"#5a6e58",marginBottom:5}}>${(50-tot).toFixed(2)} away from free shipping</p>
+                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/50*100,100)}%`,transition:"width .5s"}} /></div>
               </div>}
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:18}}>
-                <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22}}>Total</span>
-                <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,fontWeight:700}}>${total.toFixed(2)}</span>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:14}}>
+                <span className="f" style={{fontSize:20}}>Total</span>
+                <span className="f" style={{fontSize:20,fontWeight:700}}>${tot.toFixed(2)}</span>
               </div>
-              <button className="btn bp" style={{width:"100%"}} onClick={()=>{setCartOpen(false);goTo("checkout")}}>Checkout via WhatsApp</button>
+              <button className="b bp" style={{width:"100%"}} onClick={()=>{setCartOpen(false);go("checkout")}}>Checkout via WhatsApp</button>
             </div>
           )}
         </div>
       )}
 
-      {/* PRODUCT MODAL */}
+      {/* MODAL */}
       {sel&&(<>
-        <div className="overlay" onClick={()=>setSel(null)} />
-        <div className="modal-p" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:20,display:"flex",flexDirection:"column",overflow:"hidden",animation:"modalIn .5s cubic-bezier(.16,1,.3,1)"}}>
-          <button onClick={()=>setSel(null)} style={{position:"absolute",top:18,right:18,background:"rgba(255,255,255,.9)",backdropFilter:"blur(8px)",border:"none",borderRadius:"50%",width:40,height:40,cursor:"pointer",fontSize:18,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",transition:"transform .3s",boxShadow:"0 2px 12px rgba(0,0,0,.08)"}} onMouseEnter={e=>e.currentTarget.style.transform="rotate(90deg)"} onMouseLeave={e=>e.currentTarget.style.transform="rotate(0)"}>✕</button>
+        <div className="ov" onClick={()=>setSel(null)} />
+        <div className="mp" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:18,display:"flex",flexDirection:"column",overflow:"hidden",animation:"modalIn .4s cubic-bezier(.16,1,.3,1)"}}>
+          <button onClick={()=>setSel(null)} style={{position:"absolute",top:16,right:16,background:"rgba(255,255,255,.9)",backdropFilter:"blur(8px)",border:"none",borderRadius:"50%",width:38,height:38,cursor:"pointer",fontSize:16,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,.06)"}}>✕</button>
           <div style={{display:"flex",flex:1,overflow:"hidden",flexWrap:"wrap"}}>
-            <div style={{flex:"1 1 55%",minWidth:280,background:GX,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:32}}>
-              <img src={sel.images[imgIdx]||sel.images[0]} alt={sel.name} style={{maxWidth:"85%",maxHeight:"55vh",objectFit:"contain",borderRadius:12,transition:"all .5s"}} />
-              {sel.images.length>1&&(<div style={{display:"flex",gap:10,marginTop:20}}>{sel.images.map((img,i)=>(<img key={i} src={img} alt="" onClick={()=>setImgIdx(i)} style={{width:60,height:60,objectFit:"cover",borderRadius:10,cursor:"pointer",border:i===imgIdx?`2.5px solid ${G}`:"2.5px solid transparent",opacity:i===imgIdx?1:.5,transition:"all .3s",transform:i===imgIdx?"scale(1.08)":"scale(1)"}} />))}</div>)}
+            <div style={{flex:"1 1 55%",minWidth:280,background:GX,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28}}>
+              <img src={sel.img[ii]||sel.img[0]} alt={sel.name} style={{maxWidth:"85%",maxHeight:"55vh",objectFit:"contain",borderRadius:12,transition:"all .4s"}} />
+              {sel.img.length>1&&<div style={{display:"flex",gap:8,marginTop:16}}>{sel.img.map((im,i)=><img key={i} src={im} alt="" onClick={()=>setII(i)} style={{width:56,height:56,objectFit:"cover",borderRadius:8,cursor:"pointer",border:i===ii?`2px solid ${G}`:"2px solid transparent",opacity:i===ii?1:.4,transition:"all .3s"}} />)}</div>}
             </div>
-            <div style={{flex:"1 1 40%",minWidth:280,padding:"44px 36px",overflow:"auto"}}>
-              <p style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:10,fontWeight:600}}>{CATS[sel.category]}</p>
-              <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:34,fontWeight:400,marginBottom:8,lineHeight:1.2}}>{sel.name}</h2>
-              <p style={{fontSize:13,color:"#8a9a88",marginBottom:20}}>{sel.size}</p>
-              <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:30,fontWeight:600,color:G,marginBottom:28}}>${sel.price.toFixed(2)}</p>
-              <p style={{fontSize:14,lineHeight:1.9,color:"#4a4a4a",marginBottom:24}}>{sel.desc}</p>
-              {sel.benefits&&<div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:28}}>{sel.benefits.map(b=><span key={b} className="tag">{b}</span>)}</div>}
-              <button className="btn bp" style={{width:"100%",padding:"16px"}} onClick={()=>{addToCart(sel);setSel(null)}}>Add to Cart</button>
-              <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" style={{display:"block",textAlign:"center",marginTop:14,fontSize:12,color:GL,letterSpacing:1}}>Or order via Instagram →</a>
+            <div style={{flex:"1 1 40%",minWidth:280,padding:"40px 32px",overflow:"auto"}}>
+              <p style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:8,fontWeight:600}}>{CATS[sel.cat]}</p>
+              <h2 className="f" style={{fontSize:32,fontWeight:400,marginBottom:6,lineHeight:1.2}}>{sel.name}</h2>
+              <p style={{fontSize:12,color:"#8a9a88",marginBottom:16}}>{sel.size}</p>
+              <p className="f" style={{fontSize:28,fontWeight:600,color:G,marginBottom:24}}>${sel.price.toFixed(2)}</p>
+              <p style={{fontSize:14,lineHeight:1.8,color:"#4a4a4a",marginBottom:20}}>{sel.desc}</p>
+              {sel.ben&&<div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:24}}>{sel.ben.map(b=><span key={b} className="tg">{b}</span>)}</div>}
+              <button className="b bp" style={{width:"100%"}} onClick={()=>{add(sel);setSel(null)}}>Add to Cart</button>
             </div>
           </div>
         </div>
       </>)}
 
-      <div className="page-transition" style={{opacity:transition?0:1,transform:transition?"translateY(10px)":"translateY(0)"}}>
+      <div style={{opacity:trans?0:1,transform:trans?"translateY(8px)":"translateY(0)",transition:"all .25s"}}>
 
-      {page==="home"&&<>
-        {/* HERO - SPLIT LAYOUT */}
-        <section className="hero-split" style={{minHeight:"100vh",display:"flex",alignItems:"center",position:"relative",overflow:"hidden"}}>
-          {/* Left - text */}
-          <div className="hero-left" style={{flex:"1 1 50%",padding:"120px clamp(24px,5vw,80px) 80px clamp(24px,5vw,80px)",position:"relative",zIndex:2}}>
-            <div style={{opacity:0,animation:"slideUp .8s ease .2s both"}}>
-              <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:20,fontWeight:600,display:"flex",alignItems:"center",gap:8}}>
-                <span style={{width:24,height:1.5,background:G,display:"inline-block"}}></span> From Japan & China
-              </p>
-            </div>
-            <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(36px,5vw,64px)",fontWeight:300,color:"#2a2a2a",lineHeight:1.1,marginBottom:20,opacity:0,animation:"slideUp .8s ease .35s both"}}>
-              Discover the<br /><span style={{fontWeight:600,color:G}}>Art of Tea</span>
-            </h1>
-            <p style={{fontSize:16,color:"rgba(42,42,42,.5)",lineHeight:1.8,maxWidth:420,marginBottom:36,opacity:0,animation:"slideUp .8s ease .5s both"}}>
-              Authentic hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms.
-            </p>
-            <div style={{display:"flex",gap:14,flexWrap:"wrap",opacity:0,animation:"slideUp .8s ease .65s both"}}>
-              <button className="btn bp" style={{padding:"16px 36px",letterSpacing:2}} onClick={()=>goTo("shop")}>Shop Now</button>
-              <button className="btn bo" style={{padding:"16px 36px",letterSpacing:2}} onClick={()=>goTo("about")}>Our Story</button>
-            </div>
-            {/* Trust badges */}
-            <div style={{display:"flex",gap:28,marginTop:48,opacity:0,animation:"slideUp .8s ease .8s both"}}>
-              {[["🍃","100% Natural"],["🌿","Organic"],["📦","Free Shipping 50$+"]].map(([icon,text])=>(
-                <div key={text} style={{display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:18}}>{icon}</span>
-                  <span style={{fontSize:11,color:"#5a6e58",fontWeight:500,letterSpacing:.5}}>{text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right - product showcase */}
-          <div className="hero-right" style={{flex:"1 1 50%",position:"relative",height:"100vh",background:`linear-gradient(135deg, ${GX}, #f0ede6)`}}>
-            {/* Floating product images */}
-            {heroProducts.map((p,i)=>(
-              <div key={p.id} className="hero-product" style={{
-                opacity:heroImg===i?1:0,
-                transform:heroImg===i?"scale(1) rotate(0deg)":"scale(.85) rotate(3deg)",
-                top:"15%",left:"10%",right:"10%",bottom:"15%",
-                zIndex:heroImg===i?2:1
-              }}>
-                <img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                <div style={{position:"absolute",bottom:24,left:24,right:24,background:"rgba(255,255,255,.92)",backdropFilter:"blur(12px)",borderRadius:12,padding:"16px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <div>
-                    <p style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,fontWeight:500}}>{p.name}</p>
-                    <p style={{fontSize:12,color:"#8a9a88"}}>{p.size}</p>
-                  </div>
-                  <span style={{fontFamily:"'Cormorant Garamond',serif",fontSize:22,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
-                </div>
+      {pg==="home"&&<>
+        {/* HERO */}
+        <section style={{paddingTop:64,background:`linear-gradient(135deg, ${GX} 0%, #f5f2ec 50%, ${GX} 100%)`,position:"relative",overflow:"hidden"}}>
+          <div style={{maxWidth:1200,margin:"0 auto",padding:"60px clamp(16px,4vw,48px) 40px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center"}} className="hg">
+            {/* Left */}
+            <div style={{opacity:0,animation:"slideUp .8s ease .1s both"}}>
+              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
+                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Asia</p>
               </div>
-            ))}
-            {/* Dots indicator */}
-            <div style={{position:"absolute",bottom:32,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:5}}>
-              {heroProducts.map((_,i)=>(
-                <button key={i} onClick={()=>setHeroImg(i)} style={{width:heroImg===i?24:8,height:8,borderRadius:4,background:heroImg===i?G:"rgba(50,107,47,.2)",border:"none",cursor:"pointer",transition:"all .4s"}} />
+              <h1 className="f" style={{fontSize:"clamp(36px,5vw,58px)",fontWeight:300,lineHeight:1.1,marginBottom:18}}>
+                Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
+              </h1>
+              <p style={{fontSize:15,color:"#666",lineHeight:1.8,maxWidth:440,marginBottom:28}}>
+                Premium Japanese hojicha, Chinese blooming tea bombs, and organic powders — delivered to your door in Lebanon.
+              </p>
+              <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:32}}>
+                <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
+                <button className="b bo" onClick={()=>go("about")}>Our Story</button>
+              </div>
+              {/* Trust */}
+              <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","Free Ship 50$+"]].map(([ic,tx])=>(
+                  <div key={tx} style={{display:"flex",alignItems:"center",gap:6}}>
+                    <span style={{fontSize:16}}>{ic}</span>
+                    <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Right - product grid */}
+            <div className="dk" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,opacity:0,animation:"slideUp .8s ease .3s both"}}>
+              {P.slice(0,4).map((p,i)=>(
+                <div key={p.id} onClick={()=>{setSel(p);setII(0)}} style={{borderRadius:14,overflow:"hidden",cursor:"pointer",background:"#fff",border:"1px solid rgba(50,107,47,.06)",transition:"all .3s",position:"relative",aspectRatio:"1"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.03)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"}>
+                  <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                  <div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.5))",padding:"20px 12px 12px"}}>
+                    <p style={{fontSize:12,color:"#fff",fontWeight:600}}>{p.name}</p>
+                    <p style={{fontSize:14,color:"#fff",fontWeight:700}}>${p.price.toFixed(2)}</p>
+                  </div>
+                </div>
               ))}
             </div>
-            {/* Decorative elements */}
-            <div style={{position:"absolute",top:"10%",right:"8%",width:60,height:60,border:`1px solid rgba(50,107,47,.08)`,borderRadius:"50%",animation:"spin 25s linear infinite"}} />
-            <div style={{position:"absolute",bottom:"20%",left:"5%",width:8,height:8,borderRadius:"50%",background:"rgba(50,107,47,.12)",animation:"float 5s ease infinite"}} />
           </div>
         </section>
 
-        {/* MARQUEE */}
-        <div style={{background:G,color:"white",padding:"13px 0",overflow:"hidden"}}>
-          <div style={{display:"flex",animation:"marquee 25s linear infinite",whiteSpace:"nowrap"}}>
-            {[...Array(8)].map((_,i)=><span key={i} style={{fontSize:11,letterSpacing:3,textTransform:"uppercase",fontWeight:500,marginRight:80}}>✦ Free shipping on orders above $50 ✦ Limited time offer ✦ Authentic Japanese & Chinese Tea</span>)}
+        {/* STATS BAR */}
+        <div style={{background:G,color:"#fff",padding:"16px clamp(16px,4vw,48px)"}}>
+          <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:16}}>
+            {[["11+","Products"],["100%","Natural"],["$50+","Free Shipping"],["💬","Order via WhatsApp"]].map(([n,l])=>(
+              <div key={l} style={{textAlign:"center"}}>
+                <p className="f" style={{fontSize:22,fontWeight:700}}>{n}</p>
+                <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>{l}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* HOW IT WORKS */}
-        <section style={{padding:"80px clamp(16px,5vw,48px)",background:GX}}>
-          <div style={{maxWidth:900,margin:"0 auto"}}>
-            <Reveal><div style={{textAlign:"center",marginBottom:48}}>
-              <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:600}}>How It Works</p>
-              <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(28px,4vw,40px)",fontWeight:300}}>Order in 3 Simple Steps</h2>
-            </div></Reveal>
-            <div className="steps-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20}}>
-              {[["Browse","Explore our collection of authentic Japanese and Chinese teas"],["Add to Cart","Pick your favorites and add them to your cart"],["Order via WhatsApp","Checkout sends your order directly — we'll confirm and deliver"]].map(([title,desc],i)=>(
-                <Reveal key={title} delay={i*.12}>
-                  <div className="step-card">
-                    <div className="step-num">{i+1}</div>
-                    <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,fontWeight:500,marginBottom:8}}>{title}</h3>
-                    <p style={{fontSize:13,color:"#5a6e58",lineHeight:1.7}}>{desc}</p>
-                  </div>
-                </Reveal>
-              ))}
+        {/* BESTSELLERS */}
+        <section style={{padding:"70px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto"}}>
+          <R><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:16}}>
+            <div>
+              <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:8,fontWeight:600}}>Featured</p>
+              <h2 className="f" style={{fontSize:"clamp(28px,4vw,42px)",fontWeight:300}}>Our Bestsellers</h2>
             </div>
-          </div>
-        </section>
-
-        {/* FEATURED */}
-        <section style={{padding:"100px clamp(16px,5vw,48px)",maxWidth:1200,margin:"0 auto"}}>
-          <Reveal><div style={{textAlign:"center",marginBottom:56}}>
-            <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:600}}>Featured</p>
-            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(30px,5vw,46px)",fontWeight:300}}>Our Bestsellers</h2>
-          </div></Reveal>
-          <div className="pgrid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",gap:22}}>
-            {PRODUCTS.slice(0,4).map((p,i)=>(
-              <Reveal key={p.id} delay={i*.1}>
-                <div className="card" onClick={()=>{setSel(p);setImgIdx(0)}}>
-                  <div style={{height:240,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
-                    <img className="card-img" src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                    <div className="card-overlay" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .4s",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                      <span style={{background:"rgba(255,255,255,.95)",padding:"8px 20px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>View Details</span>
+            <button className="b bo" onClick={()=>go("shop")}>View All →</button>
+          </div></R>
+          <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
+            {P.slice(0,4).map((p,i)=>(
+              <R key={p.id} delay={i*.08}>
+                <div className="card" onClick={()=>{setSel(p);setII(0)}}>
+                  <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
+                    <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.04)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <span style={{background:"#fff",padding:"7px 18px",borderRadius:18,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase",boxShadow:"0 4px 12px rgba(0,0,0,.06)"}}>Quick View</span>
                     </div>
                   </div>
-                  <div style={{padding:"18px 20px 22px"}}>
-                    <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:6,fontWeight:600}}>{CATS[p.category]}</p>
-                    <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,fontWeight:500,marginBottom:5}}>{p.name}</h3>
-                    <p style={{fontSize:12,color:"#8a9a88",marginBottom:12}}>{p.size}</p>
+                  <div style={{padding:"16px 18px 20px"}}>
+                    <p style={{fontSize:9,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:5,fontWeight:600}}>{CATS[p.cat]}</p>
+                    <h3 className="f" style={{fontSize:17,fontWeight:500,marginBottom:4}}>{p.name}</h3>
+                    <p style={{fontSize:11,color:"#8a9a88",marginBottom:10}}>{p.size}</p>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <span style={{fontSize:17,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
-                      <button className="btn bs bo" onClick={e=>{e.stopPropagation();addToCart(p)}}>Add</button>
+                      <span style={{fontSize:16,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
+                      <button className="b bs bo" onClick={e=>{e.stopPropagation();add(p)}}>Add</button>
                     </div>
                   </div>
                 </div>
-              </Reveal>
+              </R>
             ))}
           </div>
-          <Reveal delay={0.3}><div style={{textAlign:"center",marginTop:48}}>
-            <button className="btn bo" onClick={()=>goTo("shop")}>View All Products</button>
-          </div></Reveal>
         </section>
 
-        {/* TEA BOMBS */}
-        <section style={{padding:"90px clamp(16px,5vw,48px)",background:`linear-gradient(180deg, ${GX}, #f0ede6)`}}>
-          <div style={{maxWidth:900,margin:"0 auto",textAlign:"center"}}>
-            <Reveal><div>
-              <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:600}}>Chinese Collection</p>
-              <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(28px,5vw,42px)",fontWeight:300,marginBottom:16}}>Blooming Tea Bombs</h2>
-              <p style={{fontSize:14,color:"rgba(42,42,42,.45)",lineHeight:1.9,maxWidth:520,margin:"0 auto 40px"}}>Steep a hand-rolled tea ball in boiling water and watch it bloom into a beautiful flower. Each ball makes 4–5 cups.</p>
-            </div></Reveal>
-            <div style={{display:"flex",justifyContent:"center",gap:28,flexWrap:"wrap"}}>
-              {PRODUCTS.filter(p=>p.category==="chinese").slice(0,4).map((p,i)=>(
-                <Reveal key={p.id} delay={i*.12} direction="scale">
-                  <div onClick={()=>{setSel(p);setImgIdx(0)}} style={{width:140,cursor:"pointer",transition:"transform .4s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-8px)"} onMouseLeave={e=>e.currentTarget.style.transform="translateY(0)"}>
-                    <div style={{width:110,height:110,borderRadius:"50%",overflow:"hidden",border:`2px solid rgba(50,107,47,.15)`,margin:"0 auto 14px"}}>
-                      <img src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.15)"} onMouseLeave={e=>e.currentTarget.style.transform="scale(1)"} />
-                    </div>
-                    <p style={{fontSize:12,color:G,fontWeight:500,lineHeight:1.4}}>{p.name.replace(" Tea Bomb","").replace(" Pu'erh","")}</p>
-                    <p style={{fontSize:15,fontWeight:700,marginTop:6}}>${p.price.toFixed(2)}</p>
+        {/* BENEFITS */}
+        <section style={{padding:"60px clamp(16px,4vw,48px)",background:GX}}>
+          <div className="bg" style={{maxWidth:1000,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
+            {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","Fast Delivery","Free shipping on orders above $50 across Lebanon"]].map(([ic,t,d],i)=>(
+              <R key={t} delay={i*.08} d="scale">
+                <div style={{background:"#fff",borderRadius:14,padding:"28px 20px",textAlign:"center",border:"1px solid rgba(50,107,47,.04)",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 36px rgba(50,107,47,.08)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
+                  <div style={{fontSize:28,marginBottom:12}}>{ic}</div>
+                  <h4 style={{fontSize:14,fontWeight:600,marginBottom:6,color:"#2a2a2a"}}>{t}</h4>
+                  <p style={{fontSize:12,color:"#6a7a68",lineHeight:1.6}}>{d}</p>
+                </div>
+              </R>
+            ))}
+          </div>
+        </section>
+
+        {/* TEA BOMBS SHOWCASE */}
+        <section style={{padding:"70px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto"}}>
+          <R><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:36,flexWrap:"wrap",gap:16}}>
+            <div>
+              <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:8,fontWeight:600}}>Chinese Collection</p>
+              <h2 className="f" style={{fontSize:"clamp(28px,4vw,42px)",fontWeight:300}}>Blooming Tea Bombs</h2>
+              <p style={{fontSize:14,color:"#888",marginTop:8,maxWidth:400}}>Hand-rolled tea balls that bloom in hot water. Each ball makes 4–5 cups of pure wellness.</p>
+            </div>
+            <button className="b bo" onClick={()=>{go("shop");setCat("chinese")}}>View All →</button>
+          </div></R>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:16}} className="pg">
+            {P.filter(p=>p.cat==="chinese").map((p,i)=>(
+              <R key={p.id} delay={i*.06}>
+                <div onClick={()=>{setSel(p);setII(0)}} style={{cursor:"pointer",textAlign:"center",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-6px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
+                  <div style={{width:"100%",aspectRatio:"1",borderRadius:14,overflow:"hidden",marginBottom:12,border:"1px solid rgba(50,107,47,.06)"}}>
+                    <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .4s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.08)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
                   </div>
-                </Reveal>
+                  <p style={{fontSize:13,fontWeight:500,marginBottom:4,lineHeight:1.3}}>{p.name}</p>
+                  <p style={{fontSize:15,fontWeight:700,color:G}}>${p.price.toFixed(2)}</p>
+                  <button className="b bs bo" style={{marginTop:8}} onClick={e=>{e.stopPropagation();add(p)}}>Add to Cart</button>
+                </div>
+              </R>
+            ))}
+          </div>
+        </section>
+
+        {/* REVIEWS */}
+        <section style={{padding:"60px clamp(16px,4vw,48px)",background:GD,color:"#fff",overflow:"hidden"}}>
+          <div style={{maxWidth:700,margin:"0 auto",textAlign:"center"}}>
+            <R><p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:GL,marginBottom:10,fontWeight:600}}>What Customers Say</p>
+            <h2 className="f" style={{fontSize:"clamp(26px,4vw,38px)",fontWeight:300,marginBottom:40}}>Loved Across Lebanon</h2></R>
+            <div style={{position:"relative",minHeight:140}}>
+              {reviews.map((r,i)=>(
+                <div key={i} style={{position:i===0?"relative":"absolute",top:0,left:0,right:0,opacity:ri===i?1:0,transform:ri===i?"translateY(0)":"translateY(16px)",transition:"all .6s cubic-bezier(.16,1,.3,1)",pointerEvents:ri===i?"auto":"none"}}>
+                  <div style={{display:"flex",justifyContent:"center",gap:4,marginBottom:14}}>
+                    {[...Array(r.stars)].map((_,j)=><span key={j} style={{color:"#f0c040",fontSize:18}}>★</span>)}
+                  </div>
+                  <p className="f" style={{fontSize:22,fontStyle:"italic",lineHeight:1.6,marginBottom:16,fontWeight:300,opacity:.9}}>&ldquo;{r.text}&rdquo;</p>
+                  <p style={{fontSize:13,fontWeight:600,color:GL}}>— {r.name}</p>
+                </div>
               ))}
             </div>
-            <Reveal delay={0.4}><button className="btn bo" style={{marginTop:40}} onClick={()=>{goTo("shop");setCat("chinese")}}>View All Tea Bombs</button></Reveal>
+            <div style={{display:"flex",justifyContent:"center",gap:8,marginTop:28}}>
+              {reviews.map((_,i)=><button key={i} onClick={()=>setRI(i)} style={{width:ri===i?24:8,height:8,borderRadius:4,background:ri===i?GL:"rgba(255,255,255,.2)",border:"none",cursor:"pointer",transition:"all .3s"}} />)}
+            </div>
           </div>
         </section>
 
-        {/* ABOUT TEASER */}
-        <section style={{padding:"100px clamp(16px,5vw,48px)"}}>
-          <div style={{maxWidth:620,margin:"0 auto",textAlign:"center"}}>
-            <Reveal><p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:600}}>Our Story</p>
-            <h2 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(28px,5vw,42px)",fontWeight:300,marginBottom:28}}>Rooted in Tradition</h2></Reveal>
-            <Reveal delay={0.15}><div style={{width:60,height:1.5,background:`linear-gradient(90deg,transparent,${GL},transparent)`,margin:"0 auto 28px"}} />
-            <p style={{fontSize:16,color:"#5a5a5a",lineHeight:2}}>MuraCha brings the art of Japanese and Chinese tea culture to Lebanon. Every leaf is carefully selected from heritage farms, honoring generations of craft and the meditative ritual of tea.</p></Reveal>
-            <Reveal delay={0.25}><button className="btn bo" style={{marginTop:28}} onClick={()=>goTo("about")}>Learn More</button></Reveal>
-          </div>
+        {/* INSTAGRAM CTA */}
+        <section style={{padding:"60px clamp(16px,4vw,48px)"}}>
+          <R><div style={{maxWidth:800,margin:"0 auto",background:`linear-gradient(135deg, ${GX}, #f5f2ec)`,borderRadius:20,padding:"48px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
+            <div>
+              <h3 className="f" style={{fontSize:28,fontWeight:400,marginBottom:8}}>Follow Us on Instagram</h3>
+              <p style={{fontSize:14,color:"#666",maxWidth:360}}>See our latest products, tea rituals, and behind-the-scenes content. Join 1K+ tea lovers!</p>
+            </div>
+            <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" className="b bp" style={{gap:8}}>
+              <span style={{fontSize:18}}>📸</span> @muracha.lb
+            </a>
+          </div></R>
+        </section>
+
+        {/* NEWSLETTER */}
+        <section style={{padding:"50px clamp(16px,4vw,48px) 70px"}}>
+          <R><div style={{maxWidth:500,margin:"0 auto",textAlign:"center"}}>
+            <h3 className="f" style={{fontSize:28,fontWeight:300,marginBottom:8}}>Stay in the Loop</h3>
+            <p style={{fontSize:13,color:"#888",marginBottom:24}}>Be the first to know about new arrivals and exclusive offers.</p>
+            <div style={{display:"flex",gap:0}}>
+              <input className="inp" placeholder="Your email" style={{borderRadius:"8px 0 0 8px",borderRight:"none"}} />
+              <button className="b bp" style={{borderRadius:"0 8px 8px 0",whiteSpace:"nowrap",padding:"14px 24px"}}>Subscribe</button>
+            </div>
+          </div></R>
         </section>
       </>}
 
-      {page==="shop"&&(
-        <section style={{paddingTop:100,padding:"100px clamp(16px,5vw,48px) 60px",maxWidth:1200,margin:"0 auto"}}>
-          <Reveal><div style={{textAlign:"center",marginBottom:44}}>
-            <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(32px,5vw,48px)",fontWeight:300,marginBottom:24}}>Our Collection</h1>
-            <div className="csec" style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
-              {Object.entries(CATS).map(([k,v])=><button key={k} className={`cat-btn ${cat===k?"on":""}`} onClick={()=>setCat(k)}>{v}</button>)}
+      {pg==="shop"&&(
+        <section style={{paddingTop:90,padding:"90px clamp(16px,4vw,48px) 60px",maxWidth:1200,margin:"0 auto"}}>
+          <R><div style={{textAlign:"center",marginBottom:36}}>
+            <h1 className="f" style={{fontSize:"clamp(30px,4vw,44px)",fontWeight:300,marginBottom:20}}>Our Collection</h1>
+            <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
+              {Object.entries(CATS).map(([k,v])=><button key={k} className={`cb ${cat===k?"on":""}`} onClick={()=>setCat(k)}>{v}</button>)}
             </div>
-          </div></Reveal>
-          <div className="pgrid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(250px,1fr))",gap:22}}>
-            {filtered.map((p,i)=>(
-              <Reveal key={p.id} delay={i*.07}>
-                <div className="card" onClick={()=>{setSel(p);setImgIdx(0)}}>
-                  <div style={{height:240,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
-                    <img className="card-img" src={p.images[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                    <div className="card-overlay" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .4s",display:"flex",alignItems:"center",justifyContent:"center"}}>
-                      <span style={{background:"rgba(255,255,255,.95)",padding:"8px 20px",borderRadius:20,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>View Details</span>
+          </div></R>
+          <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
+            {fil.map((p,i)=>(
+              <R key={p.id} delay={i*.06}>
+                <div className="card" onClick={()=>{setSel(p);setII(0)}}>
+                  <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
+                    <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <span style={{background:"#fff",padding:"7px 18px",borderRadius:18,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>Quick View</span>
                     </div>
                   </div>
-                  <div style={{padding:"18px 20px 22px"}}>
-                    <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:6,fontWeight:600}}>{CATS[p.category]}</p>
-                    <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:18,fontWeight:500,marginBottom:5}}>{p.name}</h3>
-                    <p style={{fontSize:12,color:"#8a9a88",marginBottom:12}}>{p.size}</p>
+                  <div style={{padding:"16px 18px 20px"}}>
+                    <p style={{fontSize:9,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:5,fontWeight:600}}>{CATS[p.cat]}</p>
+                    <h3 className="f" style={{fontSize:17,fontWeight:500,marginBottom:4}}>{p.name}</h3>
+                    <p style={{fontSize:11,color:"#8a9a88",marginBottom:10}}>{p.size}</p>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                      <span style={{fontSize:17,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
-                      <button className="btn bs bo" onClick={e=>{e.stopPropagation();addToCart(p)}}>Add</button>
+                      <span style={{fontSize:16,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
+                      <button className="b bs bo" onClick={e=>{e.stopPropagation();add(p)}}>Add</button>
                     </div>
                   </div>
                 </div>
-              </Reveal>
+              </R>
             ))}
           </div>
         </section>
       )}
 
-      {page==="about"&&(
-        <section style={{paddingTop:100,padding:"100px clamp(16px,5vw,48px) 60px",maxWidth:720,margin:"0 auto"}}>
-          <Reveal><div style={{textAlign:"center"}}>
-            <p style={{fontSize:11,letterSpacing:5,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:600}}>About Us</p>
-            <h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"clamp(34px,5vw,52px)",fontWeight:300,marginBottom:28}}>Our Story</h1>
-            <div style={{width:60,height:1.5,background:`linear-gradient(90deg,transparent,${GL},transparent)`,margin:"0 auto 36px"}} />
-          </div></Reveal>
-          <Reveal delay={0.1}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:22}}>MuraCha brings the art of Japanese and Chinese tea culture to Lebanon. Every leaf is carefully selected from heritage farms, honoring generations of craft and the meditative ritual of tea.</p></Reveal>
-          <Reveal delay={0.2}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:22}}>From the roasted warmth of hojicha to the artistic bloom of Chinese tea bombs, each product is an invitation to slow down, breathe, and savor the moment.</p></Reveal>
-          <Reveal delay={0.3}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:36}}>Our Japanese collection features premium first-harvest teas — Sencha, Tencha, and organic Bancha — sourced directly from Japanese farms. Our Chinese collection showcases hand-rolled Pu&apos;erh tea balls wrapped with flowers — each one a unique sensory experience.</p></Reveal>
-          <Reveal delay={0.35}><div style={{display:"flex",justifyContent:"center",gap:16}}>
-            <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" className="btn bo">Instagram</a>
-            <a href="https://www.tiktok.com/@muracha.lb" target="_blank" rel="noopener noreferrer" className="btn bo">TikTok</a>
-          </div></Reveal>
+      {pg==="about"&&(
+        <section style={{paddingTop:90,padding:"90px clamp(16px,4vw,48px) 60px",maxWidth:700,margin:"0 auto"}}>
+          <R><div style={{textAlign:"center"}}>
+            <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:600}}>About Us</p>
+            <h1 className="f" style={{fontSize:"clamp(32px,5vw,48px)",fontWeight:300,marginBottom:24}}>Our Story</h1>
+            <div style={{width:50,height:1.5,background:GL,margin:"0 auto 30px"}} />
+          </div></R>
+          <R delay={0.1}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:20}}>MuraCha brings the art of Japanese and Chinese tea culture to Lebanon. Every leaf is carefully selected from heritage farms, honoring generations of craft and the meditative ritual of tea.</p></R>
+          <R delay={0.2}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:20}}>From the roasted warmth of hojicha to the artistic bloom of Chinese tea bombs, each product is an invitation to slow down, breathe, and savor the moment.</p></R>
+          <R delay={0.3}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:32}}>Our Japanese collection features premium first-harvest teas — Sencha, Tencha, and organic Bancha. Our Chinese collection showcases hand-rolled Pu&apos;erh tea balls wrapped with flowers — each one a unique sensory experience.</p></R>
+          <R delay={0.35}><div style={{display:"flex",justifyContent:"center",gap:14}}>
+            <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" className="b bo">Instagram</a>
+            <a href="https://www.tiktok.com/@muracha.lb" target="_blank" rel="noopener noreferrer" className="b bo">TikTok</a>
+          </div></R>
         </section>
       )}
 
-      {page==="checkout"&&(
-        <section style={{paddingTop:100,padding:"100px clamp(16px,5vw,48px) 60px",maxWidth:600,margin:"0 auto"}}>
-          <Reveal><h1 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:38,fontWeight:300,textAlign:"center",marginBottom:8}}>Checkout</h1>
-          <p style={{textAlign:"center",fontSize:14,color:"#8a9a88",marginBottom:40}}>Complete your order via WhatsApp</p></Reveal>
-          <Reveal delay={0.1}><div style={{background:"#fff",borderRadius:16,padding:28,marginBottom:24,border:"1px solid rgba(50,107,47,.06)",boxShadow:"0 4px 24px rgba(0,0,0,.03)"}}>
-            <h3 style={{fontFamily:"'Cormorant Garamond',serif",fontSize:20,marginBottom:18}}>Order Summary</h3>
+      {pg==="checkout"&&(
+        <section style={{paddingTop:90,padding:"90px clamp(16px,4vw,48px) 60px",maxWidth:560,margin:"0 auto"}}>
+          <R><h1 className="f" style={{fontSize:36,fontWeight:300,textAlign:"center",marginBottom:6}}>Checkout</h1>
+          <p style={{textAlign:"center",fontSize:13,color:"#8a9a88",marginBottom:32}}>Complete your order via WhatsApp</p></R>
+          <R delay={0.1}><div style={{background:"#fff",borderRadius:14,padding:24,marginBottom:20,border:"1px solid rgba(50,107,47,.05)"}}>
+            <h3 className="f" style={{fontSize:18,marginBottom:14}}>Order Summary</h3>
             {cart.map(item=>(
-              <div key={item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:12,marginBottom:12,borderBottom:"1px solid rgba(50,107,47,.04)",fontSize:14}}>
+              <div key={item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:"1px solid rgba(50,107,47,.03)",fontSize:13}}>
                 <span>{item.name} × {item.qty}</span>
                 <span style={{fontWeight:700}}>${(item.price*item.qty).toFixed(2)}</span>
               </div>
             ))}
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:20,fontFamily:"'Cormorant Garamond',serif",fontWeight:700,paddingTop:10}}>
-              <span>Total</span><span style={{color:G}}>${total.toFixed(2)}</span>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:8}} className="f">
+              <span style={{fontWeight:600}}>Total</span><span style={{fontWeight:700,color:G}}>${tot.toFixed(2)}</span>
             </div>
-            {total>=50&&<p style={{fontSize:12,color:G,marginTop:8,fontWeight:600}}>✓ Free shipping</p>}
-          </div></Reveal>
-          <Reveal delay={0.2}><div style={{display:"flex",flexDirection:"column",gap:14}}>
-            <input className="input" placeholder="Full Name *" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
-            <input className="input" placeholder="Phone Number *" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} />
-            <input className="input" placeholder="Delivery Address *" value={form.address} onChange={e=>setForm({...form,address:e.target.value})} />
-            <textarea className="input" placeholder="Notes (optional)" rows={3} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} style={{resize:"vertical"}} />
-            <button className="btn ba" style={{width:"100%",padding:16,fontSize:13}} onClick={sendWA} disabled={!form.name||!form.phone||!form.address}>Send Order via WhatsApp →</button>
-            <p style={{fontSize:12,color:"#8a9a88",textAlign:"center"}}>You&apos;ll be redirected to WhatsApp with your order details</p>
-          </div></Reveal>
+            {tot>=50&&<p style={{fontSize:11,color:G,marginTop:6,fontWeight:600}}>✓ Free shipping</p>}
+          </div></R>
+          <R delay={0.2}><div style={{display:"flex",flexDirection:"column",gap:12}}>
+            <input className="inp" placeholder="Full Name *" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
+            <input className="inp" placeholder="Phone Number *" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} />
+            <input className="inp" placeholder="Delivery Address *" value={form.address} onChange={e=>setForm({...form,address:e.target.value})} />
+            <textarea className="inp" placeholder="Notes (optional)" rows={3} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} style={{resize:"vertical"}} />
+            <button className="b bp" style={{width:"100%",padding:16,fontSize:13,animation:form.name&&form.phone&&form.address?"pulse 2s infinite":""}} onClick={sendWA} disabled={!form.name||!form.phone||!form.address}>Send Order via WhatsApp →</button>
+            <p style={{fontSize:11,color:"#8a9a88",textAlign:"center"}}>You&apos;ll be redirected to WhatsApp with your order details</p>
+          </div></R>
         </section>
       )}
 
       {/* FOOTER */}
-      <footer style={{borderTop:"1px solid rgba(50,107,47,.06)",padding:"56px clamp(16px,5vw,48px) 36px",marginTop:40,background:"rgba(232,240,230,.15)"}}>
-        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap",justifyContent:"space-between",gap:36}}>
+      <footer style={{borderTop:"1px solid rgba(50,107,47,.05)",padding:"48px clamp(16px,4vw,48px) 28px",background:"rgba(232,240,230,.15)"}}>
+        <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap",justifyContent:"space-between",gap:32}}>
           <div>
-            <img src="/images/logo.png" alt="MuraCha" style={{height:50,objectFit:"contain",marginBottom:8}} />
-            <p style={{fontSize:13,color:"#8a9a88"}}>Pure Japanese Essence & Chinese Art</p>
+            <img src="/images/logo.png" alt="MuraCha" style={{height:46,objectFit:"contain",marginBottom:8}} />
+            <p style={{fontSize:12,color:"#8a9a88"}}>Pure Japanese Essence & Chinese Art</p>
           </div>
-          <div style={{display:"flex",gap:36,flexWrap:"wrap"}}>
+          <div style={{display:"flex",gap:32,flexWrap:"wrap"}}>
             <div>
-              <p style={{fontSize:10,letterSpacing:3,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:700}}>Navigate</p>
+              <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Navigate</p>
               {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l])=>(
-                <p key={p} onClick={()=>goTo(p)} style={{fontSize:13,color:"#5a6e58",cursor:"pointer",marginBottom:8,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</p>
+                <p key={p} onClick={()=>go(p)} style={{fontSize:12,color:"#5a6e58",cursor:"pointer",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</p>
               ))}
             </div>
             <div>
-              <p style={{fontSize:10,letterSpacing:3,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:700}}>Contact</p>
-              <a href="mailto:muracha.lb@gmail.com" style={{fontSize:13,color:"#5a6e58",display:"block",marginBottom:8}}>muracha.lb@gmail.com</a>
-              <p style={{fontSize:13,color:"#5a6e58"}}>Lebanon</p>
+              <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Contact</p>
+              <a href="mailto:muracha.lb@gmail.com" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>muracha.lb@gmail.com</a>
+              <p style={{fontSize:12,color:"#5a6e58"}}>Lebanon</p>
             </div>
             <div>
-              <p style={{fontSize:10,letterSpacing:3,textTransform:"uppercase",color:G,marginBottom:14,fontWeight:700}}>Follow</p>
+              <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Follow</p>
               {[["https://www.instagram.com/muracha.lb","Instagram"],["https://www.tiktok.com/@muracha.lb","TikTok"],["https://www.facebook.com/share/1B6JkrCKFt/","Facebook"]].map(([u,l])=>(
-                <a key={l} href={u} target="_blank" rel="noopener noreferrer" style={{fontSize:13,color:"#5a6e58",display:"block",marginBottom:8,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</a>
+                <a key={l} href={u} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</a>
               ))}
             </div>
           </div>
         </div>
-        <div style={{maxWidth:1200,margin:"36px auto 0",paddingTop:22,borderTop:"1px solid rgba(50,107,47,.04)",textAlign:"center"}}>
-          <p style={{fontSize:11,color:"#a0afa0"}}>© 2026 MuraCha. All rights reserved.</p>
+        <div style={{maxWidth:1200,margin:"28px auto 0",paddingTop:18,borderTop:"1px solid rgba(50,107,47,.04)",textAlign:"center"}}>
+          <p style={{fontSize:10,color:"#a0afa0"}}>© 2026 MuraCha. All rights reserved.</p>
         </div>
       </footer>
 
