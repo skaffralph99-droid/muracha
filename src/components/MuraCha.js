@@ -206,7 +206,7 @@ export default function App(){
 
       {pg==="home"&&<>
         {/* HERO SLIDESHOW */}
-        <section style={{position:"relative",height:"100vh",minHeight:580,maxHeight:900,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #1a3a18, #244a22)"}}>
+        <section style={{position:"relative",height:"75vh",minHeight:480,maxHeight:680,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #1a3a18, #244a22)"}}>
           {/* Slides */}
           {[
             {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
@@ -237,15 +237,15 @@ export default function App(){
                   </div>
                 </div>
                 {/* Product image */}
-                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"40px 0"}}>
+                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"20px 0"}}>
                   <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(255,255,255,.05)",filter:"blur(60px)"}} />
-                  <img src={slide.img} alt={slide.title} style={{height:"clamp(300px,55vh,480px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
+                  <img src={slide.img} alt={slide.title} style={{height:"clamp(250px,45vh,400px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
                 </div>
               </div>
             </div>
           ))}
           {/* Dots */}
-          <div style={{position:"absolute",bottom:60,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
+          <div style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
             {[0,1,2,3,4].map(i=>(
               <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?"#fff":"rgba(255,255,255,.25)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
             ))}
