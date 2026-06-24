@@ -102,7 +102,7 @@ export default function App(){
         .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
         .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
         .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
-        @media(max-width:768px){.dk{display:none!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
+        @media(max-width:768px){.dk{display:none!important}.mob-hero{display:block!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
       `}</style>
 
       <div style={{position:"fixed",top:0,left:0,height:2,background:`linear-gradient(90deg,${G},${GL})`,width:`${prog*100}%`,zIndex:200,transition:"width .1s"}} />
@@ -207,44 +207,47 @@ export default function App(){
       {pg==="home"&&<>
         {/* HERO */}
         <section style={{position:"relative",overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #f0ede6, #e8f0e6)"}}>
-          <div style={{maxWidth:1200,margin:"0 auto",padding:"60px clamp(16px,5vw,60px) 50px",display:"flex",alignItems:"center",minHeight:480,position:"relative"}}>
-            {/* Decorative product photos - floating around for visual richness */}
-            <div className="dk" style={{position:"absolute",right:"5%",top:"8%",width:160,height:200,borderRadius:14,overflow:"hidden",opacity:.85,transform:`rotate(4deg) translateY(${-sY*.04}px)`,boxShadow:"0 16px 48px rgba(0,0,0,.08)",transition:"transform .1s"}}>
-              <img src={P[1].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+          <div style={{maxWidth:1200,margin:"0 auto",padding:"40px clamp(16px,5vw,60px) 40px"}}>
+            {/* Mobile: single hero image on top */}
+            <div className="mob-hero" style={{display:"none",marginBottom:24,borderRadius:16,overflow:"hidden",height:220}}>
+              <img src="/images/hero-teabombs.jpg" alt="MuraCha Tea" style={{width:"100%",height:"100%",objectFit:"cover"}} />
             </div>
-            <div className="dk" style={{position:"absolute",right:"22%",bottom:"8%",width:130,height:170,borderRadius:14,overflow:"hidden",opacity:.7,transform:`rotate(-3deg) translateY(${-sY*.06}px)`,boxShadow:"0 12px 36px rgba(0,0,0,.06)",transition:"transform .1s"}}>
-              <img src={P[5].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
-            </div>
-            <div className="dk" style={{position:"absolute",right:"2%",bottom:"18%",width:100,height:130,borderRadius:12,overflow:"hidden",opacity:.6,transform:`rotate(6deg) translateY(${-sY*.03}px)`,boxShadow:"0 8px 24px rgba(0,0,0,.05)",transition:"transform .1s"}}>
-              <img src={P[7].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
-            </div>
-            {/* Subtle decorative elements */}
-            <div style={{position:"absolute",top:"12%",left:"8%",width:6,height:6,borderRadius:"50%",background:"rgba(50,107,47,.15)"}} />
-            <div style={{position:"absolute",bottom:"20%",right:"40%",width:4,height:4,borderRadius:"50%",background:"rgba(50,107,47,.1)"}} />
-            <div className="dk" style={{position:"absolute",top:"20%",right:"38%",width:70,height:70,border:"1px solid rgba(50,107,47,.06)",borderRadius:"50%"}} />
-
-            {/* Text */}
-            <div style={{maxWidth:520,position:"relative",zIndex:2,opacity:0,animation:"slideUp .8s ease .1s both"}}>
-              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
-                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
+            <div style={{display:"flex",alignItems:"center",gap:"clamp(24px,4vw,60px)",minHeight:420}}>
+              {/* Text */}
+              <div style={{flex:"1 1 45%",position:"relative",zIndex:2,opacity:0,animation:"slideUp .8s ease .1s both"}}>
+                <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
+                  <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
+                </div>
+                <h1 className="f" style={{fontSize:"clamp(34px,5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#2a2a2a"}}>
+                  Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
+                </h1>
+                <p style={{fontSize:15,color:"#777",lineHeight:1.8,marginBottom:28,maxWidth:440}}>
+                  Premium hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms, delivered to your door in Lebanon.
+                </p>
+                <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:28}}>
+                  <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
+                  <button className="b bo" onClick={()=>go("about")}>Our Story</button>
+                </div>
+                <div style={{display:"flex",gap:20,flexWrap:"wrap"}}>
+                  {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
+                    <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
+                      <span style={{fontSize:14}}>{ic}</span>
+                      <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h1 className="f" style={{fontSize:"clamp(36px,5.5vw,58px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#2a2a2a"}}>
-                Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
-              </h1>
-              <p style={{fontSize:15,color:"#777",lineHeight:1.8,marginBottom:28,maxWidth:440}}>
-                Premium hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms, delivered to your door in Lebanon.
-              </p>
-              <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:32}}>
-                <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
-                <button className="b bo" onClick={()=>go("about")}>Our Story</button>
-              </div>
-              <div style={{display:"flex",gap:20,flexWrap:"wrap"}}>
-                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
-                  <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
-                    <span style={{fontSize:14}}>{ic}</span>
-                    <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
-                  </div>
-                ))}
+              {/* Image collage - desktop */}
+              <div className="dk" style={{flex:"1 1 50%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,opacity:0,animation:"slideUp .8s ease .3s both"}}>
+                <div style={{borderRadius:14,overflow:"hidden",height:220}}>
+                  <img src="/images/hero-latte.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
+                </div>
+                <div style={{borderRadius:14,overflow:"hidden",height:220}}>
+                  <img src="/images/hero-teabombs.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
+                </div>
+                <div style={{borderRadius:14,overflow:"hidden",height:200,gridColumn:"1 / -1"}}>
+                  <img src="/images/hero-flatlay.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 60%",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
+                </div>
               </div>
             </div>
           </div>
