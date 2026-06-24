@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 const WA = "96171425250";
 const DELIVERY_FEE = 4;
 const FREE_SHIP_MIN = 50;
+const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
 const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8", GD="#1a3a18";
 const P = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao. High in antioxidants, boosts mood, great for a warm drink or desserts.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
@@ -66,7 +68,7 @@ export default function App(){
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
   const fil=cat==="all"?P:P.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;try{const order={id:Date.now(),date:new Date().toISOString(),customer:{name:form.name,phone:form.phone,address:form.address,notes:form.notes},items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"};const prev=JSON.parse(localStorage.getItem("muracha_orders")||"[]");localStorage.setItem("muracha_orders",JSON.stringify([order,...prev]))}catch(e){}window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 

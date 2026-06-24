@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 
 const ADMIN_PASS = "muracha2026";
 const G = "#326b2f", GL = "#5a9e4f";
+const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
+const sbFetch = (path, opts = {}) => fetch(`${SB_URL}/rest/v1/${path}`, { ...opts, headers: { "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}`, "Content-Type": "application/json", "Prefer": opts.method === "PATCH" || opts.method === "DELETE" ? "return=minimal" : "return=representation", ...opts.headers } });
 
 const DEFAULT_PRODUCTS = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
@@ -53,11 +56,11 @@ export default function AdminPanel() {
       if (s) setSettings(JSON.parse(s));
       const r = localStorage.getItem('muracha_reviews');
       if (r) setReviews(JSON.parse(r));
-      const o = localStorage.getItem('muracha_orders');
-      if (o) setOrders(JSON.parse(o));
     } catch (e) {
       setProducts(DEFAULT_PRODUCTS);
     }
+    // Load orders from Supabase
+    sbFetch("muracha_orders?order=created_at.desc").then(r => r.json()).then(data => { if (Array.isArray(data)) setOrders(data); }).catch(() => {});
   }, []);
 
   const save = (key, data) => {
@@ -280,19 +283,19 @@ export default function AdminPanel() {
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
                       <div>
                         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-                          <p style={{ fontSize: 16, fontWeight: 700 }}>{o.customer?.name || "Unknown"}</p>
+                          <p style={{ fontSize: 16, fontWeight: 700 }}>{o.customer_name || "Unknown"}</p>
                           <span style={{ fontSize: 11, padding: "3px 10px", borderRadius: 10, fontWeight: 500, background: o.status === "pending" ? "#fff8e6" : o.status === "confirmed" ? "#e6f0ff" : o.status === "delivered" ? "#e8f0e6" : "#fef0f0", color: o.status === "pending" ? "#c47a00" : o.status === "confirmed" ? "#4070c4" : o.status === "delivered" ? G : "#e74c3c" }}>
                             {o.status === "pending" ? "⏳ Pending" : o.status === "confirmed" ? "✓ Confirmed" : o.status === "delivered" ? "📦 Delivered" : "✕ Cancelled"}
                           </span>
                         </div>
-                        <p style={{ fontSize: 12, color: "#999" }}>{o.date ? new Date(o.date).toLocaleString() : "—"}</p>
+                        <p style={{ fontSize: 12, color: "#999" }}>{o.created_at ? new Date(o.created_at).toLocaleString() : "—"}</p>
                       </div>
-                      <p style={{ fontSize: 20, fontWeight: 700, color: G }}>${o.total?.toFixed(2) || "0.00"}</p>
+                      <p style={{ fontSize: 20, fontWeight: 700, color: G }}>${Number(o.total || 0).toFixed(2)}</p>
                     </div>
                     <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
-                      <p style={{ fontSize: 13, color: "#555" }}>📱 {o.customer?.phone || "—"}</p>
-                      <p style={{ fontSize: 13, color: "#555" }}>📍 {o.customer?.address || "—"}</p>
-                      {o.customer?.notes && <p style={{ fontSize: 13, color: "#888" }}>📝 {o.customer.notes}</p>}
+                      <p style={{ fontSize: 13, color: "#555" }}>📱 {o.customer_phone || "—"}</p>
+                      <p style={{ fontSize: 13, color: "#555" }}>📍 {o.customer_address || "—"}</p>
+                      {o.customer_notes && <p style={{ fontSize: 13, color: "#888" }}>📝 {o.customer_notes}</p>}
                     </div>
                     <div style={{ background: "#fafaf7", borderRadius: 8, padding: "10px 14px", marginBottom: 14 }}>
                       {o.items?.map((item, j) => (
@@ -302,15 +305,15 @@ export default function AdminPanel() {
                         </div>
                       ))}
                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#888", marginTop: 4 }}>
-                        <span>Delivery</span><span>{o.delivery === 0 ? "Free" : `$${o.delivery?.toFixed(2)}`}</span>
+                        <span>Delivery</span><span>{Number(o.delivery) === 0 ? "Free" : `$${Number(o.delivery).toFixed(2)}`}</span>
                       </div>
                     </div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      {o.status === "pending" && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "confirmed" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Order confirmed"); }} style={{ padding: "6px 14px", background: "#e6f0ff", color: "#4070c4", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>✓ Confirm</button>}
-                      {(o.status === "pending" || o.status === "confirmed") && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "delivered" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Marked as delivered"); }} style={{ padding: "6px 14px", background: "#e8f0e6", color: G, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>📦 Delivered</button>}
-                      {o.status !== "cancelled" && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "cancelled" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Order cancelled"); }} style={{ padding: "6px 14px", background: "#fef0f0", color: "#e74c3c", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>Cancel</button>}
-                      <button onClick={() => { setConfirm({ title: "Delete Order", message: "Remove this order permanently?", action: () => { const updated = orders.filter((_, idx) => idx !== i); setOrders(updated); save("muracha_orders", updated); showToast("Order deleted"); setConfirm(null); }}); }} style={{ padding: "6px 14px", background: "#f5f5f0", color: "#999", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>Delete</button>
-                      <a href={`https://wa.me/${o.customer?.phone?.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" style={{ padding: "6px 14px", background: "#dcf8c6", color: "#25d366", borderRadius: 6, fontSize: 12, fontWeight: 500, display: "inline-block" }}>💬 WhatsApp</a>
+                      {o.status === "pending" && <button onClick={() => { sbFetch(`muracha_orders?id=eq.${o.id}`, { method: "PATCH", body: JSON.stringify({ status: "confirmed" }) }).then(() => { setOrders(orders.map((or, idx) => idx === i ? { ...or, status: "confirmed" } : or)); showToast("Order confirmed"); }); }} style={{ padding: "6px 14px", background: "#e6f0ff", color: "#4070c4", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>✓ Confirm</button>}
+                      {(o.status === "pending" || o.status === "confirmed") && <button onClick={() => { sbFetch(`muracha_orders?id=eq.${o.id}`, { method: "PATCH", body: JSON.stringify({ status: "delivered" }) }).then(() => { setOrders(orders.map((or, idx) => idx === i ? { ...or, status: "delivered" } : or)); showToast("Marked as delivered"); }); }} style={{ padding: "6px 14px", background: "#e8f0e6", color: G, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>📦 Delivered</button>}
+                      {o.status !== "cancelled" && <button onClick={() => { sbFetch(`muracha_orders?id=eq.${o.id}`, { method: "PATCH", body: JSON.stringify({ status: "cancelled" }) }).then(() => { setOrders(orders.map((or, idx) => idx === i ? { ...or, status: "cancelled" } : or)); showToast("Order cancelled"); }); }} style={{ padding: "6px 14px", background: "#fef0f0", color: "#e74c3c", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>Cancel</button>}
+                      <button onClick={() => { setConfirm({ title: "Delete Order", message: "Remove this order permanently?", action: () => { sbFetch(`muracha_orders?id=eq.${o.id}`, { method: "DELETE" }).then(() => { setOrders(orders.filter((_, idx) => idx !== i)); showToast("Order deleted"); setConfirm(null); }); }}); }} style={{ padding: "6px 14px", background: "#f5f5f0", color: "#999", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>Delete</button>
+                      <a href={`https://wa.me/${(o.customer_phone||'').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" style={{ padding: "6px 14px", background: "#dcf8c6", color: "#25d366", borderRadius: 6, fontSize: 12, fontWeight: 500, display: "inline-block" }}>💬 WhatsApp</a>
                     </div>
                   </div>
                 ))}
