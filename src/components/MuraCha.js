@@ -43,7 +43,6 @@ export default function App(){
   const[toast,setToast]=useState(null);
   const[trans,setTrans]=useState(false);
   const[ri,setRI]=useState(0);
-  const[heroSlide,setHeroSlide]=useState(0);
   const[userRevs,setUserRevs]=useState([]);
   const[revForm,setRevForm]=useState({name:"",text:"",stars:5});
   const[revOpen,setRevOpen]=useState(false);
@@ -56,7 +55,6 @@ export default function App(){
   useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
-  useEffect(()=>{const t=setInterval(()=>setHeroSlide(p=>(p+1)%5),3000);return()=>clearInterval(t)},[]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
   const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
@@ -205,63 +203,47 @@ export default function App(){
       <div style={{opacity:trans?0:1,transform:trans?"translateY(8px)":"translateY(0)",transition:"all .25s"}}>
 
       {pg==="home"&&<>
-        {/* HERO SLIDESHOW */}
-        <section style={{position:"relative",height:"75vh",minHeight:480,maxHeight:680,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #f0ede6, #e8f0e6)"}}>
-          {/* Slides */}
-          {[
-            {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
-            {img:P[5].img[0],label:"Chinese Collection",title:"Blooming Tea Bombs",sub:"Hand-rolled tea balls that bloom into beautiful flowers",price:"From $6.50"},
-            {img:P[0].img[0],label:"Powders",title:"Cacao Powder",sub:"Rich, unprocessed, 100% premium cacao for warm drinks & desserts",price:"$15"},
-            {img:P[3].img[0],label:"Organic",title:"Hojicha Powder",sub:"Stone-ground organic powder for lattes, baking, and beyond",price:"$22"},
-            {img:P[7].img[0],label:"Tea Bombs",title:"Jasmine Pu'erh",sub:"Detox, slimming, fresh breath — each ball makes 4-5 cups",price:"$6.50"},
-          ].map((slide,i)=>(
-            <div key={i} style={{position:i===0?"relative":"absolute",inset:0,opacity:heroSlide===i?1:0,transition:"opacity .4s ease",zIndex:heroSlide===i?2:1}}>
-              <div style={{maxWidth:1200,margin:"0 auto",height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,5vw,80px)",gap:"clamp(20px,4vw,60px)"}}>
-                {/* Text side */}
-                <div style={{flex:"1 1 50%",zIndex:3}}>
-                  <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .1s"}}>
-                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>{slide.label}</p>
-                  </div>
-                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#2a2a2a",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .15s"}}>
-                    {slide.title}
-                  </h1>
-                  <p style={{fontSize:15,color:"rgba(42,42,42,.5)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .2s"}}>
-                    {slide.sub}
-                  </p>
-                  <p className="f" style={{fontSize:30,fontWeight:600,color:G,marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .25s"}}>
-                    {slide.price}
-                  </p>
-                  <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .3s"}}>
-                    <button className="b bp" onClick={()=>go("shop")}>Shop Now</button>
-                    <button className="b bo" onClick={()=>go("about")}>Our Story</button>
-                  </div>
-                </div>
-                {/* Product image */}
-                <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"20px 0"}}>
-                  <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(50,107,47,.04)",filter:"blur(60px)"}} />
-                  <img src={slide.img} alt={slide.title} style={{height:"clamp(250px,45vh,400px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 16px 40px rgba(0,0,0,.12))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
-                </div>
-              </div>
+        {/* HERO */}
+        <section style={{position:"relative",overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #f0ede6, #e8f0e6)"}}>
+          <div style={{maxWidth:1200,margin:"0 auto",padding:"60px clamp(16px,5vw,60px) 50px",display:"flex",alignItems:"center",minHeight:480,position:"relative"}}>
+            {/* Decorative product photos - floating around for visual richness */}
+            <div className="dk" style={{position:"absolute",right:"5%",top:"8%",width:160,height:200,borderRadius:14,overflow:"hidden",opacity:.85,transform:`rotate(4deg) translateY(${-sY*.04}px)`,boxShadow:"0 16px 48px rgba(0,0,0,.08)",transition:"transform .1s"}}>
+              <img src={P[1].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
             </div>
-          ))}
-          {/* Dots */}
-          <div style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
-            {[0,1,2,3,4].map(i=>(
-              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?G:"rgba(50,107,47,.2)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
-            ))}
-          </div>
-          {/* Arrows */}
-          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} className="dk" style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(50,107,47,.06)",border:"1px solid rgba(50,107,47,.1)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:G,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(50,107,47,.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(50,107,47,.06)"}>‹</button>
-          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} className="dk" style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(50,107,47,.06)",border:"1px solid rgba(50,107,47,.1)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:G,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(50,107,47,.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(50,107,47,.06)"}>›</button>
-          {/* Trust bar */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(50,107,47,.05)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
-            <div style={{maxWidth:800,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:12}}>
-              {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"],["💚","Free above $50"]].map(([ic,tx])=>(
-                <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
-                  <span style={{fontSize:14}}>{ic}</span>
-                  <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
-                </div>
-              ))}
+            <div className="dk" style={{position:"absolute",right:"22%",bottom:"8%",width:130,height:170,borderRadius:14,overflow:"hidden",opacity:.7,transform:`rotate(-3deg) translateY(${-sY*.06}px)`,boxShadow:"0 12px 36px rgba(0,0,0,.06)",transition:"transform .1s"}}>
+              <img src={P[5].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+            </div>
+            <div className="dk" style={{position:"absolute",right:"2%",bottom:"18%",width:100,height:130,borderRadius:12,overflow:"hidden",opacity:.6,transform:`rotate(6deg) translateY(${-sY*.03}px)`,boxShadow:"0 8px 24px rgba(0,0,0,.05)",transition:"transform .1s"}}>
+              <img src={P[7].img[0]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+            </div>
+            {/* Subtle decorative elements */}
+            <div style={{position:"absolute",top:"12%",left:"8%",width:6,height:6,borderRadius:"50%",background:"rgba(50,107,47,.15)"}} />
+            <div style={{position:"absolute",bottom:"20%",right:"40%",width:4,height:4,borderRadius:"50%",background:"rgba(50,107,47,.1)"}} />
+            <div className="dk" style={{position:"absolute",top:"20%",right:"38%",width:70,height:70,border:"1px solid rgba(50,107,47,.06)",borderRadius:"50%"}} />
+
+            {/* Text */}
+            <div style={{maxWidth:520,position:"relative",zIndex:2,opacity:0,animation:"slideUp .8s ease .1s both"}}>
+              <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
+                <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
+              </div>
+              <h1 className="f" style={{fontSize:"clamp(36px,5.5vw,58px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#2a2a2a"}}>
+                Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
+              </h1>
+              <p style={{fontSize:15,color:"#777",lineHeight:1.8,marginBottom:28,maxWidth:440}}>
+                Premium hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms, delivered to your door in Lebanon.
+              </p>
+              <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:32}}>
+                <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
+                <button className="b bo" onClick={()=>go("about")}>Our Story</button>
+              </div>
+              <div style={{display:"flex",gap:20,flexWrap:"wrap"}}>
+                {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
+                  <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
+                    <span style={{fontSize:14}}>{ic}</span>
+                    <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -269,12 +251,16 @@ export default function App(){
         {/* STATS BAR */}
         <div style={{background:G,color:"#fff",padding:"16px clamp(16px,4vw,48px)"}}>
           <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:16}}>
-            {[["11+","Products"],["100%","Natural"],["$4","Delivery (Free 50$+)"],["💬","Order via WhatsApp"]].map(([n,l])=>(
+            {[["11+","Products"],["100%","Natural"],["$4","Delivery (Free 50$+)"]].map(([n,l])=>(
               <div key={l} style={{textAlign:"center"}}>
                 <p className="f" style={{fontSize:22,fontWeight:700}}>{n}</p>
                 <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>{l}</p>
               </div>
             ))}
+            <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{textAlign:"center",cursor:"pointer",transition:"opacity .3s"}} onMouseEnter={e=>e.currentTarget.style.opacity=".8"} onMouseLeave={e=>e.currentTarget.style.opacity="1"}>
+              <p className="f" style={{fontSize:22,fontWeight:700}}>💬</p>
+              <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>Order via WhatsApp</p>
+            </a>
           </div>
         </div>
 
@@ -536,7 +522,7 @@ export default function App(){
             <div>
               <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Contact</p>
               <a href="mailto:muracha.lb@gmail.com" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>muracha.lb@gmail.com</a>
-              <a href="tel:+96171425250" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>+961 71 425 250</a>
+              <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>+961 71 425 250</a>
               <p style={{fontSize:12,color:"#5a6e58"}}>Lebanon</p>
             </div>
             <div>
