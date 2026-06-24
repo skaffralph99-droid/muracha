@@ -206,7 +206,7 @@ export default function App(){
 
       {pg==="home"&&<>
         {/* HERO SLIDESHOW */}
-        <section style={{position:"relative",height:"75vh",minHeight:480,maxHeight:680,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #1a3a18, #244a22)"}}>
+        <section style={{position:"relative",height:"75vh",minHeight:480,maxHeight:680,overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #f0ede6, #e8f0e6)"}}>
           {/* Slides */}
           {[
             {img:P[1].img[0],label:"Japanese Collection",title:"Hojicha Tea",sub:"Roasted to perfection — a calming coffee alternative",price:"From $15"},
@@ -219,27 +219,27 @@ export default function App(){
               <div style={{maxWidth:1200,margin:"0 auto",height:"100%",display:"flex",alignItems:"center",padding:"0 clamp(24px,5vw,80px)",gap:"clamp(20px,4vw,60px)"}}>
                 {/* Text side */}
                 <div style={{flex:"1 1 50%",zIndex:3}}>
-                  <div style={{display:"inline-block",background:"rgba(255,255,255,.1)",backdropFilter:"blur(8px)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .1s"}}>
-                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.8)",fontWeight:500}}>{slide.label}</p>
+                  <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"5px 16px",marginBottom:18,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .1s"}}>
+                    <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>{slide.label}</p>
                   </div>
-                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#fff",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .15s"}}>
+                  <h1 className="f" style={{fontSize:"clamp(38px,6vw,68px)",fontWeight:300,color:"#2a2a2a",lineHeight:1.05,marginBottom:14,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .15s"}}>
                     {slide.title}
                   </h1>
-                  <p style={{fontSize:15,color:"rgba(255,255,255,.55)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .2s"}}>
+                  <p style={{fontSize:15,color:"rgba(42,42,42,.5)",lineHeight:1.7,marginBottom:10,maxWidth:380,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-20px)",transition:"all .4s ease .2s"}}>
                     {slide.sub}
                   </p>
-                  <p className="f" style={{fontSize:30,fontWeight:600,color:"#fff",marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .25s"}}>
+                  <p className="f" style={{fontSize:30,fontWeight:600,color:G,marginBottom:28,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .25s"}}>
                     {slide.price}
                   </p>
                   <div style={{display:"flex",gap:12,opacity:heroSlide===i?1:0,transform:heroSlide===i?"translateX(0)":"translateX(-15px)",transition:"all .4s ease .3s"}}>
-                    <button className="b bw" onClick={()=>go("shop")}>Shop Now</button>
-                    <button className="b" style={{background:"transparent",border:"1.5px solid rgba(255,255,255,.3)",color:"#fff",padding:"13px 28px",fontSize:12,letterSpacing:1.5}} onClick={()=>go("about")} onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";e.currentTarget.style.borderColor="rgba(255,255,255,.6)"}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.borderColor="rgba(255,255,255,.3)"}}>Our Story</button>
+                    <button className="b bp" onClick={()=>go("shop")}>Shop Now</button>
+                    <button className="b bo" onClick={()=>go("about")}>Our Story</button>
                   </div>
                 </div>
                 {/* Product image */}
                 <div style={{flex:"1 1 45%",display:"flex",alignItems:"center",justifyContent:"center",height:"100%",position:"relative",padding:"20px 0"}}>
-                  <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(255,255,255,.05)",filter:"blur(60px)"}} />
-                  <img src={slide.img} alt={slide.title} style={{height:"clamp(250px,45vh,400px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 20px 60px rgba(0,0,0,.4))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
+                  <div style={{position:"absolute",width:"60%",height:"60%",borderRadius:"50%",background:"rgba(50,107,47,.04)",filter:"blur(60px)"}} />
+                  <img src={slide.img} alt={slide.title} style={{height:"clamp(250px,45vh,400px)",width:"auto",maxWidth:"100%",objectFit:"contain",position:"relative",zIndex:2,filter:"drop-shadow(0 16px 40px rgba(0,0,0,.12))",opacity:heroSlide===i?1:0,transform:heroSlide===i?"scale(1) translateY(0)":"scale(.9) translateY(20px)",transition:"all .5s cubic-bezier(.16,1,.3,1) .1s"}} />
                 </div>
               </div>
             </div>
@@ -247,19 +247,19 @@ export default function App(){
           {/* Dots */}
           <div style={{position:"absolute",bottom:48,left:"50%",transform:"translateX(-50%)",display:"flex",gap:8,zIndex:10}}>
             {[0,1,2,3,4].map(i=>(
-              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?"#fff":"rgba(255,255,255,.25)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
+              <button key={i} onClick={()=>setHeroSlide(i)} style={{width:heroSlide===i?28:10,height:10,borderRadius:5,background:heroSlide===i?G:"rgba(50,107,47,.2)",border:"none",cursor:"pointer",transition:"all .4s cubic-bezier(.16,1,.3,1)"}} />
             ))}
           </div>
           {/* Arrows */}
-          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} className="dk" style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.08)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.12)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:"#fff",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>‹</button>
-          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} className="dk" style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(255,255,255,.08)",backdropFilter:"blur(4px)",border:"1px solid rgba(255,255,255,.12)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:"#fff",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,.18)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(255,255,255,.08)"}>›</button>
+          <button onClick={()=>setHeroSlide(p=>(p+4)%5)} className="dk" style={{position:"absolute",left:20,top:"50%",transform:"translateY(-50%)",background:"rgba(50,107,47,.06)",border:"1px solid rgba(50,107,47,.1)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:G,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(50,107,47,.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(50,107,47,.06)"}>‹</button>
+          <button onClick={()=>setHeroSlide(p=>(p+1)%5)} className="dk" style={{position:"absolute",right:20,top:"50%",transform:"translateY(-50%)",background:"rgba(50,107,47,.06)",border:"1px solid rgba(50,107,47,.1)",borderRadius:"50%",width:46,height:46,cursor:"pointer",color:G,fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",zIndex:10,transition:"all .3s"}} onMouseEnter={e=>e.currentTarget.style.background="rgba(50,107,47,.12)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(50,107,47,.06)"}>›</button>
           {/* Trust bar */}
-          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(0,0,0,.3)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
+          <div style={{position:"absolute",bottom:0,left:0,right:0,background:"rgba(50,107,47,.05)",backdropFilter:"blur(12px)",padding:"12px clamp(16px,4vw,48px)",zIndex:10}}>
             <div style={{maxWidth:800,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:12}}>
               {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"],["💚","Free above $50"]].map(([ic,tx])=>(
                 <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
                   <span style={{fontSize:14}}>{ic}</span>
-                  <span style={{fontSize:11,color:"rgba(255,255,255,.75)",fontWeight:500}}>{tx}</span>
+                  <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
                 </div>
               ))}
             </div>
@@ -536,6 +536,7 @@ export default function App(){
             <div>
               <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Contact</p>
               <a href="mailto:muracha.lb@gmail.com" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>muracha.lb@gmail.com</a>
+              <a href="tel:+96171425250" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>+961 71 425 250</a>
               <p style={{fontSize:12,color:"#5a6e58"}}>Lebanon</p>
             </div>
             <div>
