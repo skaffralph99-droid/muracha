@@ -36,6 +36,7 @@ export default function AdminPanel() {
   const [products, setProducts] = useState([]);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [reviews, setReviews] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
   const [toast, setToast] = useState(null);
@@ -52,6 +53,8 @@ export default function AdminPanel() {
       if (s) setSettings(JSON.parse(s));
       const r = localStorage.getItem('muracha_reviews');
       if (r) setReviews(JSON.parse(r));
+      const o = localStorage.getItem('muracha_orders');
+      if (o) setOrders(JSON.parse(o));
     } catch (e) {
       setProducts(DEFAULT_PRODUCTS);
     }
@@ -143,6 +146,8 @@ export default function AdminPanel() {
     minPrice: products.length ? Math.min(...products.map(p => p.price)).toFixed(2) : 0,
     maxPrice: products.length ? Math.max(...products.map(p => p.price)).toFixed(2) : 0,
     reviewCount: reviews.length,
+    orderCount: orders.length,
+    pendingOrders: orders.filter(o => o.status === "pending").length,
   };
 
   // LOGIN
@@ -202,7 +207,7 @@ export default function AdminPanel() {
           <p style={{ fontSize: 11, color: "#aaa", marginTop: 2 }}>Admin Panel</p>
         </div>
         <nav style={{ flex: 1, padding: "16px 12px" }}>
-          {[["dashboard", "📊", "Dashboard"], ["products", "📦", "Products"], ["reviews", "⭐", "Reviews"], ["settings", "⚙️", "Settings"], ["data", "💾", "Data"]].map(([id, icon, label]) => (
+          {[["dashboard", "📊", "Dashboard"], ["orders", "🛒", "Orders"], ["products", "📦", "Products"], ["reviews", "⭐", "Reviews"], ["settings", "⚙️", "Settings"], ["data", "💾", "Data"]].map(([id, icon, label]) => (
             <button key={id} onClick={() => { setTab(id); setEditing(null); setAdding(false); }}
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "none", borderRadius: 8, background: tab === id ? `${G}12` : "transparent", color: tab === id ? G : "#555", fontSize: 13, fontWeight: tab === id ? 600 : 400, cursor: "pointer", marginBottom: 2, textAlign: "left" }}>
               <span style={{ fontSize: 16 }}>{icon}</span>{label}
@@ -230,6 +235,8 @@ export default function AdminPanel() {
                 [`$${stats.avgPrice}`, "Avg Price", "💰", "#f0e6ff"],
                 [`$${stats.minPrice} – $${stats.maxPrice}`, "Price Range", "📊", "#e6fff0"],
                 [stats.reviewCount, "User Reviews", "⭐", "#fff8e6"],
+                [stats.orderCount, "Total Orders", "🛒", "#e6fff0"],
+                [stats.pendingOrders, "Pending", "⏳", "#fff0e6"],
                 [settings.deliveryFee === 0 ? "Free" : `$${settings.deliveryFee}`, "Delivery Fee", "🚚", "#f5f0e6"],
               ].map(([val, label, icon, bg]) => (
                 <div key={label} style={{ background: "#fff", borderRadius: 12, padding: "20px 18px", border: "1px solid #f0f0ec" }}>
@@ -246,6 +253,69 @@ export default function AdminPanel() {
               <button onClick={exportData} style={{ padding: "10px 20px", background: "#fff", border: "1px solid #ddd", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>Export Backup</button>
               <a href="/" target="_blank" style={{ padding: "10px 20px", background: "#fff", border: "1px solid #ddd", borderRadius: 8, fontSize: 13, cursor: "pointer", textDecoration: "none", color: "#333", display: "inline-block" }}>View Live Site →</a>
             </div>
+          </div>
+        )}
+
+        {/* ORDERS */}
+        {tab === "orders" && (
+          <div style={{ animation: "fadeIn .3s ease" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+              <h1 style={{ fontSize: 24, fontWeight: 700 }}>Orders ({orders.length})</h1>
+              {orders.length > 0 && <div style={{ display: "flex", gap: 8 }}>
+                <span style={{ fontSize: 12, padding: "4px 12px", borderRadius: 12, background: "#fff8e6", color: "#c47a00" }}>{orders.filter(o=>o.status==="pending").length} Pending</span>
+                <span style={{ fontSize: 12, padding: "4px 12px", borderRadius: 12, background: "#e6f0ff", color: "#4070c4" }}>{orders.filter(o=>o.status==="confirmed").length} Confirmed</span>
+                <span style={{ fontSize: 12, padding: "4px 12px", borderRadius: 12, background: "#e8f0e6", color: G }}>{orders.filter(o=>o.status==="delivered").length} Delivered</span>
+              </div>}
+            </div>
+            {orders.length === 0 ? (
+              <div style={{ background: "#fff", borderRadius: 12, padding: 40, textAlign: "center", border: "1px solid #f0f0ec" }}>
+                <p style={{ fontSize: 36, marginBottom: 12 }}>🛒</p>
+                <p style={{ fontSize: 15, fontWeight: 500, marginBottom: 4 }}>No orders yet</p>
+                <p style={{ fontSize: 13, color: "#999" }}>Orders placed through WhatsApp checkout will appear here</p>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gap: 12 }}>
+                {orders.map((o, i) => (
+                  <div key={o.id || i} style={{ background: "#fff", borderRadius: 12, padding: "20px 24px", border: "1px solid #f0f0ec" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+                      <div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+                          <p style={{ fontSize: 16, fontWeight: 700 }}>{o.customer?.name || "Unknown"}</p>
+                          <span style={{ fontSize: 11, padding: "3px 10px", borderRadius: 10, fontWeight: 500, background: o.status === "pending" ? "#fff8e6" : o.status === "confirmed" ? "#e6f0ff" : o.status === "delivered" ? "#e8f0e6" : "#fef0f0", color: o.status === "pending" ? "#c47a00" : o.status === "confirmed" ? "#4070c4" : o.status === "delivered" ? G : "#e74c3c" }}>
+                            {o.status === "pending" ? "⏳ Pending" : o.status === "confirmed" ? "✓ Confirmed" : o.status === "delivered" ? "📦 Delivered" : "✕ Cancelled"}
+                          </span>
+                        </div>
+                        <p style={{ fontSize: 12, color: "#999" }}>{o.date ? new Date(o.date).toLocaleString() : "—"}</p>
+                      </div>
+                      <p style={{ fontSize: 20, fontWeight: 700, color: G }}>${o.total?.toFixed(2) || "0.00"}</p>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                      <p style={{ fontSize: 13, color: "#555" }}>📱 {o.customer?.phone || "—"}</p>
+                      <p style={{ fontSize: 13, color: "#555" }}>📍 {o.customer?.address || "—"}</p>
+                      {o.customer?.notes && <p style={{ fontSize: 13, color: "#888" }}>📝 {o.customer.notes}</p>}
+                    </div>
+                    <div style={{ background: "#fafaf7", borderRadius: 8, padding: "10px 14px", marginBottom: 14 }}>
+                      {o.items?.map((item, j) => (
+                        <div key={j} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, paddingBottom: 4, marginBottom: 4, borderBottom: j < o.items.length - 1 ? "1px solid #f0f0ec" : "none" }}>
+                          <span>{item.name} × {item.qty}</span>
+                          <span style={{ fontWeight: 600 }}>${(item.price * item.qty).toFixed(2)}</span>
+                        </div>
+                      ))}
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#888", marginTop: 4 }}>
+                        <span>Delivery</span><span>{o.delivery === 0 ? "Free" : `$${o.delivery?.toFixed(2)}`}</span>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {o.status === "pending" && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "confirmed" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Order confirmed"); }} style={{ padding: "6px 14px", background: "#e6f0ff", color: "#4070c4", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>✓ Confirm</button>}
+                      {(o.status === "pending" || o.status === "confirmed") && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "delivered" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Marked as delivered"); }} style={{ padding: "6px 14px", background: "#e8f0e6", color: G, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>📦 Delivered</button>}
+                      {o.status !== "cancelled" && <button onClick={() => { const updated = orders.map((or, idx) => idx === i ? { ...or, status: "cancelled" } : or); setOrders(updated); save("muracha_orders", updated); showToast("Order cancelled"); }} style={{ padding: "6px 14px", background: "#fef0f0", color: "#e74c3c", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>Cancel</button>}
+                      <button onClick={() => { setConfirm({ title: "Delete Order", message: "Remove this order permanently?", action: () => { const updated = orders.filter((_, idx) => idx !== i); setOrders(updated); save("muracha_orders", updated); showToast("Order deleted"); setConfirm(null); }}); }} style={{ padding: "6px 14px", background: "#f5f5f0", color: "#999", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>Delete</button>
+                      <a href={`https://wa.me/${o.customer?.phone?.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" style={{ padding: "6px 14px", background: "#dcf8c6", color: "#25d366", borderRadius: 6, fontSize: 12, fontWeight: 500, display: "inline-block" }}>💬 WhatsApp</a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

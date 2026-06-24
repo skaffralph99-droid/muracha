@@ -66,7 +66,7 @@ export default function App(){
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
   const fil=cat==="all"?P:P.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;try{const order={id:Date.now(),date:new Date().toISOString(),customer:{name:form.name,phone:form.phone,address:form.address,notes:form.notes},items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"};const prev=JSON.parse(localStorage.getItem("muracha_orders")||"[]");localStorage.setItem("muracha_orders",JSON.stringify([order,...prev]))}catch(e){}window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
