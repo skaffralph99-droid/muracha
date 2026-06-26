@@ -31,7 +31,7 @@ const defaultReviews=[
 ];
 
 function useInView(t=0.1){const r=useRef(null);const[v,s]=useState(false);useEffect(()=>{const e=r.current;if(!e)return;const o=new IntersectionObserver(([en])=>{if(en.isIntersecting){s(true);o.unobserve(e)}},{threshold:t});o.observe(e);return()=>o.disconnect()},[t]);return[r,v]}
-function R({children,delay=0,d="up",style={}}){const[r,v]=useInView();const t={up:"translateY(40px)",scale:"scale(0.93)",left:"translateX(40px)",right:"translateX(-40px)"};return(<div ref={r} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[d],transition:`all .7s cubic-bezier(.16,1,.3,1) ${delay}s`}}>{children}</div>)}
+function R({children,delay=0,d="up",style={}}){const[r,v]=useInView();const t={up:"translateY(40px)",scale:"scale(0.93)",left:"translateX(40px)",right:"translateX(-40px)"};return(<div ref={r} style={{...style,opacity:v?1:0,transform:v?"translate(0) scale(1)":t[d],transition:`all .7s cubic-bezier(.16,1,.3,1) ${delay}s`,willChange:"transform,opacity",backfaceVisibility:"hidden"}}>{children}</div>)}
 
 export default function App(){
   const[pg,setPg]=useState("home");
@@ -54,7 +54,7 @@ export default function App(){
   useEffect(()=>{try{const s=localStorage.getItem('muracha_reviews');if(s)setUserRevs(JSON.parse(s))}catch(e){}},[]);
   const submitReview=()=>{if(!revForm.name||!revForm.text)return;const nr={...revForm,date:new Date().toLocaleDateString()};const updated=[...userRevs,nr];setUserRevs(updated);try{localStorage.setItem('muracha_reviews',JSON.stringify(updated))}catch(e){}setRevForm({name:"",text:"",stars:5});setRevSubmitted(true);setTimeout(()=>setRevSubmitted(false),3000)};
 
-  useEffect(()=>{const h=()=>setSY(window.scrollY);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
+  useEffect(()=>{let ticking=false;const h=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{setSY(window.scrollY);ticking=false})}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
@@ -98,7 +98,7 @@ export default function App(){
         .bw{background:#fff;color:${G};padding:14px 30px;font-size:13px}.bw:hover{background:rgba(255,255,255,.9);transform:translateY(-2px)}
         .cb{padding:9px 20px;border:1px solid rgba(50,107,47,.12);background:transparent;color:#5a6e58;font-family:'DM Sans';font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:30px;font-weight:500}
         .cb.on{background:${G};color:#fff;border-color:${G}}.cb:hover:not(.on){border-color:${GL};color:${GL}}
-        .ov{position:fixed;inset:0;background:rgba(20,30,18,.55);z-index:200;backdrop-filter:blur(8px);animation:fadeIn .25s}
+        .ov{position:fixed;inset:0;background:rgba(20,30,18,.6);z-index:200;animation:fadeIn .25s}
         .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
         .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
         .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
@@ -112,7 +112,7 @@ export default function App(){
       <div style={{position:"fixed",inset:0,background:"#fafaf7",zIndex:150,pointerEvents:"none",opacity:trans?1:0,transition:"opacity .25s"}} />
 
       {/* NAV */}
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.94)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(50,107,47,.05)"}}>
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.97)",borderBottom:"1px solid rgba(50,107,47,.05)",transform:"translateZ(0)"}}>
         <div style={{display:"flex",alignItems:"center",gap:32}}>
           <span onClick={()=>go("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:40,objectFit:"contain"}} /></span>
           <div className="dk" style={{display:"flex",gap:24}}>
@@ -183,7 +183,7 @@ export default function App(){
       {sel&&(<>
         <div className="ov" onClick={()=>setSel(null)} />
         <div className="mp" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:18,display:"flex",flexDirection:"column",overflow:"hidden",animation:"modalIn .4s cubic-bezier(.16,1,.3,1)"}}>
-          <button onClick={()=>setSel(null)} style={{position:"absolute",top:16,right:16,background:"rgba(255,255,255,.9)",backdropFilter:"blur(8px)",border:"none",borderRadius:"50%",width:38,height:38,cursor:"pointer",fontSize:16,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,.06)"}}>✕</button>
+          <button onClick={()=>setSel(null)} style={{position:"absolute",top:16,right:16,background:"rgba(255,255,255,.95)",border:"none",borderRadius:"50%",width:38,height:38,cursor:"pointer",fontSize:16,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,.06)"}}>✕</button>
           <div style={{display:"flex",flex:1,overflow:"hidden",flexWrap:"wrap"}}>
             <div style={{flex:"1 1 55%",minWidth:280,background:GX,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28}}>
               <img src={sel.img[ii]||sel.img[0]} alt={sel.name} style={{maxWidth:"85%",maxHeight:"55vh",objectFit:"contain",borderRadius:12,transition:"all .4s"}} />
