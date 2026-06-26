@@ -56,7 +56,7 @@ export default function App(){
 
   useEffect(()=>{let ticking=false;const h=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{setSY(window.scrollY);ticking=false})}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
-  useEffect(()=>{document.body.style.overflow=(sel||cartOpen)?"hidden":"";return()=>{document.body.style.overflow=""}},[sel,cartOpen]);
+  useEffect(()=>{if(sel||cartOpen){const y=window.scrollY;document.body.style.position="fixed";document.body.style.top=`-${y}px`;document.body.style.left="0";document.body.style.right="0";document.body.style.overflow="hidden"}else{const y=document.body.style.top;document.body.style.position="";document.body.style.top="";document.body.style.left="";document.body.style.right="";document.body.style.overflow="";if(y)window.scrollTo(0,parseInt(y||"0")*-1)}return()=>{document.body.style.position="";document.body.style.top="";document.body.style.left="";document.body.style.right="";document.body.style.overflow=""}},[sel,cartOpen]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
