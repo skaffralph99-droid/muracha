@@ -56,10 +56,10 @@ export default function App(){
 
   useEffect(()=>{let ticking=false;const h=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{setSY(window.scrollY);ticking=false})}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
-  useEffect(()=>{if(sel||cartOpen){const y=window.scrollY;document.body.style.position="fixed";document.body.style.top=`-${y}px`;document.body.style.left="0";document.body.style.right="0";document.body.style.overflow="hidden"}else{const y=document.body.style.top;document.body.style.position="";document.body.style.top="";document.body.style.left="";document.body.style.right="";document.body.style.overflow="";if(y)window.scrollTo(0,parseInt(y||"0")*-1)}return()=>{document.body.style.position="";document.body.style.top="";document.body.style.left="";document.body.style.right="";document.body.style.overflow=""}},[sel,cartOpen]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
-  const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);setSel(null);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
+  const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
+  const viewProduct=(p)=>{setSel(p);setII(0);go("product")};
   const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
   const rm=id=>setCart(p=>p.filter(i=>i.id!==id));
   const uq=(id,d)=>setCart(p=>p.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
@@ -180,30 +180,6 @@ export default function App(){
         </div>
       )}
 
-      {/* MODAL */}
-      {sel&&(<>
-        <div className="ov" onClick={()=>setSel(null)} />
-        <div className="mp" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:18,display:"flex",flexDirection:"column",overflow:"auto",WebkitOverflowScrolling:"touch",animation:"modalIn .4s cubic-bezier(.16,1,.3,1)"}}>
-          <button onClick={()=>setSel(null)} style={{position:"absolute",top:16,right:16,background:"rgba(255,255,255,.95)",border:"none",borderRadius:"50%",width:38,height:38,cursor:"pointer",fontSize:16,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,.06)"}}>✕</button>
-          <div style={{display:"flex",flex:1,overflow:"hidden",flexWrap:"wrap"}}>
-            <div style={{flex:"1 1 55%",minWidth:280,background:GX,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28}}>
-              <img src={sel.img[ii]||sel.img[0]} alt={sel.name} style={{maxWidth:"85%",maxHeight:"55vh",objectFit:"contain",borderRadius:12,transition:"all .4s"}} />
-              {sel.img.length>1&&<div style={{display:"flex",gap:8,marginTop:16}}>{sel.img.map((im,i)=><img key={i} src={im} alt="" onClick={()=>setII(i)} style={{width:56,height:56,objectFit:"cover",borderRadius:8,cursor:"pointer",border:i===ii?`2px solid ${G}`:"2px solid transparent",opacity:i===ii?1:.4,transition:"all .3s"}} />)}</div>}
-            </div>
-            <div style={{flex:"1 1 40%",minWidth:280,padding:"40px 32px",overflow:"auto"}}>
-              <p style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:8,fontWeight:600}}>{CATS[sel.cat]}</p>
-              <h2 className="f" style={{fontSize:32,fontWeight:400,marginBottom:6,lineHeight:1.2}}>{sel.name}</h2>
-              <p style={{fontSize:12,color:"#8a9a88",marginBottom:16}}>{sel.size}</p>
-              <p className="f" style={{fontSize:28,fontWeight:600,color:G,marginBottom:24}}>${sel.price.toFixed(2)}</p>
-              <div style={{fontSize:14,lineHeight:1.8,color:"#4a4a4a",marginBottom:20}}>{sel.desc.split("\n").map((line,i)=>line.trim()?<p key={i} style={{marginBottom:8}}>{line}</p>:null)}</div>
-              {sel.serve&&<div style={{background:"rgba(50,107,47,.05)",borderRadius:8,padding:"10px 16px",marginBottom:20,display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}>🍵</span><p style={{fontSize:13,color:G,fontWeight:600}}>{sel.serve}</p></div>}
-              {sel.ben&&<div style={{marginBottom:24}}><p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:10}}>Benefits</p><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{sel.ben.map(b=><span key={b} className="tg">{b}</span>)}</div></div>}
-              <button className="b bp" style={{width:"100%"}} onClick={()=>{add(sel);setSel(null)}}>Add to Cart</button>
-            </div>
-          </div>
-        </div>
-      </>)}
-
       <div style={{opacity:trans?0:1,transform:trans?"translateY(8px)":"translateY(0)",transition:"all .25s"}}>
 
       {pg==="home"&&<>
@@ -283,7 +259,7 @@ export default function App(){
           <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
             {P.slice(0,4).map((p,i)=>(
               <R key={p.id} delay={i*.08}>
-                <div className="card" onClick={()=>{setSel(p);setII(0)}}>
+                <div className="card" onClick={()=>{viewProduct(p)}}>
                   <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
                     <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
                     <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.04)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -333,7 +309,7 @@ export default function App(){
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:16}} className="pg">
             {P.filter(p=>p.cat==="chinese").map((p,i)=>(
               <R key={p.id} delay={i*.06}>
-                <div onClick={()=>{setSel(p);setII(0)}} style={{cursor:"pointer",textAlign:"center",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-6px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
+                <div onClick={()=>{viewProduct(p)}} style={{cursor:"pointer",textAlign:"center",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-6px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
                   <div style={{width:"100%",aspectRatio:"1",borderRadius:14,overflow:"hidden",marginBottom:12,border:"1px solid rgba(50,107,47,.06)"}}>
                     <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .4s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.08)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
                   </div>
@@ -438,7 +414,7 @@ export default function App(){
           <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
             {fil.map((p,i)=>(
               <R key={p.id} delay={i*.06}>
-                <div className="card" onClick={()=>{setSel(p);setII(0)}}>
+                <div className="card" onClick={()=>{viewProduct(p)}}>
                   <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
                     <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
                     <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -457,6 +433,37 @@ export default function App(){
                 </div>
               </R>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* PRODUCT PAGE */}
+      {pg==="product"&&sel&&(
+        <section style={{paddingTop:80,padding:"80px clamp(16px,4vw,48px) 60px",maxWidth:1000,margin:"0 auto"}}>
+          <button onClick={()=>go("shop")} style={{display:"flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",fontSize:13,color:G,fontWeight:500,marginBottom:24,padding:0}}>← Back to Shop</button>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"clamp(24px,4vw,48px)",alignItems:"start"}} className="hg">
+            {/* Images */}
+            <div>
+              <div style={{borderRadius:14,overflow:"hidden",background:GX,marginBottom:12}}>
+                <img src={sel.img[ii]||sel.img[0]} alt={sel.name} style={{width:"100%",aspectRatio:"1",objectFit:"cover"}} />
+              </div>
+              {sel.img.length>1&&<div style={{display:"flex",gap:8}}>{sel.img.map((im,i)=><div key={i} onClick={()=>setII(i)} style={{flex:1,borderRadius:10,overflow:"hidden",cursor:"pointer",border:i===ii?`2px solid ${G}`:"2px solid transparent",opacity:i===ii?1:.5,transition:"all .3s"}}><img src={im} alt="" style={{width:"100%",aspectRatio:"1",objectFit:"cover"}} /></div>)}</div>}
+            </div>
+            {/* Details */}
+            <div>
+              <p style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:10,fontWeight:600}}>{CATS[sel.cat]}</p>
+              <h1 className="f" style={{fontSize:"clamp(28px,4vw,38px)",fontWeight:400,marginBottom:6,lineHeight:1.2}}>{sel.name}</h1>
+              <p style={{fontSize:13,color:"#8a9a88",marginBottom:18}}>{sel.size}</p>
+              <p className="f" style={{fontSize:32,fontWeight:600,color:G,marginBottom:28}}>${sel.price.toFixed(2)}</p>
+              <div style={{fontSize:14,lineHeight:1.9,color:"#4a4a4a",marginBottom:24}}>{sel.desc.split("\n").map((line,i)=>line.trim()?<p key={i} style={{marginBottom:10}}>{line}</p>:null)}</div>
+              {sel.serve&&<div style={{background:"rgba(50,107,47,.05)",borderRadius:10,padding:"12px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>🍵</span><p style={{fontSize:14,color:G,fontWeight:600}}>{sel.serve}</p></div>}
+              {sel.ben&&<div style={{marginBottom:28}}><p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:12}}>Benefits</p><div style={{display:"flex",flexWrap:"wrap",gap:8}}>{sel.ben.map(b=><span key={b} className="tg" style={{padding:"6px 16px",fontSize:12}}>{b}</span>)}</div></div>}
+              <button className="b bp" style={{width:"100%",padding:"16px"}} onClick={()=>{add(sel);go("shop")}}>Add to Cart</button>
+              <div style={{display:"flex",gap:16,marginTop:16,justifyContent:"center"}}>
+                <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:GL}}>Order via WhatsApp →</a>
+                <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:GL}}>Order via Instagram →</a>
+              </div>
+            </div>
           </div>
         </section>
       )}
