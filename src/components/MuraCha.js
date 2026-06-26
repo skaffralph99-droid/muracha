@@ -20,7 +20,7 @@ const P = [
   {id:"white-chrysanthemum",name:"White Chrysanthemum Tea Bomb Jar",price:10,size:"4 × 5g balls",cat:"chinese",desc:"A glass jar containing 4 tea balls of white tea with chrysanthemum flower.\n\nSteep in boiling water to enjoy an artistic blooming experience.",serve:"1 ball makes 1–2 cups of tea",ben:["Anti-bacterial","Good for Eyes & Liver","Reduces Swelling"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2203.jpg?v=1770921274","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9036.jpg?v=1770921274"]},
   {id:"white-tangerine",name:"White Tangerine Peel Tea Bomb Jar",price:10,size:"4 × 5g balls",cat:"chinese",desc:"A glass jar containing 4 tea balls of white tea with tangerine peel.\n\nSteep in boiling water to enjoy an artistic blooming experience.",serve:"1 ball makes 1–2 cups of tea",ben:["Reduces Fat","Aids Digestion","Reduces Cough","Rich in Vitamin C"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/L6A2201.jpg?v=1770921245","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9037.jpg?v=1770921245"]},
 ];
-const CATS={all:"All",japanese:"Japanese",chinese:"Tea Bombs",powders:"Powders",herbal:"Herbal Tea"};
+const CATS={all:"All",japanese:"Japanese",chinese:"Tea Bombs",powders:"Powders",herbal:"Herbal Tea",sweets:"Sweets"};
 const defaultReviews=[
   {name:"Sarah M.",text:"The hojicha is incredible — smooth, calming, and the perfect coffee replacement. I'm obsessed!",stars:5},
   {name:"Rami K.",text:"The rose tea bombs are a whole experience. Watching them bloom is magical. Taste is amazing too.",stars:5},
