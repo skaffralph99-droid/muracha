@@ -183,7 +183,7 @@ export default function App(){
       {/* MODAL */}
       {sel&&(<>
         <div className="ov" onClick={()=>setSel(null)} />
-        <div className="mp" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:18,display:"flex",flexDirection:"column",overflow:"hidden",animation:"modalIn .4s cubic-bezier(.16,1,.3,1)"}}>
+        <div className="mp" style={{position:"fixed",zIndex:201,background:"#fff",top:"4%",left:"4%",right:"4%",bottom:"4%",borderRadius:18,display:"flex",flexDirection:"column",overflow:"auto",WebkitOverflowScrolling:"touch",animation:"modalIn .4s cubic-bezier(.16,1,.3,1)"}}>
           <button onClick={()=>setSel(null)} style={{position:"absolute",top:16,right:16,background:"rgba(255,255,255,.95)",border:"none",borderRadius:"50%",width:38,height:38,cursor:"pointer",fontSize:16,zIndex:10,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 2px 10px rgba(0,0,0,.06)"}}>✕</button>
           <div style={{display:"flex",flex:1,overflow:"hidden",flexWrap:"wrap"}}>
             <div style={{flex:"1 1 55%",minWidth:280,background:GX,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28}}>
