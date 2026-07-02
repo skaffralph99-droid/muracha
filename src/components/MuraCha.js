@@ -41,6 +41,7 @@ export default function App(){
   const[cartOpen,setCartOpen]=useState(false);
   const[sY,setSY]=useState(0);
   const[ii,setII]=useState(0);
+  const[selVar,setSelVar]=useState(0);
   const[form,setForm]=useState({name:"",phone:"",address:"",notes:""});
   const[toast,setToast]=useState(null);
   const[trans,setTrans]=useState(false);
@@ -53,7 +54,7 @@ export default function App(){
   const allRevs=[...defaultReviews,...userRevs];
 
   useEffect(()=>{try{const s=localStorage.getItem('muracha_reviews');if(s)setUserRevs(JSON.parse(s))}catch(e){}},[]);
-  useEffect(()=>{fetch(`${SB_URL}/rest/v1/muracha_products?active=eq.true&order=sort_order.asc`,{headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`}}).then(r=>r.json()).then(data=>{if(Array.isArray(data)&&data.length>0){setProducts(data.map(p=>({id:p.id,name:p.name,price:Number(p.price),size:p.size,cat:p.cat,desc:p.description||"",serve:p.serve||undefined,ben:p.benefits||[],img:p.images||[]})))}}).catch(()=>{})},[]);
+  useEffect(()=>{fetch(`${SB_URL}/rest/v1/muracha_products?active=eq.true&order=sort_order.asc`,{headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`}}).then(r=>r.json()).then(data=>{if(Array.isArray(data)&&data.length>0){setProducts(data.map(p=>({id:p.id,name:p.name,price:Number(p.price),size:p.size,cat:p.cat,desc:p.description||"",serve:p.serve||undefined,ben:p.benefits||[],img:p.images||[],variants:p.variants||null})))}}).catch(()=>{})},[]);
   const submitReview=()=>{if(!revForm.name||!revForm.text)return;const nr={...revForm,date:new Date().toLocaleDateString()};const updated=[...userRevs,nr];setUserRevs(updated);try{localStorage.setItem('muracha_reviews',JSON.stringify(updated))}catch(e){}setRevForm({name:"",text:"",stars:5});setRevSubmitted(true);setTimeout(()=>setRevSubmitted(false),3000)};
 
   useEffect(()=>{let ticking=false;const h=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{setSY(window.scrollY);ticking=false})}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
@@ -61,10 +62,10 @@ export default function App(){
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
   const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
-  const viewProduct=(p)=>{setSel(p);setII(0);go("product")};
-  const add=(p)=>{setCart(prev=>{const ex=prev.find(i=>i.id===p.id);return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,qty:1}]});setToast(p.name)};
-  const rm=id=>setCart(p=>p.filter(i=>i.id!==id));
-  const uq=(id,d)=>setCart(p=>p.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
+  const viewProduct=(p)=>{setSel(p);setII(0);setSelVar(0);go("product")};
+  const add=(p)=>{const cid=p.cartId||p.id;setCart(prev=>{const ex=prev.find(i=>(i.cartId||i.id)===cid);return ex?prev.map(i=>(i.cartId||i.id)===cid?{...i,qty:i.qty+1}:i):[...prev,{...p,cartId:cid,qty:1}]});setToast(p.name)};
+  const rm=id=>setCart(p=>p.filter(i=>(i.cartId||i.id)!==id));
+  const uq=(id,d)=>setCart(p=>p.map(i=>(i.cartId||i.id)===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
   const delivery=tot>=FREE_SHIP_MIN?0:DELIVERY_FEE;
   const grandTotal=tot+delivery;
@@ -141,19 +142,19 @@ export default function App(){
           <div style={{flex:1,overflow:"auto",padding:20}}>
             {cart.length===0?<p style={{color:"#b0bfae",fontSize:14,textAlign:"center",marginTop:50}}>Your cart is empty</p>:
             cart.map((item,i)=>(
-              <div key={item.id} style={{display:"flex",gap:14,marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(50,107,47,.04)"}}>
+              <div key={item.cartId||item.id} style={{display:"flex",gap:14,marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(50,107,47,.04)"}}>
                 <img src={item.img[0]} alt="" style={{width:64,height:64,objectFit:"cover",borderRadius:10}} />
                 <div style={{flex:1}}>
                   <p style={{fontSize:13,fontWeight:600,marginBottom:2}}>{item.name}</p>
                   <p style={{fontSize:11,color:"#8a9a88",marginBottom:6}}>{item.size}</p>
                   <div style={{display:"flex",alignItems:"center",gap:10}}>
                     <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.1)",borderRadius:5}}>
-                      <button onClick={()=>uq(item.id,-1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>−</button>
+                      <button onClick={()=>uq(item.cartId||item.id,-1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>−</button>
                       <span style={{fontSize:12,fontWeight:600,minWidth:18,textAlign:"center"}}>{item.qty}</span>
-                      <button onClick={()=>uq(item.id,1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>+</button>
+                      <button onClick={()=>uq(item.cartId||item.id,1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>+</button>
                     </div>
                     <span style={{fontSize:13,fontWeight:700,color:G}}>${(item.price*item.qty).toFixed(2)}</span>
-                    <button onClick={()=>rm(item.id)} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",fontSize:10,color:"#c9857a",fontWeight:600}}>Remove</button>
+                    <button onClick={()=>rm(item.cartId||item.id)} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",fontSize:10,color:"#c9857a",fontWeight:600}}>Remove</button>
                   </div>
                 </div>
               </div>
@@ -455,12 +456,23 @@ export default function App(){
             <div>
               <p style={{fontSize:10,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:10,fontWeight:600}}>{CATS[sel.cat]}</p>
               <h1 className="f" style={{fontSize:"clamp(28px,4vw,38px)",fontWeight:400,marginBottom:6,lineHeight:1.2}}>{sel.name}</h1>
-              <p style={{fontSize:13,color:"#8a9a88",marginBottom:18}}>{sel.size}</p>
-              <p className="f" style={{fontSize:32,fontWeight:600,color:G,marginBottom:28}}>${sel.price.toFixed(2)}</p>
+              {sel.variants&&sel.variants.length>0?(
+                <div style={{marginBottom:18}}>
+                  <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:10}}>Size</p>
+                  <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                    {sel.variants.map((v,vi)=>(
+                      <button key={vi} onClick={()=>setSelVar(vi)} style={{padding:"10px 20px",border:selVar===vi?`2px solid ${G}`:"2px solid #e0e0e0",borderRadius:6,background:selVar===vi?"rgba(50,107,47,.05)":"#fff",cursor:"pointer",fontSize:13,fontWeight:selVar===vi?600:400,color:selVar===vi?G:"#555",transition:"all .2s"}}>{v.size} — ${Number(v.price).toFixed(2)}</button>
+                    ))}
+                  </div>
+                </div>
+              ):(
+                <p style={{fontSize:13,color:"#8a9a88",marginBottom:18}}>{sel.size}</p>
+              )}
+              <p className="f" style={{fontSize:32,fontWeight:600,color:G,marginBottom:28}}>${(sel.variants&&sel.variants.length>0?Number(sel.variants[selVar].price):sel.price).toFixed(2)}</p>
               <div style={{fontSize:14,lineHeight:1.9,color:"#4a4a4a",marginBottom:24}}>{sel.desc.split("\n").map((line,i)=>line.trim()?<p key={i} style={{marginBottom:10}}>{line}</p>:null)}</div>
               {sel.serve&&<div style={{background:"rgba(50,107,47,.05)",borderRadius:10,padding:"12px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>🍵</span><p style={{fontSize:14,color:G,fontWeight:600}}>{sel.serve}</p></div>}
               {sel.ben&&<div style={{marginBottom:28}}><p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:12}}>Benefits</p><div style={{display:"flex",flexWrap:"wrap",gap:8}}>{sel.ben.map(b=><span key={b} className="tg" style={{padding:"6px 16px",fontSize:12}}>{b}</span>)}</div></div>}
-              <button className="b bp" style={{width:"100%",padding:"16px"}} onClick={()=>{add(sel);go("shop")}}>Add to Cart</button>
+              <button className="b bp" style={{width:"100%",padding:"16px"}} onClick={()=>{const v=sel.variants&&sel.variants.length>0?sel.variants[selVar]:null;add({...sel,price:v?Number(v.price):sel.price,size:v?v.size:sel.size,cartId:sel.id+(v?`-${v.size}`:"")});go("shop")}}>Add to Cart</button>
               <div style={{display:"flex",gap:16,marginTop:16,justifyContent:"center"}}>
                 <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:GL}}>Order via WhatsApp →</a>
                 <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:GL}}>Order via Instagram →</a>
@@ -494,7 +506,7 @@ export default function App(){
           <R delay={0.1}><div style={{background:"#fff",borderRadius:14,padding:24,marginBottom:20,border:"1px solid rgba(50,107,47,.05)"}}>
             <h3 className="f" style={{fontSize:18,marginBottom:14}}>Order Summary</h3>
             {cart.map(item=>(
-              <div key={item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:"1px solid rgba(50,107,47,.03)",fontSize:13}}>
+              <div key={item.cartId||item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:"1px solid rgba(50,107,47,.03)",fontSize:13}}>
                 <span>{item.name} × {item.qty}</span>
                 <span style={{fontWeight:700}}>${(item.price*item.qty).toFixed(2)}</span>
               </div>

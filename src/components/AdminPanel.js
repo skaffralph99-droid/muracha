@@ -98,6 +98,7 @@ export default function AdminPanel() {
       serve: product.serve || null,
       benefits: product.ben || [],
       images: product.img || [],
+      variants: product.variants || null,
       active: true,
       sort_order: products.length + 1
     };
@@ -510,14 +511,27 @@ function ProductForm({ product, onSave, onCancel }) {
     desc: product?.desc || "",
     img: product?.img?.join("\n") || "",
     ben: product?.ben?.join(", ") || "",
+    serve: product?.serve || "",
+    variants: product?.variants || [],
   });
 
+  const addVariant = () => setF({ ...f, variants: [...f.variants, { size: "", price: 0 }] });
+  const removeVariant = (i) => setF({ ...f, variants: f.variants.filter((_, idx) => idx !== i) });
+  const updateVariant = (i, key, val) => setF({ ...f, variants: f.variants.map((v, idx) => idx === i ? { ...v, [key]: val } : v) });
+
   const handleSave = () => {
-    if (!f.name || !f.price) return;
+    if (!f.name || (!f.price && f.variants.length === 0)) return;
     onSave({
       name: f.name,
-      price: Number(f.price),
-      size: f.size,
+      price: f.variants.length > 0 ? Number(f.variants[0].price) : Number(f.price),
+      size: f.variants.length > 0 ? f.variants.map(v => v.size).join(" / ") : f.size,
+      cat: f.cat,
+      desc: f.desc,
+      serve: f.serve || undefined,
+      img: f.img.split("\n").map(s => s.trim()).filter(Boolean),
+      ...(f.ben.trim() ? { ben: f.ben.split(",").map(s => s.trim()).filter(Boolean) } : {}),
+      variants: f.variants.length > 0 ? f.variants.map(v => ({ size: v.size, price: Number(v.price) })) : null,
+    });
       cat: f.cat,
       desc: f.desc,
       img: f.img.split("\n").map(s => s.trim()).filter(Boolean),
@@ -569,6 +583,29 @@ function ProductForm({ product, onSave, onCancel }) {
             <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Benefits (comma separated, optional)</label>
             <input value={f.ben} onChange={e => setF({ ...f, ben: e.target.value })} placeholder="e.g. Low Caffeine, Heart Health" style={inputStyle} />
           </div>
+          <div>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Serving Info (optional)</label>
+            <input value={f.serve} onChange={e => setF({ ...f, serve: e.target.value })} placeholder="e.g. 1 ball makes 4-5 cups of tea" style={inputStyle} />
+          </div>
+          {/* VARIANTS */}
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#555" }}>Size Variants (optional — for multiple sizes/prices)</label>
+              <button onClick={addVariant} style={{ padding: "5px 14px", background: G, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>+ Add Variant</button>
+            </div>
+            {f.variants.length > 0 && (
+              <div style={{ display: "grid", gap: 8 }}>
+                {f.variants.map((v, i) => (
+                  <div key={i} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                    <input value={v.size} onChange={e => updateVariant(i, "size", e.target.value)} placeholder="Size (e.g. 200g)" style={{ ...inputStyle, flex: 1 }} />
+                    <input type="number" step="0.5" value={v.price} onChange={e => updateVariant(i, "price", e.target.value)} placeholder="Price" style={{ ...inputStyle, width: 100 }} />
+                    <button onClick={() => removeVariant(i)} style={{ padding: "8px 12px", background: "#fef0f0", color: "#e74c3c", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}>✕</button>
+                  </div>
+                ))}
+                <p style={{ fontSize: 11, color: "#999" }}>When variants are set, the main Price/Size fields are ignored.</p>
+              </div>
+            )}
+          </div>
           {/* Preview */}
           {f.img.trim() && (
             <div>
@@ -581,8 +618,9 @@ function ProductForm({ product, onSave, onCancel }) {
             </div>
           )}
           <div style={{ display: "flex", gap: 10, paddingTop: 8 }}>
-            <button onClick={handleSave} disabled={!f.name || !f.price} style={{ padding: "12px 28px", background: G, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: !f.name || !f.price ? .5 : 1 }}>
+            <button onClick={handleSave} disabled={!f.name || (!f.price && f.variants.length === 0)} style={{ padding: "12px 28px", background: G, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: !f.name || (!f.price && f.variants.length === 0) ? .5 : 1 }}>
               {product ? "Save Changes" : "Add Product"}
+            </button>
             </button>
             <button onClick={onCancel} style={{ padding: "12px 28px", background: "#f0f0f0", border: "none", borderRadius: 8, fontSize: 14, cursor: "pointer" }}>Cancel</button>
           </div>
