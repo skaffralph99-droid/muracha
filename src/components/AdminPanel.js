@@ -47,18 +47,21 @@ export default function AdminPanel() {
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("all");
 
-  // Load from localStorage
+  // Load data
   useEffect(() => {
+    // Load products from Supabase
+    sbFetch("muracha_products?order=sort_order.asc").then(r => r.json()).then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], active: p.active })));
+      }
+    }).catch(() => setProducts(DEFAULT_PRODUCTS));
+    // Load settings from localStorage
     try {
-      const p = localStorage.getItem('muracha_products');
-      setProducts(p ? JSON.parse(p) : DEFAULT_PRODUCTS);
       const s = localStorage.getItem('muracha_settings');
       if (s) setSettings(JSON.parse(s));
       const r = localStorage.getItem('muracha_reviews');
       if (r) setReviews(JSON.parse(r));
-    } catch (e) {
-      setProducts(DEFAULT_PRODUCTS);
-    }
+    } catch (e) {}
     // Load orders from Supabase
     sbFetch("muracha_orders?order=created_at.desc").then(r => r.json()).then(data => { if (Array.isArray(data)) setOrders(data); }).catch(() => {});
   }, []);
@@ -69,25 +72,46 @@ export default function AdminPanel() {
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 2500); };
 
-  const saveProducts = (p) => { setProducts(p); save('muracha_products', p); };
   const saveSettings = (s) => { setSettings(s); save('muracha_settings', s); };
 
+  const loadProducts = () => {
+    sbFetch("muracha_products?order=sort_order.asc").then(r => r.json()).then(data => {
+      if (Array.isArray(data)) setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], active: p.active })));
+    });
+  };
+
   const deleteProduct = (id) => {
-    const updated = products.filter(p => p.id !== id);
-    saveProducts(updated);
-    showToast("Product deleted");
+    sbFetch(`muracha_products?id=eq.${id}`, { method: "DELETE" }).then(() => {
+      setProducts(products.filter(p => p.id !== id));
+      showToast("Product deleted");
+    });
     setConfirm(null);
   };
 
   const saveProduct = (product) => {
+    const dbProduct = {
+      name: product.name,
+      price: product.price,
+      size: product.size || "",
+      cat: product.cat || "japanese",
+      description: product.desc || "",
+      serve: product.serve || null,
+      benefits: product.ben || [],
+      images: product.img || [],
+      active: true,
+      sort_order: products.length + 1
+    };
     if (editing) {
-      const updated = products.map(p => p.id === editing.id ? { ...product, id: editing.id } : p);
-      saveProducts(updated);
-      showToast("Product updated");
+      sbFetch(`muracha_products?id=eq.${editing.id}`, { method: "PATCH", body: JSON.stringify(dbProduct) }).then(() => {
+        loadProducts();
+        showToast("Product updated");
+      });
     } else {
       const id = product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
-      saveProducts([...products, { ...product, id }]);
-      showToast("Product added");
+      sbFetch("muracha_products", { method: "POST", body: JSON.stringify({ ...dbProduct, id }) }).then(() => {
+        loadProducts();
+        showToast("Product added");
+      });
     }
     setEditing(null);
     setAdding(false);

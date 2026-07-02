@@ -49,9 +49,11 @@ export default function App(){
   const[revForm,setRevForm]=useState({name:"",text:"",stars:5});
   const[revOpen,setRevOpen]=useState(false);
   const[revSubmitted,setRevSubmitted]=useState(false);
+  const[products,setProducts]=useState(P);
   const allRevs=[...defaultReviews,...userRevs];
 
   useEffect(()=>{try{const s=localStorage.getItem('muracha_reviews');if(s)setUserRevs(JSON.parse(s))}catch(e){}},[]);
+  useEffect(()=>{fetch(`${SB_URL}/rest/v1/muracha_products?active=eq.true&order=sort_order.asc`,{headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`}}).then(r=>r.json()).then(data=>{if(Array.isArray(data)&&data.length>0){setProducts(data.map(p=>({id:p.id,name:p.name,price:Number(p.price),size:p.size,cat:p.cat,desc:p.description||"",serve:p.serve||undefined,ben:p.benefits||[],img:p.images||[]})))}}).catch(()=>{})},[]);
   const submitReview=()=>{if(!revForm.name||!revForm.text)return;const nr={...revForm,date:new Date().toLocaleDateString()};const updated=[...userRevs,nr];setUserRevs(updated);try{localStorage.setItem('muracha_reviews',JSON.stringify(updated))}catch(e){}setRevForm({name:"",text:"",stars:5});setRevSubmitted(true);setTimeout(()=>setRevSubmitted(false),3000)};
 
   useEffect(()=>{let ticking=false;const h=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{setSY(window.scrollY);ticking=false})}};window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h)},[]);
@@ -67,7 +69,7 @@ export default function App(){
   const delivery=tot>=FREE_SHIP_MIN?0:DELIVERY_FEE;
   const grandTotal=tot+delivery;
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
-  const fil=cat==="all"?P:P.filter(p=>p.cat===cat);
+  const fil=cat==="all"?products:products.filter(p=>p.cat===cat);
 
   const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
@@ -257,7 +259,7 @@ export default function App(){
             <button className="b bo" onClick={()=>go("shop")}>View All →</button>
           </div></R>
           <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
-            {P.slice(0,4).map((p,i)=>(
+            {products.slice(0,4).map((p,i)=>(
               <R key={p.id} delay={i*.08}>
                 <div className="card" onClick={()=>{viewProduct(p)}}>
                   <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
@@ -307,7 +309,7 @@ export default function App(){
             <button className="b bo" onClick={()=>{go("shop");setCat("chinese")}}>View All →</button>
           </div></R>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:16}} className="pg">
-            {P.filter(p=>p.cat==="chinese").map((p,i)=>(
+            {products.filter(p=>p.cat==="chinese").map((p,i)=>(
               <R key={p.id} delay={i*.06}>
                 <div onClick={()=>{viewProduct(p)}} style={{cursor:"pointer",textAlign:"center",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-6px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
                   <div style={{width:"100%",aspectRatio:"1",borderRadius:14,overflow:"hidden",marginBottom:12,border:"1px solid rgba(50,107,47,.06)"}}>
