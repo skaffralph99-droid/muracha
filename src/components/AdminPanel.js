@@ -52,7 +52,7 @@ export default function AdminPanel() {
     // Load products from Supabase
     sbFetch("muracha_products?order=sort_order.asc").then(r => r.json()).then(data => {
       if (Array.isArray(data) && data.length > 0) {
-        setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], active: p.active })));
+        setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], variants: p.variants || null, active: p.active })));
       }
     }).catch(() => setProducts(DEFAULT_PRODUCTS));
     // Load settings from localStorage
@@ -76,7 +76,7 @@ export default function AdminPanel() {
 
   const loadProducts = () => {
     sbFetch("muracha_products?order=sort_order.asc").then(r => r.json()).then(data => {
-      if (Array.isArray(data)) setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], active: p.active })));
+      if (Array.isArray(data)) setProducts(data.map(p => ({ id: p.id, name: p.name, price: Number(p.price), size: p.size, cat: p.cat, desc: p.description || "", serve: p.serve, ben: p.benefits || [], img: p.images || [], variants: p.variants || null, active: p.active })));
     });
   };
 
