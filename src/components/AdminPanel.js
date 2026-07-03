@@ -532,11 +532,6 @@ function ProductForm({ product, onSave, onCancel }) {
       ...(f.ben.trim() ? { ben: f.ben.split(",").map(s => s.trim()).filter(Boolean) } : {}),
       variants: f.variants.length > 0 ? f.variants.map(v => ({ size: v.size, price: Number(v.price) })) : null,
     });
-      cat: f.cat,
-      desc: f.desc,
-      img: f.img.split("\n").map(s => s.trim()).filter(Boolean),
-      ...(f.ben.trim() ? { ben: f.ben.split(",").map(s => s.trim()).filter(Boolean) } : {}),
-    });
   };
 
   const inputStyle = { width: "100%", padding: "10px 14px", border: "1px solid #e0e0e0", borderRadius: 8, fontSize: 14, outline: "none", fontFamily: "'DM Sans'" };
