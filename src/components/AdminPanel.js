@@ -616,7 +616,6 @@ function ProductForm({ product, onSave, onCancel }) {
             <button onClick={handleSave} disabled={!f.name || (!f.price && f.variants.length === 0)} style={{ padding: "12px 28px", background: G, color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", opacity: !f.name || (!f.price && f.variants.length === 0) ? .5 : 1 }}>
               {product ? "Save Changes" : "Add Product"}
             </button>
-            </button>
             <button onClick={onCancel} style={{ padding: "12px 28px", background: "#f0f0f0", border: "none", borderRadius: 8, fontSize: 14, cursor: "pointer" }}>Cancel</button>
           </div>
         </div>
