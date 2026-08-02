@@ -563,6 +563,7 @@ export default function App(){
         </div>
         <div style={{maxWidth:1200,margin:"28px auto 0",paddingTop:18,borderTop:"1px solid rgba(50,107,47,.04)",textAlign:"center"}}>
           <p style={{fontSize:10,color:"#a0afa0"}}>© 2026 MuraCha. All rights reserved.</p>
+          <p style={{fontSize:10,color:"#a0afa0",marginTop:6}}><a href="https://yalla-build.com" target="_blank" rel="noopener" style={{color:"#a0afa0",textDecoration:"none"}}>Website by Yalla Build — web & app studio in Lebanon</a></p>
         </div>
       </footer>
 
