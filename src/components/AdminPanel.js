@@ -6,6 +6,17 @@ const G = "#326b2f", GL = "#5a9e4f";
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
 const sbFetch = (path, opts = {}) => fetch(`${SB_URL}/rest/v1/${path}`, { ...opts, headers: { "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}`, "Content-Type": "application/json", "Prefer": opts.method === "PATCH" || opts.method === "DELETE" ? "return=minimal" : "return=representation", ...opts.headers } });
+const uploadImage = async (file) => {
+  const ext = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const res = await fetch(`${SB_URL}/storage/v1/object/product-images/${fileName}`, {
+    method: "POST",
+    headers: { "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}`, "Content-Type": file.type },
+    body: file
+  });
+  if (!res.ok) throw new Error("Upload failed");
+  return `${SB_URL}/storage/v1/object/public/product-images/${fileName}`;
+};
 
 const DEFAULT_PRODUCTS = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying. Made of 100% premium cacao.",img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
@@ -40,6 +51,9 @@ export default function AdminPanel() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [reviews, setReviews] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [newCat, setNewCat] = useState({ id: "", label: "" });
+  const [uploading, setUploading] = useState(false);
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
   const [toast, setToast] = useState(null);
@@ -64,6 +78,7 @@ export default function AdminPanel() {
     } catch (e) {}
     // Load orders from Supabase
     sbFetch("muracha_orders?order=created_at.desc").then(r => r.json()).then(data => { if (Array.isArray(data)) setOrders(data); }).catch(() => {});
+    sbFetch("muracha_categories?order=sort_order.asc").then(r => r.json()).then(data => { if (Array.isArray(data)) setCategories(data); }).catch(() => {});
   }, []);
 
   const save = (key, data) => {
@@ -116,6 +131,23 @@ export default function AdminPanel() {
     }
     setEditing(null);
     setAdding(false);
+  };
+
+  const addCategory = () => {
+    const id = newCat.id.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '') || newCat.label.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+    if (!id || !newCat.label.trim()) return;
+    sbFetch("muracha_categories", { method: "POST", body: JSON.stringify({ id, label: newCat.label.trim(), sort_order: categories.length + 1 }) }).then(() => {
+      sbFetch("muracha_categories?order=sort_order.asc").then(r => r.json()).then(data => { if (Array.isArray(data)) setCategories(data); });
+      setNewCat({ id: "", label: "" });
+      showToast("Category added");
+    });
+  };
+  const deleteCategory = (id) => {
+    sbFetch(`muracha_categories?id=eq.${id}`, { method: "DELETE" }).then(() => {
+      setCategories(categories.filter(c => c.id !== id));
+      showToast("Category deleted");
+    });
+    setConfirm(null);
   };
 
   const deleteReview = (idx) => {
@@ -235,7 +267,7 @@ export default function AdminPanel() {
           <p style={{ fontSize: 11, color: "#aaa", marginTop: 2 }}>Admin Panel</p>
         </div>
         <nav style={{ flex: 1, padding: "16px 12px" }}>
-          {[["dashboard", "📊", "Dashboard"], ["orders", "🛒", "Orders"], ["products", "📦", "Products"], ["reviews", "⭐", "Reviews"], ["settings", "⚙️", "Settings"], ["data", "💾", "Data"]].map(([id, icon, label]) => (
+          {[["dashboard", "📊", "Dashboard"], ["orders", "🛒", "Orders"], ["products", "📦", "Products"], ["categories", "🏷️", "Categories"], ["reviews", "⭐", "Reviews"], ["settings", "⚙️", "Settings"], ["data", "💾", "Data"]].map(([id, icon, label]) => (
             <button key={id} onClick={() => { setTab(id); setEditing(null); setAdding(false); }}
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "none", borderRadius: 8, background: tab === id ? `${G}12` : "transparent", color: tab === id ? G : "#555", fontSize: 13, fontWeight: tab === id ? 600 : 400, cursor: "pointer", marginBottom: 2, textAlign: "left" }}>
               <span style={{ fontSize: 16 }}>{icon}</span>{label}
@@ -410,9 +442,39 @@ export default function AdminPanel() {
         {tab === "products" && (editing || adding) && (
           <ProductForm
             product={editing || undefined}
+            categories={categories}
             onSave={saveProduct}
             onCancel={() => { setEditing(null); setAdding(false); }}
           />
+        )}
+
+        {/* CATEGORIES */}
+        {tab === "categories" && (
+          <div style={{ animation: "fadeIn .3s ease" }}>
+            <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>Categories ({categories.length})</h1>
+            <div style={{ background: "#fff", borderRadius: 12, padding: 24, border: "1px solid #f0f0ec", maxWidth: 600, marginBottom: 20 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 14 }}>Add New Category</h3>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Category Name</label>
+                  <input value={newCat.label} onChange={e => setNewCat({ ...newCat, label: e.target.value })} placeholder="e.g. Gift Sets" style={{ width: "100%", padding: "10px 14px", border: "1px solid #e0e0e0", borderRadius: 8, fontSize: 14, outline: "none" }} />
+                </div>
+                <button onClick={addCategory} disabled={!newCat.label.trim()} style={{ padding: "10px 22px", background: G, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", opacity: !newCat.label.trim() ? .5 : 1 }}>Add</button>
+              </div>
+            </div>
+            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #f0f0ec", overflow: "hidden", maxWidth: 600 }}>
+              {categories.map((c, i) => (
+                <div key={c.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: i < categories.length - 1 ? "1px solid #f8f8f4" : "none" }}>
+                  <div>
+                    <p style={{ fontSize: 14, fontWeight: 600 }}>{c.label}</p>
+                    <p style={{ fontSize: 11, color: "#aaa" }}>ID: {c.id} · {products.filter(p => p.cat === c.id).length} products</p>
+                  </div>
+                  <button onClick={() => setConfirm({ title: "Delete Category", message: `Delete "${c.label}"? Products in it won't be deleted but won't show under any category.`, action: () => deleteCategory(c.id) })} style={{ padding: "5px 14px", background: "#fef0f0", color: "#e74c3c", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 500 }}>Delete</button>
+                </div>
+              ))}
+              {categories.length === 0 && <p style={{ padding: 24, textAlign: "center", color: "#bbb", fontSize: 13 }}>No categories yet</p>}
+            </div>
+          </div>
         )}
 
         {/* REVIEWS */}
@@ -502,7 +564,8 @@ export default function AdminPanel() {
 }
 
 // PRODUCT FORM COMPONENT
-function ProductForm({ product, onSave, onCancel }) {
+function ProductForm({ product, categories, onSave, onCancel }) {
+  const [uploading, setUploading] = useState(false);
   const [f, setF] = useState({
     name: product?.name || "",
     price: product?.price || 0,
@@ -560,9 +623,9 @@ function ProductForm({ product, onSave, onCancel }) {
             <div>
               <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Category</label>
               <select value={f.cat} onChange={e => setF({ ...f, cat: e.target.value })} style={{ ...inputStyle, background: "#fff" }}>
-                <option value="japanese">Japanese</option>
-                <option value="chinese">Tea Bombs</option>
-                <option value="powders">Powders</option>
+                {(categories && categories.length > 0 ? categories : [{id:"japanese",label:"Japanese"},{id:"chinese",label:"Tea Bombs"},{id:"powders",label:"Powders"}]).map(c => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -571,8 +634,22 @@ function ProductForm({ product, onSave, onCancel }) {
             <textarea value={f.desc} onChange={e => setF({ ...f, desc: e.target.value })} rows={3} placeholder="Product description..." style={{ ...inputStyle, resize: "vertical" }} />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Image URLs (one per line)</label>
-            <textarea value={f.img} onChange={e => setF({ ...f, img: e.target.value })} rows={3} placeholder="https://cdn.shopify.com/..." style={{ ...inputStyle, resize: "vertical", fontSize: 12 }} />
+            <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Product Images</label>
+            <input type="file" accept="image/*" multiple onChange={async e => {
+              const files = Array.from(e.target.files);
+              if (!files.length) return;
+              setUploading(true);
+              try {
+                const urls = [];
+                for (const file of files) { urls.push(await uploadImage(file)); }
+                const existing = f.img.trim() ? f.img.split("\n").filter(Boolean) : [];
+                setF({ ...f, img: [...existing, ...urls].join("\n") });
+              } catch (err) { alert("Upload failed - try again"); }
+              setUploading(false);
+            }} style={{ fontSize: 13, marginBottom: 8 }} />
+            {uploading && <p style={{ fontSize: 12, color: G }}>Uploading...</p>}
+            <label style={{ display: "block", fontSize: 11, color: "#999", marginBottom: 6, marginTop: 8 }}>Or paste image URLs (one per line)</label>
+            <textarea value={f.img} onChange={e => setF({ ...f, img: e.target.value })} rows={2} placeholder="https://..." style={{ ...inputStyle, resize: "vertical", fontSize: 12 }} />
           </div>
           <div>
             <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Benefits (comma separated, optional)</label>
