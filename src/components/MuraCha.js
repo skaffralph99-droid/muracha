@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
+import BuildBox from "./BuildBox";
 
 const WA = "96171425250";
 const DELIVERY_FEE = 4;
@@ -78,6 +79,8 @@ export default function App(){
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
+  if(pg==="build") return <BuildBox onBack={()=>go("shop")} />;
+
   return(
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fafaf7",color:"#2a2a2a",minHeight:"100vh",overflowX:"hidden"}}>
       <style>{`
@@ -122,7 +125,7 @@ export default function App(){
         <div style={{display:"flex",alignItems:"center",gap:32}}>
           <span onClick={()=>go("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:40,objectFit:"contain"}} /></span>
           <div className="dk" style={{display:"flex",gap:24}}>
-            {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l])=>(
+            {[["home","Home"],["shop","Shop"],["build","Build a Box"],["about","About"]].map(([p,l])=>(
               <span key={p} onClick={()=>go(p)} style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",cursor:"pointer",fontWeight:600,color:pg===p?G:"#888",transition:"color .3s"}}>{l}</span>
             ))}
           </div>
@@ -251,6 +254,17 @@ export default function App(){
             </a>
           </div>
         </div>
+
+        {/* BUILD A BOX CTA */}
+        <section style={{padding:"70px clamp(16px,4vw,48px)"}}>
+          <R><div style={{maxWidth:1000,margin:"0 auto",background:`linear-gradient(135deg, ${G}, #244a22)`,borderRadius:24,padding:"clamp(36px,6vw,64px) clamp(24px,5vw,56px)",textAlign:"center",color:"#fff",position:"relative",overflow:"hidden"}}>
+            <div style={{fontSize:44,marginBottom:16}}>🎁</div>
+            <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:"rgba(255,255,255,.6)",marginBottom:12,fontWeight:600}}>New — Custom Gift Boxes</p>
+            <h2 className="f" style={{fontSize:"clamp(28px,5vw,44px)",fontWeight:300,marginBottom:14,lineHeight:1.15}}>Build Your Own Box</h2>
+            <p style={{fontSize:15,color:"rgba(255,255,255,.75)",lineHeight:1.7,maxWidth:480,margin:"0 auto 28px"}}>Choose your packaging, teas, chocolates, and a personalized message — crafted just the way you want it.</p>
+            <button onClick={()=>go("build")} style={{padding:"16px 40px",background:"#fff",color:G,border:"none",borderRadius:10,fontSize:13,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",cursor:"pointer",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>Start Building →</button>
+          </div></R>
+        </section>
 
         {/* BESTSELLERS */}
         <section style={{padding:"70px clamp(16px,4vw,48px)",maxWidth:1200,margin:"0 auto"}}>
