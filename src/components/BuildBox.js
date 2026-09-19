@@ -114,13 +114,14 @@ export default function BuildBox({ onBack }) {
     setSent(true);
   };
 
-  const Section = ({ num, title, sub, children }) => (
+  const Section = ({ num, title, sub, img, children }) => (
     <section style={{ marginBottom:56 }}>
       <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:8 }}>
         <span style={{ width:36, height:36, borderRadius:"50%", background:G, color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:18, fontWeight:600, flexShrink:0 }}>{num}</span>
         <h2 className="f" style={{ fontSize:"clamp(22px,4vw,30px)", fontWeight:400 }}>{title}</h2>
       </div>
       {sub && <p style={{ fontSize:13, color:"#8a9a88", marginBottom:20, marginLeft:50 }}>{sub}</p>}
+      {img && <img src={img} alt={title} style={{ width:"100%", borderRadius:16, marginBottom:20, border:"1px solid rgba(50,107,47,.08)" }} />}
       <div style={{ marginLeft:0 }}>{children}</div>
     </section>
   );
@@ -165,7 +166,7 @@ export default function BuildBox({ onBack }) {
         </div>
 
         {/* STEP 1 */}
-        <Section num="1" title="Choose Your Package" sub="Select one packaging option (required)">
+        <Section num="1" title="Choose Your Package" sub="Select one packaging option (required)" img="/images/builder-packaging.jpeg">
           <div style={{ display:"grid", gap:10 }}>
             {PACKAGES.map(p => (
               <div key={p.id} className={`opt ${pkg===p.id?"on":""}`} onClick={()=>setPkg(p.id)}>
@@ -177,7 +178,7 @@ export default function BuildBox({ onBack }) {
         </Section>
 
         {/* STEP 2 */}
-        <Section num="2" title="Choose Your Ritual" sub="Pick any teas you'd like — or skip this step">
+        <Section num="2" title="Choose Your Ritual" sub="Pick any teas you'd like — or skip this step" img="/images/builder-tea.jpeg">
           <div style={{ display:"grid", gap:10 }}>
             {RITUALS.map(r => (
               <div key={r.id} className={`opt ${rituals.includes(r.id)?"on":""}`} onClick={()=>toggleRitual(r.id)}>
@@ -192,7 +193,7 @@ export default function BuildBox({ onBack }) {
         </Section>
 
         {/* STEP 3 */}
-        <Section num="3" title="Choose Your Chocolate" sub="Sold by weight — minimum 200g per item. Skip if you don't want chocolate.">
+        <Section num="3" title="Choose Your Chocolate" sub="Sold by weight — minimum 200g per item. Skip if you don't want chocolate." img="/images/builder-chocolate.jpeg">
           <div style={{ display:"grid", gap:12 }}>
             {CHOCOLATES.map(c => {
               const active = chocs[c.id];
