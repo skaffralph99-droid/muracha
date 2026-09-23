@@ -7,7 +7,7 @@ const DELIVERY_FEE = 4;
 const FREE_SHIP_MIN = 50;
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
-const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8", GD="#1a3a18";
+const G="#544339", GL="#8A6C5F", GX="#F5E9D3", GD="#3d3128";
 const P = [
   {id:"cacao-powder",name:"Cacao Powder",price:15,size:"200g",cat:"powders",desc:"Rich, unprocessed, unsweetened and deeply satisfying.\n\nMade of 100% premium cacao.\n\nHigh in antioxidants, boosts mood, great for a warm drink or desserts.",ben:["High Antioxidants","Boosts Mood","Heart Health","Iron & Magnesium"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_e4bd0bf7-c5ae-4cd6-ba3b-0ce122dbfc49.jpg?v=1770908353"]},
   {id:"hojicha-classic",name:"Hojicha Tea — Classic",price:15,size:"30g",cat:"japanese",desc:"Roasted to perfection, giving a unique flavor depth and umami-rich taste.\n\nMade of 100% first harvest Sencha tea, medium roasted.\n\nA great coffee alternative, smooth on stomach, rich in L-theanine, low in caffeine and nutrient dense — giving you calm energy and focus without the crash.",ben:["Boosts Metabolism","Low Caffeine","Heart Health","Calm Focus"],img:["https://cdn.shopify.com/s/files/1/0757/2799/5134/files/FullSizeRender_2acf7464-448e-4798-b6c8-b6982bcc927a.jpg?v=1770921443","https://cdn.shopify.com/s/files/1/0757/2799/5134/files/IMG-9032.jpg?v=1770921443"]},
@@ -82,7 +82,7 @@ export default function App(){
   if(pg==="build") return <BuildBox onBack={()=>go("shop")} />;
 
   return(
-    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fafaf7",color:"#2a2a2a",minHeight:"100vh",overflowX:"hidden"}}>
+    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#FBF7F0",color:"#3d3128",minHeight:"100vh",overflowX:"hidden"}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}a{text-decoration:none;color:inherit}
@@ -95,22 +95,22 @@ export default function App(){
         @keyframes toastOut{0%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-20px)}}
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
         .f{font-family:'Cormorant Garamond',serif}
-        .card{transition:all .4s cubic-bezier(.16,1,.3,1);cursor:pointer;border-radius:14px;overflow:hidden;background:#fff;border:1px solid rgba(50,107,47,.06)}
-        .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(50,107,47,.1)}
+        .card{transition:all .4s cubic-bezier(.16,1,.3,1);cursor:pointer;border-radius:14px;overflow:hidden;background:#fff;border:1px solid rgba(138,108,95,.06)}
+        .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(138,108,95,.1)}
         .cimg{transition:transform .6s cubic-bezier(.16,1,.3,1)}.card:hover .cimg{transform:scale(1.07)}
         .card:hover .covr{opacity:1}
         .b{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:'DM Sans';font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:all .3s cubic-bezier(.16,1,.3,1);border-radius:6px;position:relative;overflow:hidden}
         .b::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);transform:translateX(-100%);transition:transform .4s}.b:hover::after{transform:translateX(100%)}
-        .bp{background:${G};color:#fff;padding:14px 30px;font-size:13px}.bp:hover{background:${GL};transform:translateY(-2px);box-shadow:0 8px 20px rgba(50,107,47,.2)}
+        .bp{background:${G};color:#fff;padding:14px 30px;font-size:13px}.bp:hover{background:${GL};transform:translateY(-2px);box-shadow:0 8px 20px rgba(138,108,95,.2)}
         .bo{background:transparent;border:1.5px solid ${G};color:${G};padding:13px 28px;font-size:12px}.bo:hover{background:${G};color:#fff;transform:translateY(-2px)}
         .bs{padding:8px 16px;font-size:11px;border-radius:4px}
         .bw{background:#fff;color:${G};padding:14px 30px;font-size:13px}.bw:hover{background:rgba(255,255,255,.9);transform:translateY(-2px)}
-        .cb{padding:9px 20px;border:1px solid rgba(50,107,47,.12);background:transparent;color:#5a6e58;font-family:'DM Sans';font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:30px;font-weight:500}
+        .cb{padding:9px 20px;border:1px solid rgba(138,108,95,.12);background:transparent;color:#6b5d52;font-family:'DM Sans';font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:30px;font-weight:500}
         .cb.on{background:${G};color:#fff;border-color:${G}}.cb:hover:not(.on){border-color:${GL};color:${GL}}
         .ov{position:fixed;inset:0;background:rgba(20,30,18,.6);z-index:200;animation:fadeIn .25s}
-        .inp{width:100%;padding:14px 18px;border:1px solid rgba(50,107,47,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#2a2a2a;outline:none;border-radius:8px;transition:all .3s}
-        .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(50,107,47,.06)}.inp::placeholder{color:#b0bfae}
-        .tg{display:inline-block;padding:5px 14px;background:rgba(50,107,47,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(50,107,47,.12)}
+        .inp{width:100%;padding:14px 18px;border:1px solid rgba(138,108,95,.12);background:#fff;font-family:'DM Sans';font-size:14px;color:#3d3128;outline:none;border-radius:8px;transition:all .3s}
+        .inp:focus{border-color:${GL};box-shadow:0 0 0 3px rgba(138,108,95,.06)}.inp::placeholder{color:#c4b5a4}
+        .tg{display:inline-block;padding:5px 14px;background:rgba(138,108,95,.06);color:${G};font-size:11px;border-radius:20px;font-weight:500;transition:all .3s}.tg:hover{background:rgba(138,108,95,.12)}
         @media(max-width:768px){.dk{display:none!important}.mob-hero{display:block!important}.pg{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.mp{width:100%!important;height:100%!important;inset:0!important;border-radius:0!important}.cp{width:100%!important}.hg{grid-template-columns:1fr!important}.bg{grid-template-columns:1fr 1fr!important}.rg{grid-template-columns:1fr!important}}
       `}</style>
 
@@ -118,10 +118,10 @@ export default function App(){
 
       {toast&&<div style={{position:"fixed",bottom:32,left:"50%",transform:"translateX(-50%)",zIndex:999,background:G,color:"#fff",padding:"14px 32px",borderRadius:12,fontSize:13,fontWeight:500,animation:"toastIn .4s cubic-bezier(.16,1,.3,1), toastOut .4s ease 2s forwards",boxShadow:"0 12px 40px rgba(0,0,0,.15)",display:"flex",alignItems:"center",gap:10}}><span style={{background:GL,borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>✓</span>{toast} added</div>}
 
-      <div style={{position:"fixed",inset:0,background:"#fafaf7",zIndex:150,pointerEvents:"none",opacity:trans?1:0,transition:"opacity .25s"}} />
+      <div style={{position:"fixed",inset:0,background:"#FBF7F0",zIndex:150,pointerEvents:"none",opacity:trans?1:0,transition:"opacity .25s"}} />
 
       {/* NAV */}
-      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.97)",borderBottom:"1px solid rgba(50,107,47,.05)",transform:"translateZ(0)"}}>
+      <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:100,height:64,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(16px,4vw,48px)",background:"rgba(250,250,247,.97)",borderBottom:"1px solid rgba(138,108,95,.05)",transform:"translateZ(0)"}}>
         <div style={{display:"flex",alignItems:"center",gap:32}}>
           <span onClick={()=>go("home")} style={{cursor:"pointer"}}><img src="/images/logo.png" alt="MuraCha" style={{height:40,objectFit:"contain"}} /></span>
           <div className="dk" style={{display:"flex",gap:24}}>
@@ -131,7 +131,7 @@ export default function App(){
           </div>
         </div>
         <button onClick={()=>setCartOpen(true)} style={{position:"relative",background:"none",border:"none",cursor:"pointer",padding:6}}>
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2a2a2a" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3d3128" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
           {cnt>0&&<span style={{position:"absolute",top:-3,right:-3,background:G,color:"#fff",fontSize:9,fontWeight:700,width:17,height:17,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{cnt}</span>}
         </button>
       </nav>
@@ -140,20 +140,20 @@ export default function App(){
       {cartOpen&&<div className="ov" onClick={()=>setCartOpen(false)} />}
       {cartOpen&&(
         <div className="cp" style={{position:"fixed",right:0,top:0,bottom:0,width:400,background:"#fff",zIndex:202,boxShadow:"-8px 0 40px rgba(0,0,0,.06)",display:"flex",flexDirection:"column",animation:"slideRight .35s cubic-bezier(.16,1,.3,1)"}}>
-          <div style={{padding:"24px 24px 16px",borderBottom:"1px solid rgba(50,107,47,.05)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{padding:"24px 24px 16px",borderBottom:"1px solid rgba(138,108,95,.05)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <h3 className="f" style={{fontSize:24,fontWeight:500}}>Cart ({cnt})</h3>
             <button onClick={()=>setCartOpen(false)} style={{background:"rgba(0,0,0,.03)",border:"none",borderRadius:"50%",width:34,height:34,cursor:"pointer",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
           </div>
           <div style={{flex:1,overflow:"auto",padding:20}}>
-            {cart.length===0?<p style={{color:"#b0bfae",fontSize:14,textAlign:"center",marginTop:50}}>Your cart is empty</p>:
+            {cart.length===0?<p style={{color:"#c4b5a4",fontSize:14,textAlign:"center",marginTop:50}}>Your cart is empty</p>:
             cart.map((item,i)=>(
-              <div key={item.cartId||item.id} style={{display:"flex",gap:14,marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(50,107,47,.04)"}}>
+              <div key={item.cartId||item.id} style={{display:"flex",gap:14,marginBottom:18,paddingBottom:18,borderBottom:"1px solid rgba(138,108,95,.04)"}}>
                 <img src={item.img[0]} alt="" style={{width:64,height:64,objectFit:"cover",borderRadius:10}} />
                 <div style={{flex:1}}>
                   <p style={{fontSize:13,fontWeight:600,marginBottom:2}}>{item.name}</p>
-                  <p style={{fontSize:11,color:"#8a9a88",marginBottom:6}}>{item.size}</p>
+                  <p style={{fontSize:11,color:"#9a8a7c",marginBottom:6}}>{item.size}</p>
                   <div style={{display:"flex",alignItems:"center",gap:10}}>
-                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(50,107,47,.1)",borderRadius:5}}>
+                    <div style={{display:"flex",alignItems:"center",border:"1px solid rgba(138,108,95,.1)",borderRadius:5}}>
                       <button onClick={()=>uq(item.cartId||item.id,-1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>−</button>
                       <span style={{fontSize:12,fontWeight:600,minWidth:18,textAlign:"center"}}>{item.qty}</span>
                       <button onClick={()=>uq(item.cartId||item.id,1)} style={{background:"none",border:"none",padding:"4px 10px",cursor:"pointer",fontSize:13}}>+</button>
@@ -166,19 +166,19 @@ export default function App(){
             ))}
           </div>
           {cart.length>0&&(
-            <div style={{padding:20,borderTop:"1px solid rgba(50,107,47,.05)",background:GX}}>
+            <div style={{padding:20,borderTop:"1px solid rgba(138,108,95,.05)",background:GX}}>
               {tot>=FREE_SHIP_MIN?<p style={{fontSize:12,color:G,marginBottom:10,fontWeight:600}}>✓ Free delivery!</p>:
               <div style={{marginBottom:10}}>
-                <p style={{fontSize:11,color:"#5a6e58",marginBottom:5}}>${(FREE_SHIP_MIN-tot).toFixed(2)} away from free delivery</p>
-                <div style={{height:3,background:"rgba(50,107,47,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/FREE_SHIP_MIN*100,100)}%`,transition:"width .5s"}} /></div>
+                <p style={{fontSize:11,color:"#6b5d52",marginBottom:5}}>${(FREE_SHIP_MIN-tot).toFixed(2)} away from free delivery</p>
+                <div style={{height:3,background:"rgba(138,108,95,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/FREE_SHIP_MIN*100,100)}%`,transition:"width .5s"}} /></div>
               </div>}
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:13,color:"#5a6e58"}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:13,color:"#6b5d52"}}>
                 <span>Subtotal</span><span>${tot.toFixed(2)}</span>
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,fontSize:13,color:delivery===0?G:"#5a6e58"}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,fontSize:13,color:delivery===0?G:"#6b5d52"}}>
                 <span>Delivery</span><span>{delivery===0?"Free":`$${delivery.toFixed(2)}`}</span>
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:14,borderTop:"1px solid rgba(50,107,47,.08)",paddingTop:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:14,borderTop:"1px solid rgba(138,108,95,.08)",paddingTop:10}}>
                 <span className="f" style={{fontSize:20}}>Total</span>
                 <span className="f" style={{fontSize:20,fontWeight:700}}>${grandTotal.toFixed(2)}</span>
               </div>
@@ -192,7 +192,7 @@ export default function App(){
 
       {pg==="home"&&<>
         {/* HERO */}
-        <section style={{position:"relative",overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #f0ede6, #e8f0e6)"}}>
+        <section style={{position:"relative",overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #E0D9CF, #F5E9D3)"}}>
           <div style={{maxWidth:1200,margin:"0 auto",padding:"40px clamp(16px,5vw,60px) 40px"}}>
             {/* Mobile: single hero image on top */}
             <div className="mob-hero" style={{display:"none",marginBottom:24,borderRadius:16,overflow:"hidden",height:220}}>
@@ -201,10 +201,10 @@ export default function App(){
             <div style={{display:"flex",alignItems:"center",gap:"clamp(24px,4vw,60px)",minHeight:420}}>
               {/* Text */}
               <div style={{flex:"1 1 45%",position:"relative",zIndex:2,opacity:0,animation:"slideUp .8s ease .1s both"}}>
-                <div style={{display:"inline-block",background:"rgba(50,107,47,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
+                <div style={{display:"inline-block",background:"rgba(138,108,95,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
                   <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
                 </div>
-                <h1 className="f" style={{fontSize:"clamp(34px,5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#2a2a2a"}}>
+                <h1 className="f" style={{fontSize:"clamp(34px,5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#3d3128"}}>
                   Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
                 </h1>
                 <p style={{fontSize:15,color:"#777",lineHeight:1.8,marginBottom:28,maxWidth:440}}>
@@ -218,7 +218,7 @@ export default function App(){
                   {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
                     <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
                       <span style={{fontSize:14}}>{ic}</span>
-                      <span style={{fontSize:11,color:"#5a6e58",fontWeight:500}}>{tx}</span>
+                      <span style={{fontSize:11,color:"#6b5d52",fontWeight:500}}>{tx}</span>
                     </div>
                   ))}
                 </div>
@@ -257,7 +257,7 @@ export default function App(){
 
         {/* BUILD A BOX CTA */}
         <section style={{padding:"70px clamp(16px,4vw,48px)"}}>
-          <R><div style={{maxWidth:1000,margin:"0 auto",background:`linear-gradient(135deg, ${G}, #244a22)`,borderRadius:24,padding:"clamp(36px,6vw,64px) clamp(24px,5vw,56px)",textAlign:"center",color:"#fff",position:"relative",overflow:"hidden"}}>
+          <R><div style={{maxWidth:1000,margin:"0 auto",background:`linear-gradient(135deg, ${G}, #6b5445)`,borderRadius:24,padding:"clamp(36px,6vw,64px) clamp(24px,5vw,56px)",textAlign:"center",color:"#fff",position:"relative",overflow:"hidden"}}>
             <div style={{fontSize:44,marginBottom:16}}>🎁</div>
             <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:"rgba(255,255,255,.6)",marginBottom:12,fontWeight:600}}>New — Custom Gift Boxes</p>
             <h2 className="f" style={{fontSize:"clamp(28px,5vw,44px)",fontWeight:300,marginBottom:14,lineHeight:1.15}}>Build Your Own Box</h2>
@@ -279,16 +279,16 @@ export default function App(){
             {products.slice(0,4).map((p,i)=>(
               <R key={p.id} delay={i*.08}>
                 <div className="card" onClick={()=>{viewProduct(p)}}>
-                  <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
+                  <div style={{height:220,overflow:"hidden",background:"#EFE7DA",position:"relative"}}>
                     <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.04)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(138,108,95,.04)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <span style={{background:"#fff",padding:"7px 18px",borderRadius:18,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase",boxShadow:"0 4px 12px rgba(0,0,0,.06)"}}>Quick View</span>
                     </div>
                   </div>
                   <div style={{padding:"16px 18px 20px"}}>
                     <p style={{fontSize:9,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:5,fontWeight:600}}>{CATS[p.cat]}</p>
                     <h3 className="f" style={{fontSize:17,fontWeight:500,marginBottom:4}}>{p.name}</h3>
-                    <p style={{fontSize:11,color:"#8a9a88",marginBottom:10}}>{p.size}</p>
+                    <p style={{fontSize:11,color:"#9a8a7c",marginBottom:10}}>{p.size}</p>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                       <span style={{fontSize:16,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
                       <button className="b bs bo" onClick={e=>{e.stopPropagation();add(p)}}>Add</button>
@@ -305,10 +305,10 @@ export default function App(){
           <div className="bg" style={{maxWidth:1000,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
             {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","$4 Delivery","Just $4 delivery anywhere in Lebanon — free on orders above $50!"]].map(([ic,t,d],i)=>(
               <R key={t} delay={i*.08} d="scale">
-                <div style={{background:"#fff",borderRadius:14,padding:"28px 20px",textAlign:"center",border:"1px solid rgba(50,107,47,.04)",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 36px rgba(50,107,47,.08)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
+                <div style={{background:"#fff",borderRadius:14,padding:"28px 20px",textAlign:"center",border:"1px solid rgba(138,108,95,.04)",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 36px rgba(138,108,95,.08)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{fontSize:28,marginBottom:12}}>{ic}</div>
-                  <h4 style={{fontSize:14,fontWeight:600,marginBottom:6,color:"#2a2a2a"}}>{t}</h4>
-                  <p style={{fontSize:12,color:"#6a7a68",lineHeight:1.6}}>{d}</p>
+                  <h4 style={{fontSize:14,fontWeight:600,marginBottom:6,color:"#3d3128"}}>{t}</h4>
+                  <p style={{fontSize:12,color:"#7a6d60",lineHeight:1.6}}>{d}</p>
                 </div>
               </R>
             ))}
@@ -329,7 +329,7 @@ export default function App(){
             {products.filter(p=>p.cat==="chinese").map((p,i)=>(
               <R key={p.id} delay={i*.06}>
                 <div onClick={()=>{viewProduct(p)}} style={{cursor:"pointer",textAlign:"center",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-6px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
-                  <div style={{width:"100%",aspectRatio:"1",borderRadius:14,overflow:"hidden",marginBottom:12,border:"1px solid rgba(50,107,47,.06)"}}>
+                  <div style={{width:"100%",aspectRatio:"1",borderRadius:14,overflow:"hidden",marginBottom:12,border:"1px solid rgba(138,108,95,.06)"}}>
                     <img src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .4s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.08)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
                   </div>
                   <p style={{fontSize:13,fontWeight:500,marginBottom:4,lineHeight:1.3}}>{p.name}</p>
@@ -398,7 +398,7 @@ export default function App(){
 
         {/* INSTAGRAM CTA */}
         <section style={{padding:"60px clamp(16px,4vw,48px)"}}>
-          <R><div style={{maxWidth:800,margin:"0 auto",background:`linear-gradient(135deg, ${GX}, #f5f2ec)`,borderRadius:20,padding:"48px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
+          <R><div style={{maxWidth:800,margin:"0 auto",background:`linear-gradient(135deg, ${GX}, #F5E9D3)`,borderRadius:20,padding:"48px 40px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:24}}>
             <div>
               <h3 className="f" style={{fontSize:28,fontWeight:400,marginBottom:8}}>Follow Us on Instagram</h3>
               <p style={{fontSize:14,color:"#666",maxWidth:360}}>See our latest products, tea rituals, and behind-the-scenes content. Join 1K+ tea lovers!</p>
@@ -434,16 +434,16 @@ export default function App(){
             {fil.map((p,i)=>(
               <R key={p.id} delay={i*.06}>
                 <div className="card" onClick={()=>{viewProduct(p)}}>
-                  <div style={{height:220,overflow:"hidden",background:"#f5f3ef",position:"relative"}}>
+                  <div style={{height:220,overflow:"hidden",background:"#EFE7DA",position:"relative"}}>
                     <img className="cimg" src={p.img[0]} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} />
-                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(50,107,47,.03)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <div className="covr" style={{position:"absolute",inset:0,background:"rgba(138,108,95,.03)",opacity:0,transition:"opacity .3s",display:"flex",alignItems:"center",justifyContent:"center"}}>
                       <span style={{background:"#fff",padding:"7px 18px",borderRadius:18,fontSize:11,fontWeight:600,letterSpacing:1,textTransform:"uppercase"}}>Quick View</span>
                     </div>
                   </div>
                   <div style={{padding:"16px 18px 20px"}}>
                     <p style={{fontSize:9,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:5,fontWeight:600}}>{CATS[p.cat]}</p>
                     <h3 className="f" style={{fontSize:17,fontWeight:500,marginBottom:4}}>{p.name}</h3>
-                    <p style={{fontSize:11,color:"#8a9a88",marginBottom:10}}>{p.size}</p>
+                    <p style={{fontSize:11,color:"#9a8a7c",marginBottom:10}}>{p.size}</p>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                       <span style={{fontSize:16,fontWeight:700,color:G}}>${p.price.toFixed(2)}</span>
                       <button className="b bs bo" onClick={e=>{e.stopPropagation();add(p)}}>Add</button>
@@ -477,16 +477,16 @@ export default function App(){
                   <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:10}}>Size</p>
                   <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                     {sel.variants.map((v,vi)=>(
-                      <button key={vi} onClick={()=>setSelVar(vi)} style={{padding:"10px 20px",border:selVar===vi?`2px solid ${G}`:"2px solid #e0e0e0",borderRadius:6,background:selVar===vi?"rgba(50,107,47,.05)":"#fff",cursor:"pointer",fontSize:13,fontWeight:selVar===vi?600:400,color:selVar===vi?G:"#555",transition:"all .2s"}}>{v.size} — ${Number(v.price).toFixed(2)}</button>
+                      <button key={vi} onClick={()=>setSelVar(vi)} style={{padding:"10px 20px",border:selVar===vi?`2px solid ${G}`:"2px solid #e0e0e0",borderRadius:6,background:selVar===vi?"rgba(138,108,95,.05)":"#fff",cursor:"pointer",fontSize:13,fontWeight:selVar===vi?600:400,color:selVar===vi?G:"#555",transition:"all .2s"}}>{v.size} — ${Number(v.price).toFixed(2)}</button>
                     ))}
                   </div>
                 </div>
               ):(
-                <p style={{fontSize:13,color:"#8a9a88",marginBottom:18}}>{sel.size}</p>
+                <p style={{fontSize:13,color:"#9a8a7c",marginBottom:18}}>{sel.size}</p>
               )}
               <p className="f" style={{fontSize:32,fontWeight:600,color:G,marginBottom:28}}>${(sel.variants&&sel.variants.length>0?Number(sel.variants[selVar].price):sel.price).toFixed(2)}</p>
-              <div style={{fontSize:14,lineHeight:1.9,color:"#4a4a4a",marginBottom:24}}>{sel.desc.split("\n").map((line,i)=>line.trim()?<p key={i} style={{marginBottom:10}}>{line}</p>:null)}</div>
-              {sel.serve&&<div style={{background:"rgba(50,107,47,.05)",borderRadius:10,padding:"12px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>🍵</span><p style={{fontSize:14,color:G,fontWeight:600}}>{sel.serve}</p></div>}
+              <div style={{fontSize:14,lineHeight:1.9,color:"#544339",marginBottom:24}}>{sel.desc.split("\n").map((line,i)=>line.trim()?<p key={i} style={{marginBottom:10}}>{line}</p>:null)}</div>
+              {sel.serve&&<div style={{background:"rgba(138,108,95,.05)",borderRadius:10,padding:"12px 18px",marginBottom:24,display:"flex",alignItems:"center",gap:10}}><span style={{fontSize:18}}>🍵</span><p style={{fontSize:14,color:G,fontWeight:600}}>{sel.serve}</p></div>}
               {sel.ben&&<div style={{marginBottom:28}}><p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:"#999",fontWeight:600,marginBottom:12}}>Benefits</p><div style={{display:"flex",flexWrap:"wrap",gap:8}}>{sel.ben.map(b=><span key={b} className="tg" style={{padding:"6px 16px",fontSize:12}}>{b}</span>)}</div></div>}
               <button className="b bp" style={{width:"100%",padding:"16px"}} onClick={()=>{const v=sel.variants&&sel.variants.length>0?sel.variants[selVar]:null;add({...sel,price:v?Number(v.price):sel.price,size:v?v.size:sel.size,cartId:sel.id+(v?`-${v.size}`:"")});go("shop")}}>Add to Cart</button>
               <div style={{display:"flex",gap:16,marginTop:16,justifyContent:"center"}}>
@@ -505,9 +505,9 @@ export default function App(){
             <h1 className="f" style={{fontSize:"clamp(32px,5vw,48px)",fontWeight:300,marginBottom:24}}>Our Story</h1>
             <div style={{width:50,height:1.5,background:GL,margin:"0 auto 30px"}} />
           </div></R>
-          <R delay={0.1}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:20}}>MuraCha brings the art of Japanese and Chinese tea culture to Lebanon. Every leaf is carefully selected from heritage farms, honoring generations of craft and the meditative ritual of tea.</p></R>
-          <R delay={0.2}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:20}}>From the roasted warmth of hojicha to the artistic bloom of Chinese tea bombs, each product is an invitation to slow down, breathe, and savor the moment.</p></R>
-          <R delay={0.3}><p style={{fontSize:16,color:"#4a4a4a",lineHeight:2.1,textAlign:"center",marginBottom:32}}>Our Japanese collection features premium first-harvest teas — Sencha, Tencha, and organic Bancha. Our Chinese collection showcases hand-rolled Pu&apos;erh tea balls wrapped with flowers — each one a unique sensory experience.</p></R>
+          <R delay={0.1}><p style={{fontSize:16,color:"#544339",lineHeight:2.1,textAlign:"center",marginBottom:20}}>MuraCha brings the art of Japanese and Chinese tea culture to Lebanon. Every leaf is carefully selected from heritage farms, honoring generations of craft and the meditative ritual of tea.</p></R>
+          <R delay={0.2}><p style={{fontSize:16,color:"#544339",lineHeight:2.1,textAlign:"center",marginBottom:20}}>From the roasted warmth of hojicha to the artistic bloom of Chinese tea bombs, each product is an invitation to slow down, breathe, and savor the moment.</p></R>
+          <R delay={0.3}><p style={{fontSize:16,color:"#544339",lineHeight:2.1,textAlign:"center",marginBottom:32}}>Our Japanese collection features premium first-harvest teas — Sencha, Tencha, and organic Bancha. Our Chinese collection showcases hand-rolled Pu&apos;erh tea balls wrapped with flowers — each one a unique sensory experience.</p></R>
           <R delay={0.35}><div style={{display:"flex",justifyContent:"center",gap:14}}>
             <a href="https://www.instagram.com/muracha.lb" target="_blank" rel="noopener noreferrer" className="b bo">Instagram</a>
             <a href="https://www.tiktok.com/@muracha.lb" target="_blank" rel="noopener noreferrer" className="b bo">TikTok</a>
@@ -518,22 +518,22 @@ export default function App(){
       {pg==="checkout"&&(
         <section style={{paddingTop:90,padding:"90px clamp(16px,4vw,48px) 60px",maxWidth:560,margin:"0 auto"}}>
           <R><h1 className="f" style={{fontSize:36,fontWeight:300,textAlign:"center",marginBottom:6}}>Checkout</h1>
-          <p style={{textAlign:"center",fontSize:13,color:"#8a9a88",marginBottom:32}}>Complete your order via WhatsApp</p></R>
-          <R delay={0.1}><div style={{background:"#fff",borderRadius:14,padding:24,marginBottom:20,border:"1px solid rgba(50,107,47,.05)"}}>
+          <p style={{textAlign:"center",fontSize:13,color:"#9a8a7c",marginBottom:32}}>Complete your order via WhatsApp</p></R>
+          <R delay={0.1}><div style={{background:"#fff",borderRadius:14,padding:24,marginBottom:20,border:"1px solid rgba(138,108,95,.05)"}}>
             <h3 className="f" style={{fontSize:18,marginBottom:14}}>Order Summary</h3>
             {cart.map(item=>(
-              <div key={item.cartId||item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:"1px solid rgba(50,107,47,.03)",fontSize:13}}>
+              <div key={item.cartId||item.id} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:"1px solid rgba(138,108,95,.03)",fontSize:13}}>
                 <span>{item.name} × {item.qty}</span>
                 <span style={{fontWeight:700}}>${(item.price*item.qty).toFixed(2)}</span>
               </div>
             ))}
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#5a6e58",paddingTop:8}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#6b5d52",paddingTop:8}}>
               <span>Subtotal</span><span>${tot.toFixed(2)}</span>
             </div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:delivery===0?G:"#5a6e58",paddingTop:4}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:delivery===0?G:"#6b5d52",paddingTop:4}}>
               <span>Delivery</span><span>{delivery===0?"Free":"$"+delivery.toFixed(2)}</span>
             </div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:10,borderTop:"1px solid rgba(50,107,47,.06)",marginTop:8}} className="f">
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:10,borderTop:"1px solid rgba(138,108,95,.06)",marginTop:8}} className="f">
               <span style={{fontWeight:600}}>Total</span><span style={{fontWeight:700,color:G}}>${grandTotal.toFixed(2)}</span>
             </div>
             {tot>=FREE_SHIP_MIN&&<p style={{fontSize:11,color:G,marginTop:6,fontWeight:600}}>✓ Free delivery</p>}
@@ -544,42 +544,42 @@ export default function App(){
             <input className="inp" placeholder="Delivery Address *" value={form.address} onChange={e=>setForm({...form,address:e.target.value})} />
             <textarea className="inp" placeholder="Notes (optional)" rows={3} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} style={{resize:"vertical"}} />
             <button className="b bp" style={{width:"100%",padding:16,fontSize:13,animation:form.name&&form.phone&&form.address?"pulse 2s infinite":""}} onClick={sendWA} disabled={!form.name||!form.phone||!form.address}>Send Order via WhatsApp →</button>
-            <p style={{fontSize:11,color:"#8a9a88",textAlign:"center"}}>You&apos;ll be redirected to WhatsApp with your order details</p>
+            <p style={{fontSize:11,color:"#9a8a7c",textAlign:"center"}}>You&apos;ll be redirected to WhatsApp with your order details</p>
           </div></R>
         </section>
       )}
 
       {/* FOOTER */}
-      <footer style={{borderTop:"1px solid rgba(50,107,47,.05)",padding:"48px clamp(16px,4vw,48px) 28px",background:"rgba(232,240,230,.15)"}}>
+      <footer style={{borderTop:"1px solid rgba(138,108,95,.05)",padding:"48px clamp(16px,4vw,48px) 28px",background:"rgba(232,240,230,.15)"}}>
         <div style={{maxWidth:1200,margin:"0 auto",display:"flex",flexWrap:"wrap",justifyContent:"space-between",gap:32}}>
           <div>
             <img src="/images/logo.png" alt="MuraCha" style={{height:46,objectFit:"contain",marginBottom:8}} />
-            <p style={{fontSize:12,color:"#8a9a88"}}>Pure Japanese Essence & Chinese Art</p>
+            <p style={{fontSize:12,color:"#9a8a7c"}}>Pure Japanese Essence & Chinese Art</p>
           </div>
           <div style={{display:"flex",gap:32,flexWrap:"wrap"}}>
             <div>
               <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Navigate</p>
               {[["home","Home"],["shop","Shop"],["about","About"]].map(([p,l])=>(
-                <p key={p} onClick={()=>go(p)} style={{fontSize:12,color:"#5a6e58",cursor:"pointer",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</p>
+                <p key={p} onClick={()=>go(p)} style={{fontSize:12,color:"#6b5d52",cursor:"pointer",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#6b5d52"}>{l}</p>
               ))}
             </div>
             <div>
               <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Contact</p>
-              <a href="mailto:muracha.lb@gmail.com" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>muracha.lb@gmail.com</a>
-              <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6}}>+961 71 425 250</a>
-              <p style={{fontSize:12,color:"#5a6e58"}}>Lebanon</p>
+              <a href="mailto:muracha.lb@gmail.com" style={{fontSize:12,color:"#6b5d52",display:"block",marginBottom:6}}>muracha.lb@gmail.com</a>
+              <a href="https://wa.me/96171425250" target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#6b5d52",display:"block",marginBottom:6}}>+961 71 425 250</a>
+              <p style={{fontSize:12,color:"#6b5d52"}}>Lebanon</p>
             </div>
             <div>
               <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",color:G,marginBottom:12,fontWeight:700}}>Follow</p>
               {[["https://www.instagram.com/muracha.lb","Instagram"],["https://www.tiktok.com/@muracha.lb","TikTok"],["https://www.facebook.com/share/1B6JkrCKFt/","Facebook"]].map(([u,l])=>(
-                <a key={l} href={u} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#5a6e58",display:"block",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#5a6e58"}>{l}</a>
+                <a key={l} href={u} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#6b5d52",display:"block",marginBottom:6,transition:"color .3s"}} onMouseEnter={e=>e.currentTarget.style.color=G} onMouseLeave={e=>e.currentTarget.style.color="#6b5d52"}>{l}</a>
               ))}
             </div>
           </div>
         </div>
-        <div style={{maxWidth:1200,margin:"28px auto 0",paddingTop:18,borderTop:"1px solid rgba(50,107,47,.04)",textAlign:"center"}}>
-          <p style={{fontSize:10,color:"#a0afa0"}}>© 2026 MuraCha. All rights reserved.</p>
-          <p style={{fontSize:10,color:"#a0afa0",marginTop:6}}><a href="https://yalla-build.com" target="_blank" rel="noopener" style={{color:"#a0afa0",textDecoration:"none"}}>Website by Yalla Build — web & app studio in Lebanon</a></p>
+        <div style={{maxWidth:1200,margin:"28px auto 0",paddingTop:18,borderTop:"1px solid rgba(138,108,95,.04)",textAlign:"center"}}>
+          <p style={{fontSize:10,color:"#b0a293"}}>© 2026 MuraCha. All rights reserved.</p>
+          <p style={{fontSize:10,color:"#b0a293",marginTop:6}}><a href="https://yalla-build.com" target="_blank" rel="noopener" style={{color:"#b0a293",textDecoration:"none"}}>Website by Yalla Build — web & app studio in Lebanon</a></p>
         </div>
       </footer>
 
