@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 const ADMIN_PASS = "muracha2026";
-const G = "#326b2f", GL = "#5a9e4f";
+const G = "#544339", GL = "#8A6C5F";
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
 const sbFetch = (path, opts = {}) => fetch(`${SB_URL}/rest/v1/${path}`, { ...opts, headers: { "apikey": SB_KEY, "Authorization": `Bearer ${SB_KEY}`, "Content-Type": "application/json", "Prefer": opts.method === "PATCH" || opts.method === "DELETE" ? "return=minimal" : "return=representation", ...opts.headers } });
