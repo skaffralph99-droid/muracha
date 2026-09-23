@@ -70,12 +70,12 @@ export default function App(){
   const rm=id=>setCart(p=>p.filter(i=>(i.cartId||i.id)!==id));
   const uq=(id,d)=>setCart(p=>p.map(i=>(i.cartId||i.id)===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const delivery=tot>=FREE_SHIP_MIN?0:DELIVERY_FEE;
+  const delivery=DELIVERY_FEE;
   const grandTotal=tot+delivery;
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
   const fil=cat==="all"?products:products.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=delivery>0?`\n*Delivery:* $${delivery.toFixed(2)}`:`\n✓ Free delivery`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=`\n*Delivery:* $${delivery.toFixed(2)}`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
@@ -167,16 +167,11 @@ export default function App(){
           </div>
           {cart.length>0&&(
             <div style={{padding:20,borderTop:"1px solid rgba(138,108,95,.05)",background:GX}}>
-              {tot>=FREE_SHIP_MIN?<p style={{fontSize:12,color:G,marginBottom:10,fontWeight:600}}>✓ Free delivery!</p>:
-              <div style={{marginBottom:10}}>
-                <p style={{fontSize:11,color:"#6b5d52",marginBottom:5}}>${(FREE_SHIP_MIN-tot).toFixed(2)} away from free delivery</p>
-                <div style={{height:3,background:"rgba(138,108,95,.08)",borderRadius:2}}><div style={{height:"100%",background:`linear-gradient(90deg,${G},${GL})`,borderRadius:2,width:`${Math.min(tot/FREE_SHIP_MIN*100,100)}%`,transition:"width .5s"}} /></div>
-              </div>}
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:4,fontSize:13,color:"#6b5d52"}}>
                 <span>Subtotal</span><span>${tot.toFixed(2)}</span>
               </div>
-              <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,fontSize:13,color:delivery===0?G:"#6b5d52"}}>
-                <span>Delivery</span><span>{delivery===0?"Free":`$${delivery.toFixed(2)}`}</span>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,fontSize:13,color:"#6b5d52"}}>
+                <span>Delivery</span><span>${delivery.toFixed(2)}</span>
               </div>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:14,borderTop:"1px solid rgba(138,108,95,.08)",paddingTop:10}}>
                 <span className="f" style={{fontSize:20}}>Total</span>
@@ -215,7 +210,7 @@ export default function App(){
                   <button className="b bo" onClick={()=>go("about")}>Our Story</button>
                 </div>
                 <div style={{display:"flex",gap:20,flexWrap:"wrap"}}>
-                  {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery (Free 50$+)"]].map(([ic,tx])=>(
+                  {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"]].map(([ic,tx])=>(
                     <div key={tx} style={{display:"flex",alignItems:"center",gap:5}}>
                       <span style={{fontSize:14}}>{ic}</span>
                       <span style={{fontSize:11,color:"#6b5d52",fontWeight:500}}>{tx}</span>
@@ -242,7 +237,7 @@ export default function App(){
         {/* STATS BAR */}
         <div style={{background:G,color:"#fff",padding:"16px clamp(16px,4vw,48px)"}}>
           <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:16}}>
-            {[["11+","Products"],["100%","Natural"],["$4","Delivery (Free 50$+)"]].map(([n,l])=>(
+            {[["11+","Products"],["100%","Natural"],["$4","Delivery"]].map(([n,l])=>(
               <div key={l} style={{textAlign:"center"}}>
                 <p className="f" style={{fontSize:22,fontWeight:700}}>{n}</p>
                 <p style={{fontSize:10,letterSpacing:2,textTransform:"uppercase",opacity:.7}}>{l}</p>
@@ -255,15 +250,35 @@ export default function App(){
           </div>
         </div>
 
-        {/* BUILD A BOX CTA */}
-        <section style={{padding:"70px clamp(16px,4vw,48px)"}}>
-          <R><div style={{maxWidth:1000,margin:"0 auto",background:`linear-gradient(135deg, ${G}, #6b5445)`,borderRadius:24,padding:"clamp(36px,6vw,64px) clamp(24px,5vw,56px)",textAlign:"center",color:"#fff",position:"relative",overflow:"hidden"}}>
-            <div style={{fontSize:44,marginBottom:16}}>🎁</div>
-            <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:"rgba(255,255,255,.6)",marginBottom:12,fontWeight:600}}>New — Custom Gift Boxes</p>
-            <h2 className="f" style={{fontSize:"clamp(28px,5vw,44px)",fontWeight:300,marginBottom:14,lineHeight:1.15}}>Build Your Own Box</h2>
-            <p style={{fontSize:15,color:"rgba(255,255,255,.75)",lineHeight:1.7,maxWidth:480,margin:"0 auto 28px"}}>Choose your packaging, teas, chocolates, and a personalized message — crafted just the way you want it.</p>
-            <button onClick={()=>go("build")} style={{padding:"16px 40px",background:"#fff",color:G,border:"none",borderRadius:10,fontSize:13,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",cursor:"pointer",transition:"transform .3s"}} onMouseEnter={e=>e.currentTarget.style.transform="translateY(-2px)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>Start Building →</button>
+        {/* TWO WAYS TO SHOP */}
+        <section style={{padding:"60px clamp(16px,4vw,48px)"}}>
+          <R><div style={{textAlign:"center",marginBottom:36}}>
+            <p style={{fontSize:11,letterSpacing:4,textTransform:"uppercase",color:G,marginBottom:10,fontWeight:600}}>Two Ways to Shop</p>
+            <h2 className="f" style={{fontSize:"clamp(26px,4vw,40px)",fontWeight:300}}>How Would You Like to Order?</h2>
           </div></R>
+          <div className="bg" style={{maxWidth:980,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:20}}>
+            {/* Shop by Item */}
+            <R>
+              <div onClick={()=>go("shop")} style={{background:"#fff",border:"1px solid rgba(138,108,95,.12)",borderRadius:20,padding:"clamp(28px,4vw,44px) clamp(20px,3vw,36px)",textAlign:"center",cursor:"pointer",transition:"all .35s cubic-bezier(.16,1,.3,1)",height:"100%",display:"flex",flexDirection:"column",alignItems:"center"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 20px 50px rgba(138,108,95,.14)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
+                <div style={{fontSize:40,marginBottom:16}}>🍵</div>
+                <p style={{fontSize:11,letterSpacing:3,textTransform:"uppercase",color:GL,marginBottom:10,fontWeight:600}}>Shop the Collection</p>
+                <h3 className="f" style={{fontSize:"clamp(24px,3vw,30px)",fontWeight:400,marginBottom:12}}>Purchase by Item</h3>
+                <p style={{fontSize:14,color:"#6b5d52",lineHeight:1.7,marginBottom:24,flex:1}}>Browse our teas, powders, and tea bombs. Add your favorites to the cart and check out.</p>
+                <button className="b bp" style={{width:"100%",maxWidth:260}}>Shop Now →</button>
+              </div>
+            </R>
+            {/* Build Your Own Box */}
+            <R delay={0.1}>
+              <div onClick={()=>go("build")} style={{background:`linear-gradient(135deg, ${G}, #6b5445)`,borderRadius:20,padding:"clamp(28px,4vw,44px) clamp(20px,3vw,36px)",textAlign:"center",cursor:"pointer",transition:"all .35s cubic-bezier(.16,1,.3,1)",height:"100%",display:"flex",flexDirection:"column",alignItems:"center",color:"#fff",position:"relative",overflow:"hidden"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-6px)";e.currentTarget.style.boxShadow="0 20px 50px rgba(84,67,57,.3)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
+                <div style={{position:"absolute",top:12,right:16,background:"rgba(255,255,255,.15)",borderRadius:20,padding:"4px 12px",fontSize:10,letterSpacing:1,textTransform:"uppercase",fontWeight:600}}>New</div>
+                <div style={{fontSize:40,marginBottom:16}}>🎁</div>
+                <p style={{fontSize:11,letterSpacing:3,textTransform:"uppercase",color:"rgba(255,255,255,.6)",marginBottom:10,fontWeight:600}}>Custom Gift Boxes</p>
+                <h3 className="f" style={{fontSize:"clamp(24px,3vw,30px)",fontWeight:400,marginBottom:12}}>Build Your Own Box</h3>
+                <p style={{fontSize:14,color:"rgba(255,255,255,.78)",lineHeight:1.7,marginBottom:24,flex:1}}>Choose your packaging, teas, chocolates, and a personalized message — crafted just the way you want it.</p>
+                <button style={{width:"100%",maxWidth:260,padding:"14px 28px",background:"#fff",color:G,border:"none",borderRadius:8,fontSize:12,fontWeight:600,letterSpacing:1.5,textTransform:"uppercase",cursor:"pointer"}}>Start Building →</button>
+              </div>
+            </R>
+          </div>
         </section>
 
         {/* BESTSELLERS */}
@@ -303,7 +318,7 @@ export default function App(){
         {/* BENEFITS */}
         <section style={{padding:"60px clamp(16px,4vw,48px)",background:GX}}>
           <div className="bg" style={{maxWidth:1000,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:16}}>
-            {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","$4 Delivery","Just $4 delivery anywhere in Lebanon — free on orders above $50!"]].map(([ic,t,d],i)=>(
+            {[["🍵","Premium Quality","First-harvest teas sourced directly from Japanese and Chinese farms"],["🌸","Artisan Crafted","Hand-rolled tea bombs that bloom into beautiful flowers"],["💚","Health Benefits","Rich in antioxidants, L-theanine, and natural minerals"],["📦","$4 Delivery","Just $4 delivery anywhere in Lebanon."]].map(([ic,t,d],i)=>(
               <R key={t} delay={i*.08} d="scale">
                 <div style={{background:"#fff",borderRadius:14,padding:"28px 20px",textAlign:"center",border:"1px solid rgba(138,108,95,.04)",transition:"all .3s"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow="0 12px 36px rgba(138,108,95,.08)"}} onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{fontSize:28,marginBottom:12}}>{ic}</div>
@@ -530,13 +545,12 @@ export default function App(){
             <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#6b5d52",paddingTop:8}}>
               <span>Subtotal</span><span>${tot.toFixed(2)}</span>
             </div>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:delivery===0?G:"#6b5d52",paddingTop:4}}>
-              <span>Delivery</span><span>{delivery===0?"Free":"$"+delivery.toFixed(2)}</span>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#6b5d52",paddingTop:4}}>
+              <span>Delivery</span><span>${delivery.toFixed(2)}</span>
             </div>
             <div style={{display:"flex",justifyContent:"space-between",fontSize:18,paddingTop:10,borderTop:"1px solid rgba(138,108,95,.06)",marginTop:8}} className="f">
               <span style={{fontWeight:600}}>Total</span><span style={{fontWeight:700,color:G}}>${grandTotal.toFixed(2)}</span>
             </div>
-            {tot>=FREE_SHIP_MIN&&<p style={{fontSize:11,color:G,marginTop:6,fontWeight:600}}>✓ Free delivery</p>}
           </div></R>
           <R delay={0.2}><div style={{display:"flex",flexDirection:"column",gap:12}}>
             <input className="inp" placeholder="Full Name *" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} />
