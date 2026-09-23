@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 const WA = "96171425250";
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
-const G="#326b2f", GL="#5a9e4f", GX="#eaf2e8";
+const G="#544339", GL="#8A6C5F", GX="#F5E9D3";
 
 // ── STEP 1: PACKAGING ──
 const PACKAGES = [
@@ -120,14 +120,14 @@ export default function BuildBox({ onBack }) {
         <span style={{ width:36, height:36, borderRadius:"50%", background:G, color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"'Cormorant Garamond',serif", fontSize:18, fontWeight:600, flexShrink:0 }}>{num}</span>
         <h2 className="f" style={{ fontSize:"clamp(22px,4vw,30px)", fontWeight:400 }}>{title}</h2>
       </div>
-      {sub && <p style={{ fontSize:13, color:"#8a9a88", marginBottom:20, marginLeft:50 }}>{sub}</p>}
-      {img && <img src={img} alt={title} style={{ width:"100%", borderRadius:16, marginBottom:20, border:"1px solid rgba(50,107,47,.08)" }} />}
+      {sub && <p style={{ fontSize:13, color:"#9a8a7c", marginBottom:20, marginLeft:50 }}>{sub}</p>}
+      {img && <img src={img} alt={title} style={{ width:"100%", borderRadius:16, marginBottom:20, border:"1px solid rgba(138,108,95,.08)" }} />}
       <div style={{ marginLeft:0 }}>{children}</div>
     </section>
   );
 
   if (sent) return (
-    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#fafaf7", padding:24, fontFamily:"'DM Sans',sans-serif" }}>
+    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#FBF7F0", padding:24, fontFamily:"'DM Sans',sans-serif" }}>
       <div style={{ textAlign:"center", maxWidth:440 }}>
         <div style={{ fontSize:52, marginBottom:16 }}>🎁</div>
         <h1 className="f" style={{ fontSize:32, fontWeight:400, marginBottom:12, fontFamily:"'Cormorant Garamond',serif" }}>Order Sent!</h1>
@@ -138,20 +138,20 @@ export default function BuildBox({ onBack }) {
   );
 
   return (
-    <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#fafaf7", color:"#2a2a2a", minHeight:"100vh" }}>
+    <div style={{ fontFamily:"'DM Sans',sans-serif", background:"#FBF7F0", color:"#3d3128", minHeight:"100vh" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         .f{font-family:'Cormorant Garamond',serif}
-        .opt{border:1.5px solid rgba(50,107,47,.12);border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .25s;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:12}
+        .opt{border:1.5px solid rgba(138,108,95,.12);border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .25s;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:12}
         .opt:hover{border-color:${GL}}
-        .opt.on{border-color:${G};background:rgba(50,107,47,.04)}
-        .qbtn{width:30px;height:30px;border:1px solid rgba(50,107,47,.2);background:#fff;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:${G}}
-        .inp{width:100%;padding:13px 16px;border:1px solid rgba(50,107,47,.15);border-radius:8px;font-size:14px;outline:none;font-family:'DM Sans'}
+        .opt.on{border-color:${G};background:rgba(138,108,95,.04)}
+        .qbtn{width:30px;height:30px;border:1px solid rgba(138,108,95,.2);background:#fff;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:${G}}
+        .inp{width:100%;padding:13px 16px;border:1px solid rgba(138,108,95,.15);border-radius:8px;font-size:14px;outline:none;font-family:'DM Sans'}
         .inp:focus{border-color:${GL}}
       `}</style>
 
       {/* Header */}
-      <div style={{ position:"sticky", top:0, zIndex:50, background:"rgba(250,250,247,.97)", borderBottom:"1px solid rgba(50,107,47,.06)", padding:"14px clamp(16px,4vw,48px)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+      <div style={{ position:"sticky", top:0, zIndex:50, background:"rgba(250,250,247,.97)", borderBottom:"1px solid rgba(138,108,95,.06)", padding:"14px clamp(16px,4vw,48px)", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
         <button onClick={onBack} style={{ background:"none", border:"none", cursor:"pointer", fontSize:13, color:G, fontWeight:500 }}>← Back</button>
         <img src="/images/logo.png" alt="MuraCha" style={{ height:34, objectFit:"contain" }} />
         <div style={{ fontSize:13, fontWeight:700, color:G }}>${total.toFixed(2)}</div>
@@ -199,11 +199,11 @@ export default function BuildBox({ onBack }) {
               const active = chocs[c.id];
               const grams = active?.grams || 0;
               return (
-                <div key={c.id} style={{ border:`1.5px solid ${active?G:"rgba(50,107,47,.12)"}`, borderRadius:12, padding:"14px 18px", background:active?"rgba(50,107,47,.04)":"#fff", transition:"all .25s" }}>
+                <div key={c.id} style={{ border:`1.5px solid ${active?G:"rgba(138,108,95,.12)"}`, borderRadius:12, padding:"14px 18px", background:active?"rgba(138,108,95,.04)":"#fff", transition:"all .25s" }}>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:12, marginBottom: active?12:0 }}>
                     <div>
                       <p style={{ fontSize:14, fontWeight:500 }}>{c.name}</p>
-                      <p style={{ fontSize:12, color:"#8a9a88" }}>${c.pricePerKg}/kg</p>
+                      <p style={{ fontSize:12, color:"#9a8a7c" }}>${c.pricePerKg}/kg</p>
                     </div>
                     {!active ? (
                       <button onClick={()=>setChoc(c.id, 200)} style={{ padding:"8px 16px", background:G, color:"#fff", border:"none", borderRadius:6, fontSize:12, fontWeight:600, cursor:"pointer", whiteSpace:"nowrap" }}>Add</button>
@@ -233,7 +233,7 @@ export default function BuildBox({ onBack }) {
 
         {/* STEP 4 — Teaware coming soon */}
         <Section num="4" title="Choose Your Teaware">
-          <div style={{ border:"1.5px dashed rgba(50,107,47,.2)", borderRadius:12, padding:"32px 20px", textAlign:"center", background:"rgba(50,107,47,.02)" }}>
+          <div style={{ border:"1.5px dashed rgba(138,108,95,.2)", borderRadius:12, padding:"32px 20px", textAlign:"center", background:"rgba(138,108,95,.02)" }}>
             <p style={{ fontSize:22, marginBottom:6 }}>🫖</p>
             <p className="f" style={{ fontSize:20, color:G }}>Coming Soon</p>
           </div>
@@ -260,7 +260,7 @@ export default function BuildBox({ onBack }) {
       </div>
 
       {/* Sticky bottom bar */}
-      <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"#fff", borderTop:"1px solid rgba(50,107,47,.1)", padding:"14px clamp(16px,4vw,48px)", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, boxShadow:"0 -4px 20px rgba(0,0,0,.05)", zIndex:60 }}>
+      <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"#fff", borderTop:"1px solid rgba(138,108,95,.1)", padding:"14px clamp(16px,4vw,48px)", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, boxShadow:"0 -4px 20px rgba(0,0,0,.05)", zIndex:60 }}>
         <div>
           <p style={{ fontSize:11, color:"#888", textTransform:"uppercase", letterSpacing:1 }}>Total</p>
           <p className="f" style={{ fontSize:26, fontWeight:700, color:G, lineHeight:1 }}>${total.toFixed(2)}</p>
