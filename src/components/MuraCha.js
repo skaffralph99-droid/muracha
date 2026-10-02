@@ -190,20 +190,23 @@ export default function App(){
         <section style={{position:"relative",overflow:"hidden",paddingTop:64,background:"linear-gradient(135deg, #E0D9CF, #F5E9D3)"}}>
           <div style={{maxWidth:1200,margin:"0 auto",padding:"40px clamp(16px,5vw,60px) 40px"}}>
             {/* Mobile: single hero image on top */}
-            <div className="mob-hero" style={{display:"none",marginBottom:24,borderRadius:16,overflow:"hidden",height:220}}>
-              <img src="/images/hero-teabombs.jpg" alt="MuraCha Tea" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+            <div className="mob-hero" style={{display:"none",marginBottom:24,borderRadius:16,overflow:"hidden"}}>
+              <img src="/images/hero-giftbox.jpg" alt="MuraCha Gift Box" style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
             </div>
             <div style={{display:"flex",alignItems:"center",gap:"clamp(24px,4vw,60px)",minHeight:420}}>
               {/* Text */}
               <div style={{flex:"1 1 45%",position:"relative",zIndex:2,opacity:0,animation:"slideUp .8s ease .1s both"}}>
                 <div style={{display:"inline-block",background:"rgba(138,108,95,.08)",borderRadius:20,padding:"6px 16px",marginBottom:20}}>
-                  <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea from Japan & China</p>
+                  <p style={{fontSize:11,letterSpacing:2,textTransform:"uppercase",color:G,fontWeight:600}}>🍃 Authentic Tea &amp; Cacao Rituals</p>
                 </div>
                 <h1 className="f" style={{fontSize:"clamp(34px,5vw,56px)",fontWeight:300,lineHeight:1.1,marginBottom:16,color:"#3d3128"}}>
-                  Nourish Your<br />Body & <span style={{fontWeight:600,color:G}}>Soul</span>
+                  A Little Ritual.<br /><span style={{fontWeight:600,color:G}}>A Lot of Soul.</span>
                 </h1>
+                <p className="f" style={{fontSize:"clamp(18px,2.4vw,24px)",color:"#3d3128",fontWeight:400,marginBottom:14}}>
+                  Premium Tea, Cacao &amp; Meaningful Gifts
+                </p>
                 <p style={{fontSize:15,color:"#777",lineHeight:1.8,marginBottom:28,maxWidth:440}}>
-                  Premium hojicha, blooming tea bombs, and organic powders — meticulously sourced from heritage farms, delivered to your door in Lebanon.
+                  Discover authentic Japanese and Chinese teas, rich cacao, and thoughtfully curated gifting experiences — made for moments of calm, connection, and joy.
                 </p>
                 <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:28}}>
                   <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
@@ -218,16 +221,10 @@ export default function App(){
                   ))}
                 </div>
               </div>
-              {/* Image collage - desktop */}
-              <div className="dk" style={{flex:"1 1 50%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,opacity:0,animation:"slideUp .8s ease .3s both"}}>
-                <div style={{borderRadius:14,overflow:"hidden",height:220}}>
-                  <img src="/images/hero-latte.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
-                </div>
-                <div style={{borderRadius:14,overflow:"hidden",height:220}}>
-                  <img src="/images/hero-teabombs.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
-                </div>
-                <div style={{borderRadius:14,overflow:"hidden",height:200,gridColumn:"1 / -1"}}>
-                  <img src="/images/hero-flatlay.jpg" alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 60%",transition:"transform .5s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.05)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
+              {/* Gift box hero image - desktop */}
+              <div className="dk" style={{flex:"1 1 50%",opacity:0,animation:"slideUp .8s ease .3s both"}}>
+                <div style={{borderRadius:18,overflow:"hidden",boxShadow:"0 20px 50px rgba(84,67,57,.15)"}}>
+                  <img src="/images/hero-giftbox.jpg" alt="MuraCha Gift Box" style={{width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform .6s"}} onMouseEnter={e=>e.currentTarget.style.transform="scale(1.04)"} onMouseLeave={e=>e.currentTarget.style.transform=""} />
                 </div>
               </div>
             </div>
