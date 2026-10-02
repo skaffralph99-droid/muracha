@@ -40,10 +40,28 @@ const CHOCOLATES = [
   { id:"mixed-dragees", name:"Mixed Dragees", pricePerKg:40, custom:true },
 ];
 
+// ── STEP 4: TEAWARE (numbered to match the photo) ──
+const TEAWARE = [
+  { id:"tw-1-2", name:"Set of 2 Cups with Plate & Spoon (#1 & 2)", price:22 },
+  { id:"tw-3", name:"Mug — Pink (#3)", price:8 },
+  { id:"tw-4", name:"Mug — Mint (#4)", price:8 },
+  { id:"tw-5", name:"Mug — Yellow (#5)", price:8 },
+  { id:"tw-6", name:"Cup with Saucer (#6)", price:10 },
+  { id:"tw-7", name:"Mug with Mirror Lid (#7)", price:8 },
+  { id:"tw-8", name:"Mug with Silicon Lid (#8)", price:8 },
+  { id:"tw-9", name:"Mug with Silicon Lid (#9)", price:10 },
+  { id:"tw-10", name:"Mug with Saucer (#10)", price:10 },
+  { id:"tw-12", name:"Tea Infuser Bottle with Separator (#12)", price:15 },
+  { id:"tw-13", name:"Glass Teapot (#13)", price:30 },
+  { id:"tw-14", name:"Glass Teapot (#14)", price:15 },
+  { id:"tw-15", name:"Wooden Box with Plexi Lid (#15)", price:6 },
+];
+
 export default function BuildBox({ onBack }) {
   const [pkg, setPkg] = useState(null);
   const [rituals, setRituals] = useState([]); // array of ritual ids
   const [chocs, setChocs] = useState({}); // { id: { grams, flavors } }
+  const [teaware, setTeaware] = useState([]); // array of teaware ids
   const [message, setMessage] = useState("");
   const [special, setSpecial] = useState("");
   const [form, setForm] = useState({ name:"", phone:"", address:"" });
@@ -52,6 +70,7 @@ export default function BuildBox({ onBack }) {
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"})},[]);
 
   const toggleRitual = (id) => setRituals(p => p.includes(id) ? p.filter(x=>x!==id) : [...p, id]);
+  const toggleTeaware = (id) => setTeaware(p => p.includes(id) ? p.filter(x=>x!==id) : [...p, id]);
   const setChoc = (id, grams, flavors) => {
     setChocs(p => {
       const n = { ...p };
@@ -66,7 +85,8 @@ export default function BuildBox({ onBack }) {
   const chocsPrice = Object.entries(chocs).reduce((s,[id,v])=> {
     const c = CHOCOLATES.find(x=>x.id===id); return s + (c.pricePerKg * (v.grams/1000));
   }, 0);
-  const total = pkgPrice + ritualsPrice + chocsPrice;
+  const teawarePrice = teaware.reduce((s,id)=> s + TEAWARE.find(x=>x.id===id).price, 0);
+  const total = pkgPrice + ritualsPrice + chocsPrice + teawarePrice;
 
   const canSend = pkg && form.name && form.phone && form.address;
 
@@ -90,6 +110,11 @@ export default function BuildBox({ onBack }) {
       });
       msg += `\n`;
     }
+    if (teaware.length) {
+      msg += `*━━━ Teaware ━━━*\n`;
+      teaware.forEach(id => { const t = TEAWARE.find(x=>x.id===id); msg += `• ${t.name} — $${t.price.toFixed(2)}\n`; });
+      msg += `\n`;
+    }
     if (message.trim()) msg += `*━━━ Personalized Message (to print) ━━━*\n"${message}"\n\n`;
     if (special.trim()) msg += `*━━━ Special Requests ━━━*\n${special}\n\n`;
     msg += `*TOTAL: $${total.toFixed(2)}*\n\n_This order will be reviewed by the shop and confirmed via WhatsApp._`;
@@ -105,6 +130,7 @@ export default function BuildBox({ onBack }) {
           { name: `📦 ${PACKAGES.find(x=>x.id===pkg).name}`, qty:1, price:pkgPrice, size:"packaging" },
           ...rituals.map(id => { const r=RITUALS.find(x=>x.id===id); return { name:r.name, qty:1, price:r.price, size:"tea" }; }),
           ...Object.entries(chocs).map(([id,v]) => { const c=CHOCOLATES.find(x=>x.id===id); return { name:`${c.name}${c.custom&&v.flavors?` (${v.flavors})`:""}`, qty:1, price:c.pricePerKg*(v.grams/1000), size:`${v.grams}g` }; }),
+          ...teaware.map(id => { const t=TEAWARE.find(x=>x.id===id); return { name:t.name, qty:1, price:t.price, size:"teaware" }; }),
         ],
         subtotal: total, delivery: 0, total, status:"pending"
       })
@@ -231,11 +257,18 @@ export default function BuildBox({ onBack }) {
           </div>
         </Section>
 
-        {/* STEP 4 — Teaware coming soon */}
-        <Section num="4" title="Choose Your Teaware">
-          <div style={{ border:"1.5px dashed rgba(138,108,95,.2)", borderRadius:12, padding:"32px 20px", textAlign:"center", background:"rgba(138,108,95,.02)" }}>
-            <p style={{ fontSize:22, marginBottom:6 }}>🫖</p>
-            <p className="f" style={{ fontSize:20, color:G }}>Coming Soon</p>
+        {/* STEP 4 — Teaware */}
+        <Section num="4" title="Choose Your Teaware" sub="Pick any pieces you'd like — numbers match the photo. Or skip this step." img="/images/builder-teaware.jpeg">
+          <div style={{ display:"grid", gap:10 }}>
+            {TEAWARE.map(t => (
+              <div key={t.id} className={`opt ${teaware.includes(t.id)?"on":""}`} onClick={()=>toggleTeaware(t.id)}>
+                <span style={{ display:"flex", alignItems:"center", gap:12 }}>
+                  <span style={{ width:20, height:20, borderRadius:5, border:`1.5px solid ${teaware.includes(t.id)?G:"#ccc"}`, background:teaware.includes(t.id)?G:"#fff", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, flexShrink:0 }}>{teaware.includes(t.id)?"✓":""}</span>
+                  <span style={{ fontSize:14, fontWeight:500 }}>{t.name}</span>
+                </span>
+                <span style={{ fontSize:14, fontWeight:700, color:G, whiteSpace:"nowrap" }}>${t.price.toFixed(2)}</span>
+              </div>
+            ))}
           </div>
         </Section>
 
