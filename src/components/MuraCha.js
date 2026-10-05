@@ -210,7 +210,7 @@ export default function App(){
                 </p>
                 <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:28}}>
                   <button className="b bp" onClick={()=>go("shop")}>Shop Collection</button>
-                  <button className="b bo" onClick={()=>go("about")}>Our Story</button>
+                  <button className="b bo" onClick={()=>go("build")}>Build Your Own Gift Box</button>
                 </div>
                 <div style={{display:"flex",gap:20,flexWrap:"wrap"}}>
                   {[["🌿","100% Natural"],["✨","Premium Quality"],["🚚","$4 Delivery"]].map(([ic,tx])=>(
@@ -288,7 +288,7 @@ export default function App(){
             <button className="b bo" onClick={()=>go("shop")}>View All →</button>
           </div></R>
           <div className="pg" style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:20}}>
-            {products.slice(0,4).map((p,i)=>(
+            {[p=>p.id==="cacao-powder",p=>p.id==="hojicha-powder",p=>/hibiscus/i.test(p.id+" "+p.name),p=>p.id==="hojicha-classic"].map(f=>products.find(f)).filter(Boolean).map((p,i)=>(
               <R key={p.id} delay={i*.08}>
                 <div className="card" onClick={()=>{viewProduct(p)}}>
                   <div style={{height:220,overflow:"hidden",background:"#EFE7DA",position:"relative"}}>
