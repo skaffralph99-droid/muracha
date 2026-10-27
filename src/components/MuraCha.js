@@ -5,7 +5,6 @@ import { track } from "./MetaPixel";
 
 const WA = "96171425250";
 const DELIVERY_FEE = 4;
-const FREE_SHIP_MIN = 50;
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
 const G="#544339", GL="#8A6C5F", GX="#F5E9D3", GD="#3d3128";

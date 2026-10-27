@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
+import { track } from "./MetaPixel";
 
 const WA = "96171425250";
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
@@ -91,6 +92,7 @@ export default function BuildBox({ onBack }) {
   const canSend = pkg && form.name && form.phone && form.address;
 
   const sendWA = () => {
+    track("Purchase", { value: total, currency: "USD", content_name: "Custom Gift Box", content_type: "product", num_items: 1 + rituals.length + Object.keys(chocs).length + teaware.length });
     let msg = `🎁 *New MuraCha Custom Box Order*\n\n`;
     msg += `*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n\n`;
     msg += `*━━━ Packaging ━━━*\n${PACKAGES.find(x=>x.id===pkg).name} — $${pkgPrice.toFixed(2)}\n\n`;
