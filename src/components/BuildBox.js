@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { track } from "./MetaPixel";
 
 const WA = "96171425250";
+const DELIVERY_FEE = 4;
 const SB_URL = "https://ihhhjwtgfamjuczaqqwn.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImloaGhqd3RnZmFtanVjemFxcXduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5OTA2ODgsImV4cCI6MjA5NTU2NjY4OH0.PIKDUY--lWbhAPiVd7ltpJFG2d2O9bvVgSO-mJo15Xo";
 const G="#544339", GL="#8A6C5F", GX="#F5E9D3";
@@ -87,7 +88,9 @@ export default function BuildBox({ onBack }) {
     const c = CHOCOLATES.find(x=>x.id===id); return s + (c.pricePerKg * (v.grams/1000));
   }, 0);
   const teawarePrice = teaware.reduce((s,id)=> s + TEAWARE.find(x=>x.id===id).price, 0);
-  const total = pkgPrice + ritualsPrice + chocsPrice + teawarePrice;
+  const subtotal = pkgPrice + ritualsPrice + chocsPrice + teawarePrice;
+  const delivery = pkg ? DELIVERY_FEE : 0;
+  const total = subtotal + delivery;
 
   const canSend = pkg && form.name && form.phone && form.address;
 
@@ -119,7 +122,9 @@ export default function BuildBox({ onBack }) {
     }
     if (message.trim()) msg += `*━━━ Personalized Message (to print) ━━━*\n"${message}"\n\n`;
     if (special.trim()) msg += `*━━━ Special Requests ━━━*\n${special}\n\n`;
-    msg += `*TOTAL: $${total.toFixed(2)}*\n\n_This order will be reviewed by the shop and confirmed via WhatsApp._`;
+    msg += `*Subtotal:* $${subtotal.toFixed(2)}
+*Delivery:* $${delivery.toFixed(2)}
+*TOTAL: $${total.toFixed(2)}*\n\n_This order will be reviewed by the shop and confirmed via WhatsApp._`;
 
     // Save to Supabase
     fetch(`${SB_URL}/rest/v1/muracha_orders`, {
@@ -134,7 +139,7 @@ export default function BuildBox({ onBack }) {
           ...Object.entries(chocs).map(([id,v]) => { const c=CHOCOLATES.find(x=>x.id===id); return { name:`${c.name}${c.custom&&v.flavors?` (${v.flavors})`:""}`, qty:1, price:c.pricePerKg*(v.grams/1000), size:`${v.grams}g` }; }),
           ...teaware.map(id => { const t=TEAWARE.find(x=>x.id===id); return { name:t.name, qty:1, price:t.price, size:"teaware" }; }),
         ],
-        subtotal: total, delivery: 0, total, status:"pending"
+        subtotal, delivery, total, status:"pending"
       })
     }).catch(()=>{});
 
@@ -297,7 +302,7 @@ export default function BuildBox({ onBack }) {
       {/* Sticky bottom bar */}
       <div style={{ position:"fixed", bottom:0, left:0, right:0, background:"#fff", borderTop:"1px solid rgba(138,108,95,.1)", padding:"14px clamp(16px,4vw,48px)", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, boxShadow:"0 -4px 20px rgba(0,0,0,.05)", zIndex:60 }}>
         <div>
-          <p style={{ fontSize:11, color:"#888", textTransform:"uppercase", letterSpacing:1 }}>Total</p>
+          <p style={{ fontSize:11, color:"#888", textTransform:"uppercase", letterSpacing:1 }}>Total · incl. ${delivery.toFixed(0)} delivery</p>
           <p className="f" style={{ fontSize:26, fontWeight:700, color:G, lineHeight:1 }}>${total.toFixed(2)}</p>
         </div>
         <button onClick={sendWA} disabled={!canSend} style={{ flex:1, maxWidth:340, padding:"16px", background:canSend?G:"#ccc", color:"#fff", border:"none", borderRadius:10, fontSize:13, fontWeight:600, letterSpacing:1, textTransform:"uppercase", cursor:canSend?"pointer":"not-allowed", transition:"background .3s" }}>
