@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
 import BuildBox from "./BuildBox";
+import { track } from "./MetaPixel";
 
 const WA = "96171425250";
 const DELIVERY_FEE = 4;
@@ -64,9 +65,9 @@ export default function App(){
   useEffect(()=>{if(toast){const t=setTimeout(()=>setToast(null),2500);return()=>clearTimeout(t)}},[toast]);
   useEffect(()=>{const t=setInterval(()=>setRI(p=>(p+1)%allRevs.length),4000);return()=>clearInterval(t)},[allRevs.length]);
 
-  const go=(p)=>{setTrans(true);setTimeout(()=>{setPg(p);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
-  const viewProduct=(p)=>{setSel(p);setII(0);setSelVar(0);go("product")};
-  const add=(p)=>{const cid=p.cartId||p.id;setCart(prev=>{const ex=prev.find(i=>(i.cartId||i.id)===cid);return ex?prev.map(i=>(i.cartId||i.id)===cid?{...i,qty:i.qty+1}:i):[...prev,{...p,cartId:cid,qty:1}]});setToast(p.name)};
+  const go=(p)=>{if(p==="checkout")track("InitiateCheckout");setTrans(true);setTimeout(()=>{setPg(p);window.scrollTo({top:0,behavior:"instant"});setTimeout(()=>setTrans(false),50)},250)};
+  const viewProduct=(p)=>{track("ViewContent",{content_name:p.name,content_ids:[p.id],content_type:"product",value:p.price,currency:"USD"});setSel(p);setII(0);setSelVar(0);go("product")};
+  const add=(p)=>{track("AddToCart",{content_name:p.name,content_ids:[p.id],content_type:"product",value:p.price,currency:"USD"});const cid=p.cartId||p.id;setCart(prev=>{const ex=prev.find(i=>(i.cartId||i.id)===cid);return ex?prev.map(i=>(i.cartId||i.id)===cid?{...i,qty:i.qty+1}:i):[...prev,{...p,cartId:cid,qty:1}]});setToast(p.name)};
   const rm=id=>setCart(p=>p.filter(i=>(i.cartId||i.id)!==id));
   const uq=(id,d)=>setCart(p=>p.map(i=>(i.cartId||i.id)===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const tot=cart.reduce((s,i)=>s+i.price*i.qty,0);
@@ -75,7 +76,7 @@ export default function App(){
   const cnt=cart.reduce((s,i)=>s+i.qty,0);
   const fil=cat==="all"?products:products.filter(p=>p.cat===cat);
 
-  const sendWA=()=>{const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=`\n*Delivery:* $${delivery.toFixed(2)}`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
+  const sendWA=()=>{track("Purchase",{value:grandTotal,currency:"USD",num_items:cart.length});const items=cart.map(i=>`• ${i.name} × ${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join("\n");const delMsg=`\n*Delivery:* $${delivery.toFixed(2)}`;const msg=`🍵 *New MuraCha Order*\n\n*Name:* ${form.name}\n*Phone:* ${form.phone}\n*Address:* ${form.address}\n${form.notes?`*Notes:* ${form.notes}\n`:""}\n*Items:*\n${items}\n\n*Subtotal:* $${tot.toFixed(2)}${delMsg}\n*Total: $${grandTotal.toFixed(2)}*`;fetch(`${SB_URL}/rest/v1/muracha_orders`,{method:"POST",headers:{"apikey":SB_KEY,"Authorization":`Bearer ${SB_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({customer_name:form.name,customer_phone:form.phone,customer_address:form.address,customer_notes:form.notes||"",items:cart.map(i=>({name:i.name,qty:i.qty,price:i.price,size:i.size})),subtotal:tot,delivery,total:grandTotal,status:"pending"})}).catch(()=>{});window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank")};
 
   const prog=Math.min(sY/(typeof document!=='undefined'?Math.max(document.body.scrollHeight-window.innerHeight,1):1),1);
 
@@ -595,7 +596,7 @@ export default function App(){
       </footer>
 
       {/* Floating WhatsApp button — always visible */}
-      <a href={`https://wa.me/${WA}`} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+      <a href={`https://wa.me/${WA}`} onClick={()=>track("Contact")} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
         style={{position:"fixed",bottom:24,right:24,zIndex:9999,width:58,height:58,borderRadius:"50%",background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 6px 20px rgba(37,211,102,.45)",transition:"transform .25s"}}
         onMouseEnter={e=>e.currentTarget.style.transform="scale(1.08)"} onMouseLeave={e=>e.currentTarget.style.transform=""}>
         <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
