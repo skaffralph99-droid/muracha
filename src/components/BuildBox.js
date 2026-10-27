@@ -19,7 +19,7 @@ const PACKAGES = [
 
 // ── STEP 2: RITUAL (tea) ──
 const RITUALS = [
-  { id:"cacao-200", name:"Premium Cacao Powder 200g (Glass Jar)", price:10 },
+  { id:"cacao-200", name:"Premium Cacao Powder 200g", price:10 },
   { id:"cacao-500", name:"Premium Cacao Powder 500g (Pouch)", price:18 },
   { id:"white-lavender", name:"White Tea Lavender 50g", price:30 },
   { id:"hibiscus", name:"Hibiscus Flower Tea 100g", price:4.5 },
