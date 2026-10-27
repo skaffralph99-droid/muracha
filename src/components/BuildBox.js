@@ -10,6 +10,7 @@ const G="#544339", GL="#8A6C5F", GX="#F5E9D3";
 
 // ── STEP 1: PACKAGING ──
 const PACKAGES = [
+  { id:"regular", name:"Regular Packaging", price:0 },
   { id:"envelope", name:"Envelope Package", price:2.5 },
   { id:"heart-box", name:"Heart / Square Box with Plexi Lid", price:5 },
   { id:"magnetic-bag", name:"Magnetic Bag", price:5.5 },
